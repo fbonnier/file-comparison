@@ -1,4 +1,4 @@
-from setuptools import setup, find_packages
+from setuptools import setup
 
 
 install_requires = [
@@ -11,7 +11,7 @@ install_requires = [
 setup(
     name='file_comparison',
     version='1.0.0',
-    packages=find_packages(),
+    packages=['file_comparison'],
     url='https://github.com/fbonnier/file_comparison.git',
     license="CeCILL",
     author='Florent Bonnier',
