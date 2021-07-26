@@ -1,8 +1,11 @@
 import os
-
-import file_comparison.file_compare as fc
+# from hbp_validation_framework import ModelCatalog
+# import requests
+# import spur
+import check_model.file_compare as fc
 import profile
 import argparse
+# from fairgraph import KGClient
 
 
 if __name__ == "__main__":
@@ -25,19 +28,33 @@ if __name__ == "__main__":
     parser.add_argument('--finfo', dest='finfo', action='store_const',
                         const=fc.hash_from_file_info,
                         help='Hash from file infos')
+    parser.add_argument('--profile', dest='profile', action='store_true',
+                        help='Profiling the method')
 
     args = parser.parse_args()
     print (args)
 
     # Test Levenstein comparison
     # profile.run('print(fc.fuzzy_files_light ("./nest_400x400_pss_3_grid.npz", "./nest_400x400_pss_3_prod.npz")); print()')
-    if args.hamming:
-        profile.run('print(args.hamming(args.files[0].name, args.files[1].name)); print()')
-    elif args.fuzzy:
-        profile.run('print(args.fuzzy(args.files[0].name, args.files[1].name)); print()')
-    elif args.nilsimsa:
-        profile.run('print(args.nilsimsa(args.files[0].name, args.files[1].name)); print()')
-    elif args.npz:
-        profile.run('print(args.npz(args.files[0].name, args.files[1].name)); print()')
-    elif args.finfo:
-        profile.run('print(args.finfo(args.files[0].name, args.files[1].name)); print()')
+    if args.profile:
+        if args.hamming:
+            profile.run('print(args.hamming(args.files[0].name, args.files[1].name)); print()')
+        elif args.fuzzy:
+            profile.run('print(args.fuzzy(args.files[0].name, args.files[1].name)); print()')
+        elif args.nilsimsa:
+            profile.run('print(args.nilsimsa(args.files[0].name, args.files[1].name)); print()')
+        elif args.npz:
+            profile.run('print(args.npz(args.files[0].name, args.files[1].name)); print()')
+        elif args.finfo:
+            profile.run('print(args.finfo(args.files[0].name, args.files[1].name)); print()')
+    else:
+        if args.hamming:
+            args.hamming(args.files[0].name, args.files[1].name)
+        elif args.fuzzy:
+            args.fuzzy(args.files[0].name, args.files[1].name)
+        elif args.nilsimsa:
+            args.nilsimsa(args.files[0].name, args.files[1].name)
+        elif args.npz:
+            args.npz(args.files[0].name, args.files[1].name)
+        elif args.finfo:
+            args.finfo(args.files[0].name, args.files[1].name)
