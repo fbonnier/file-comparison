@@ -1,6 +1,6 @@
 import os
 
-import file_compare as fc
+import file_comparison.file_compare as fc
 import profile
 import argparse
 
