@@ -1,12 +1,7 @@
 import os
-# from hbp_validation_framework import ModelCatalog
-# import requests
-# import spur
 import file_comparison.file_compare as fc
 import profile
 import argparse
-# from fairgraph import KGClient
-
 
 if __name__ == "__main__":
 
@@ -34,19 +29,17 @@ if __name__ == "__main__":
     args = parser.parse_args()
     print (args)
 
-    # Test Levenstein comparison
-    # profile.run('print(fc.fuzzy_files_light ("./nest_400x400_pss_3_grid.npz", "./nest_400x400_pss_3_prod.npz")); print()')
     if args.profile:
         if args.hamming:
-            profile.run('print(args.hamming(args.files[0].name, args.files[1].name)); print()')
+            profile.run('args.hamming(args.files[0].name, args.files[1].name)')
         elif args.fuzzy:
-            profile.run('print(args.fuzzy(args.files[0].name, args.files[1].name)); print()')
+            profile.run('args.fuzzy(args.files[0].name, args.files[1].name)')
         elif args.nilsimsa:
-            profile.run('print(args.nilsimsa(args.files[0].name, args.files[1].name)); print()')
+            profile.run('args.nilsimsa(args.files[0].name, args.files[1].name)')
         elif args.npz:
-            profile.run('print(args.npz(args.files[0].name, args.files[1].name)); print()')
+            profile.run('args.npz(args.files[0].name, args.files[1].name)')
         elif args.finfo:
-            profile.run('print(args.finfo(args.files[0].name, args.files[1].name)); print()')
+            profile.run('args.finfo(args.files[0].name, args.files[1].name)')
     else:
         if args.hamming:
             args.hamming(args.files[0].name, args.files[1].name)
