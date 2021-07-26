@@ -2,7 +2,7 @@ import os
 # from hbp_validation_framework import ModelCatalog
 # import requests
 # import spur
-import check_model.file_compare as fc
+import file_comparison.file_compare as fc
 import profile
 import argparse
 # from fairgraph import KGClient
