@@ -408,6 +408,7 @@ def hash_from_file_info (f1_path, f2_path):
     print (Nilsimsa(all_info_f1))
     print (all_info_f2)
     print (Nilsimsa(all_info_f2))
-    print(128 - compare_digests (Nilsimsa(all_info_f1).hexdigest(), Nilsimsa(all_info_f2).hexdigest()))
+    ratio = (256-(128 - compare_digests (Nilsimsa(all_info_f1).hexdigest(), Nilsimsa(all_info_f2).hexdigest())))/256
+    print ("FINFO Ratio = " + ratio*100)
     ## Hash is done using Nilsimsa algorithm to get strong colisions
     # f1_hash = Nilsimsa (bytes(os.path.dirname + ))
