@@ -25,6 +25,9 @@ BYTE_BUFFER = 64
 all_failures = {}
 known_types = [np.lib.npyio.NpzFile, np.ndarray, neo.core.block.Block, neo.core.Segment, str, bytes, list, dict, bool, float, int, neo.core.spiketrain.SpikeTrain, neo.core.analogsignal.AnalogSignal,]
 
+def compute_ratio (score):
+    return ((256.0 - (128.0 - score)) / 256.0)
+
 def iterable_are_equal (item1, item2, comparison_path):
     keys_to_avoid = []
     common_keys = []
@@ -308,6 +311,8 @@ def hamming_files(f1_path, f2_path):
     TOTAL_SCORE = 0
     # Number of buffer used
     NBUFFER = 0
+    # Total ratio
+    TOTAL_RATIO = 0
 
     # Open files in byte mode
     # Cut the files into N bytes with N=64
@@ -322,7 +327,7 @@ def hamming_files(f1_path, f2_path):
 
             NBUFFER += 1
             TOTAL_SCORE += score
-
+            TOTAL_RATIO += compute_ratio (score)
             # Initialize strings
             f1_byte = f1.read(BYTE_BUFFER)
             f2_byte = f2.read(BYTE_BUFFER)
@@ -331,6 +336,7 @@ def hamming_files(f1_path, f2_path):
         print ("Total Distance = " + str(TOTAL_SCORE))
         print ("Nb buffers = " + str(NBUFFER))
         print ("Average Distance = " + str(TOTAL_SCORE / NBUFFER))
+        print ("Average Ratio = " + str(TOTAL_RATIO / NBUFFER * 100) + " %")
 
 def nilsimsa_files (f1_path, f2_path):
 
@@ -353,7 +359,7 @@ def nilsimsa_files (f1_path, f2_path):
 
             # Computes the comparison between hashed buffers
             score_nilsimsa = compare_digests (nil1.hexdigest(), nil2.hexdigest())
-            TOTAL_RATIO += (256 - (128 - score_nilsimsa)) / 256.0
+            TOTAL_RATIO += compute_ratio (score_nilsimsa)
             # print ("Score Nilsimsa " + str(score_nilsimsa))
             TOTAL_SCORE += 128 - score_nilsimsa
             NBUFFER += 1
@@ -372,7 +378,7 @@ def nilsimsa_files (f1_path, f2_path):
         print ("\nTotal Distance = " + str(TOTAL_SCORE))
         print ("Nb buffers = " + str(NBUFFER))
         print ("Average Nilsimsa Distance = " + str(TOTAL_SCORE / NBUFFER))
-        print ("Average Nilsimsa Ratio = " + str(TOTAL_RATIO / NBUFFER * 100.0))
+        print ("Average Nilsimsa Ratio = " + str(TOTAL_RATIO / NBUFFER * 100.0) + " %")
 
 
 def npz_values (f1_path, f2_path):
@@ -408,7 +414,7 @@ def hash_from_file_info (f1_path, f2_path):
     print (Nilsimsa(all_info_f1))
     print (all_info_f2)
     print (Nilsimsa(all_info_f2))
-    ratio = (256-(128 - compare_digests (Nilsimsa(all_info_f1).hexdigest(), Nilsimsa(all_info_f2).hexdigest())))/256
+    ratio = compute_ratio (compare_digests (Nilsimsa(all_info_f1).hexdigest(), Nilsimsa(all_info_f2).hexdigest()))
     print ("FINFO Ratio = " + str(ratio*100))
     ## Hash is done using Nilsimsa algorithm to get strong colisions
     # f1_hash = Nilsimsa (bytes(os.path.dirname + ))
