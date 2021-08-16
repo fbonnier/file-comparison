@@ -10,6 +10,9 @@ from nilsimsa import Nilsimsa, compare_digests, convert_hex_to_ints
 # Numpy
 import numpy as np
 
+# Hamming
+from scipy.spatial.distance import hamming
+
 from collections.abc import Iterable
 import neo.io
 import json
@@ -305,6 +308,11 @@ def hamming_distance (seq1, seq2):
     count /= BYTE_BUFFER
     return count
 
+## Computes Hamming Distance between seq1 and seq2
+#  Using Scipy spatial distance
+def hamming_distance_scipy (seq1, seq2):
+    return hamming(seq1, seq2) * len(seq1)
+
 def hamming_files(f1_path, f2_path):
 
     # Total Score
@@ -323,7 +331,8 @@ def hamming_files(f1_path, f2_path):
 
         while f1_byte and f2_byte:
             # Run Hamming Distance computation
-            score = hamming_distance(f1_byte, f2_byte)
+            # score = hamming_distance(f1_byte, f2_byte)
+            score = hamming_distance_scipy(f1_byte, f2_byte)
 
             NBUFFER += 1
             TOTAL_SCORE += score
