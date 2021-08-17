@@ -1,3 +1,6 @@
+# Numpy
+import numpy as np
+
 from collections.abc import Iterable
 import neo.io
 
