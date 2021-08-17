@@ -5,7 +5,8 @@ install_requires = [
     "nilsimsa",
     "fuzzywuzzy",
     "argparse",
-    "neo"
+    "neo",
+    "scipy"
 ]
 
 setup(
