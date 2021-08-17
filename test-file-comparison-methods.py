@@ -16,7 +16,7 @@ if __name__ == "__main__":
                         const=hm.hamming_files,
                         help='Find the Hamming distance using bit comparison')
     parser.add_argument('--fuzzy', dest='fuzzy', action='store_const',
-                        const=lv.fuzzy_files_light,
+                        const=lv.levenshtein,
                         help='Find the Levenshtein distance using FuzzyWuzzy module')
     parser.add_argument('--nilsimsa', dest='nilsimsa', action='store_const',
                         const=nl.nilsimsa_files,
