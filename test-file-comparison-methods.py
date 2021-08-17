@@ -29,28 +29,30 @@ if __name__ == "__main__":
                         help='Hash from file infos')
     parser.add_argument('--profile', dest='profile', action='store_true',
                         help='Profiling the method')
+    parser.add_argument('--buffersize', type=int, metavar='Buffer Size', nargs=1, dest='buffersize', default=32,
+                        help='Size of buffer used in bytes (default is 32 bytes)')
 
     args = parser.parse_args()
     print (args)
 
     if args.profile:
         if args.hamming:
-            profile.run('args.hamming(args.files[0].name, args.files[1].name)')
+            profile.run('args.hamming(args.files[0].name, args.files[1].name, args.buffersize)')
         elif args.fuzzy:
-            profile.run('args.fuzzy(args.files[0].name, args.files[1].name)')
+            profile.run('args.fuzzy(args.files[0].name, args.files[1].name, args.buffersize)')
         elif args.nilsimsa:
-            profile.run('args.nilsimsa(args.files[0].name, args.files[1].name)')
+            profile.run('args.nilsimsa(args.files[0].name, args.files[1].name, args.buffersize)')
         elif args.npz:
             profile.run('args.npz(args.files[0].name, args.files[1].name)')
         elif args.finfo:
             profile.run('args.finfo(args.files[0].name, args.files[1].name)')
     else:
         if args.hamming:
-            args.hamming(args.files[0].name, args.files[1].name)
+            args.hamming(args.files[0].name, args.files[1].name, args.buffersize)
         elif args.fuzzy:
-            args.fuzzy(args.files[0].name, args.files[1].name)
+            args.fuzzy(args.files[0].name, args.files[1].name, args.buffersize)
         elif args.nilsimsa:
-            args.nilsimsa(args.files[0].name, args.files[1].name)
+            args.nilsimsa(args.files[0].name, args.files[1].name, args.buffersize)
         elif args.npz:
             args.npz(args.files[0].name, args.files[1].name)
         elif args.finfo:
