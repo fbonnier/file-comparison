@@ -1,6 +1,9 @@
 import os
 import file_comparison.file_compare as fc
 import file_comparison.nilsimsa as nl
+import file_comparison.npz as npz
+import file_comparison.hamming as hm
+import file_comparison.levenshtein as lv
 import profile
 import argparse
 
@@ -10,16 +13,16 @@ if __name__ == "__main__":
     parser.add_argument('files', type=argparse.FileType('r'), metavar='files', nargs='+',
                         help='Files to compare')
     parser.add_argument('--hamming', dest='hamming', action='store_const',
-                        const=fc.hamming_files,
+                        const=hm.hamming_files,
                         help='Find the Hamming distance using bit comparison')
     parser.add_argument('--fuzzy', dest='fuzzy', action='store_const',
-                        const=fc.fuzzy_files_light,
+                        const=lv.fuzzy_files_light,
                         help='Find the Levenshtein distance using FuzzyWuzzy module')
     parser.add_argument('--nilsimsa', dest='nilsimsa', action='store_const',
                         const=nl.nilsimsa_files,
                         help='Find the Nilsimsa hash using nilsimsa module')
     parser.add_argument('--npz', dest='npz', action='store_const',
-                        const=fc.npz_values,
+                        const=npz.npz_values,
                         help='Find the differences between two NPZ files')
     parser.add_argument('--finfo', dest='finfo', action='store_const',
                         const=fc.hash_from_file_info,
