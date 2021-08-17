@@ -4,11 +4,11 @@ from nilsimsa import Nilsimsa, compare_digests, convert_hex_to_ints
 def compute_ratio (score):
     return ((256.0 - (128.0 - score)) / 256.0)
 
-def nilsimsa_files (f1_path, f2_path):
+def nilsimsa_files (f1_path, f2_path, buffer_size=32):
 
     with open(f1_path, "rb") as f1, open(f2_path, "rb") as f2:
-        f1_byte = f1.read(BYTE_BUFFER)
-        f2_byte = f2.read(BYTE_BUFFER)
+        f1_byte = f1.read(buffer_size)
+        f2_byte = f2.read(buffer_size)
 
         # Total Score
         TOTAL_SCORE = 0
@@ -31,8 +31,8 @@ def nilsimsa_files (f1_path, f2_path):
             NBUFFER += 1
 
             # Initialize strings
-            f1_byte = f1.read(BYTE_BUFFER)
-            f2_byte = f2.read(BYTE_BUFFER)
+            f1_byte = f1.read(buffer_size)
+            f2_byte = f2.read(buffer_size)
 
 
         # Last comparison in case the files closed before filling 64 bytes arrays
