@@ -29,7 +29,7 @@ if __name__ == "__main__":
                         help='Hash from file infos')
     parser.add_argument('--profile', dest='profile', action='store_true',
                         help='Profiling the method')
-    parser.add_argument('--buffersize', type=int, metavar='Buffer Size', nargs=1, dest='buffersize', default=32, action='store_const',
+    parser.add_argument('--buffersize', type=int, metavar='Buffer Size', nargs=1, dest='buffersize', default=32,
                         help='Size of buffer used in bytes (default is 32 bytes)')
 
     args = parser.parse_args()
@@ -37,22 +37,22 @@ if __name__ == "__main__":
 
     if args.profile:
         if args.hamming:
-            profile.run('args.hamming(args.files[0].name, args.files[1].name, args.buffersize)')
+            profile.run('args.hamming(args.files[0].name, args.files[1].name, args.buffersize[0])')
         elif args.fuzzy:
-            profile.run('args.fuzzy(args.files[0].name, args.files[1].name, args.buffersize)')
+            profile.run('args.fuzzy(args.files[0].name, args.files[1].name, args.buffersize[0])')
         elif args.nilsimsa:
-            profile.run('args.nilsimsa(args.files[0].name, args.files[1].name, args.buffersize)')
+            profile.run('args.nilsimsa(args.files[0].name, args.files[1].name, args.buffersize[0])')
         elif args.npz:
             profile.run('args.npz(args.files[0].name, args.files[1].name)')
         elif args.finfo:
             profile.run('args.finfo(args.files[0].name, args.files[1].name)')
     else:
         if args.hamming:
-            args.hamming(args.files[0].name, args.files[1].name, args.buffersize)
+            args.hamming(args.files[0].name, args.files[1].name, args.buffersize[0])
         elif args.fuzzy:
-            args.fuzzy(args.files[0].name, args.files[1].name, args.buffersize)
+            args.fuzzy(args.files[0].name, args.files[1].name, args.buffersize[0])
         elif args.nilsimsa:
-            args.nilsimsa(args.files[0].name, args.files[1].name, args.buffersize)
+            args.nilsimsa(args.files[0].name, args.files[1].name, args.buffersize[0])
         elif args.npz:
             args.npz(args.files[0].name, args.files[1].name)
         elif args.finfo:
