@@ -1,5 +1,6 @@
 import os
 import file_comparison.file_compare as fc
+import file_comparison.nilsimsa as nl
 import profile
 import argparse
 
@@ -15,7 +16,7 @@ if __name__ == "__main__":
                         const=fc.fuzzy_files_light,
                         help='Find the Levenshtein distance using FuzzyWuzzy module')
     parser.add_argument('--nilsimsa', dest='nilsimsa', action='store_const',
-                        const=fc.nilsimsa_files,
+                        const=nl.nilsimsa_files,
                         help='Find the Nilsimsa hash using nilsimsa module')
     parser.add_argument('--npz', dest='npz', action='store_const',
                         const=fc.npz_values,
