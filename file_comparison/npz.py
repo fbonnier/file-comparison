@@ -135,3 +135,23 @@ def iterable_are_equal (item1, item2, comparison_path):
     # If item1 and item2 are not iterable (are values)
     elif (item1 != item2):
         all_failures[str(comparison_path+str(type(item1))+"->"+str(item1))] = "(delta= TODO)"
+
+
+def npz_values (f1_path, f2_path):
+    ## TODO
+
+    ## Check if both files are NPZ files
+    if ((not f1_path.endswith(".npz")) or (not f2_path.endswith(".npz"))):
+        print ("Error :: NPZ value comparison needs two NPZ files")
+        exit (1)
+
+    with np.load(f1_path, allow_pickle=True) as data_1:
+        with np.load(f2_path, allow_pickle=True) as data_2:
+            data_1_list = data_1.files
+            data_2_list = data_2.files
+            comparison_path="R"
+            iterable_are_equal (data_1, data_2, comparison_path)
+            # Print failures Line-by-Line
+            print(json.dumps(all_failures, indent=4))
+
+    
