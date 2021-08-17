@@ -6,7 +6,7 @@ from scipy.spatial.distance import hamming
 def hamming_distance_scipy (seq1, seq2):
     return hamming(seq1, seq2) * len(seq1)
 
-def hamming_files(f1_path, f2_path):
+def hamming_files(f1_path, f2_path, buffer_size=32):
 
     # Total Score
     TOTAL_SCORE = 0
@@ -19,8 +19,8 @@ def hamming_files(f1_path, f2_path):
     # Cut the files into N bytes with N=64
     # Compatible with Python 2.6 and Python 3.x
     with open(f1_path, "rb") as f1, open(f2_path, "rb") as f2:
-        f1_byte = f1.read(BYTE_BUFFER)
-        f2_byte = f2.read(BYTE_BUFFER)
+        f1_byte = f1.read(buffer_size)
+        f2_byte = f2.read(buffer_size)
 
         while f1_byte and f2_byte:
             # Run Hamming Distance computation
@@ -31,8 +31,8 @@ def hamming_files(f1_path, f2_path):
             TOTAL_SCORE += score
             TOTAL_RATIO += compute_ratio (score)
             # Initialize strings
-            f1_byte = f1.read(BYTE_BUFFER)
-            f2_byte = f2.read(BYTE_BUFFER)
+            f1_byte = f1.read(buffer_size)
+            f2_byte = f2.read(buffer_size)
 
 
         print ("Total Distance = " + str(TOTAL_SCORE))
