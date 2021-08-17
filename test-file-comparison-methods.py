@@ -29,7 +29,7 @@ if __name__ == "__main__":
                         help='Hash from file infos')
     parser.add_argument('--profile', dest='profile', action='store_true',
                         help='Profiling the method')
-    parser.add_argument('--buffersize', type=int, metavar='Buffer Size', nargs=1, dest='buffersize', default=32,
+    parser.add_argument('--buffersize', type=int, metavar='Buffer Size', nargs=1, dest='buffersize', default=32, action='store_const',
                         help='Size of buffer used in bytes (default is 32 bytes)')
 
     args = parser.parse_args()
