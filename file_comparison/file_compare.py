@@ -5,9 +5,24 @@ from nilsimsa import Nilsimsa, compare_digests, convert_hex_to_ints
 
 import os
 
+# Global array that stores all files to compare
+list_of_files = []
+
+
 def compute_ratio (score):
     return ((256.0 - (128.0 - score)) / 256.0)
 
+def get_files_from_watchdog_log (watchdog_file):
+    global list_of_files
+    
+    with open (watchdog_file, 'r') as f1:
+        lines = f1.readlines()
+        for iline in lines :
+            if iline not in list_of_files:
+                list_of_files.append(iline)
+                
+    print (list_of_files)
+    return 
 
 def hash_from_file_info (f1_path, f2_path):
     ## Hash file informations
