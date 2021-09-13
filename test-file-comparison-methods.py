@@ -27,6 +27,9 @@ if __name__ == "__main__":
     parser.add_argument('--finfo', dest='finfo', action='store_const',
                         const=fc.hash_from_file_info,
                         help='Hash from file infos')
+    parser.add_argument('--bijective', dest='bijective', action='store_const',
+                        const=fc.find_bijective,
+                        help='Hash from file infos')
     parser.add_argument('--profile', dest='profile', action='store_true',
                         help='Profiling the method')
     parser.add_argument('--buffersize', type=int, metavar='Buffer Size', nargs=1, dest='buffersize', default=32,
@@ -46,6 +49,8 @@ if __name__ == "__main__":
             profile.run('args.npz(args.files[0].name, args.files[1].name)')
         elif args.finfo:
             profile.run('args.finfo(args.files[0].name, args.files[1].name)')
+        elif args.bijective:
+            profile.run('args.bijective(args.files[0].name, args.files[1].name)')
     else:
         if args.hamming:
             args.hamming(args.files[0].name, args.files[1].name, args.buffersize[0])
@@ -57,3 +62,5 @@ if __name__ == "__main__":
             args.npz(args.files[0].name, args.files[1].name)
         elif args.finfo:
             args.finfo(args.files[0].name, args.files[1].name)
+        elif args.bijective:
+            args.bijective(args.files[0].name, args.files[1].name)
