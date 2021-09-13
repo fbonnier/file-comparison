@@ -5,11 +5,6 @@ from nilsimsa import Nilsimsa, compare_digests, convert_hex_to_ints
 
 import os
 
-# Global array that stores all files to compare
-list_of_files01 = []
-list_of_files02 = []
-
-
 def compute_ratio (score):
     return ((256.0 - (128.0 - score)) / 256.0)
 
@@ -31,38 +26,42 @@ def get_files_from_watchdog_log (watchdog_file):
 def find_bijective (f1, f2):
 
     # Read files from watchdog logs
-    list_of_files01 = get_files_from_watchdog_log (f1)
-    print ("List of files 01")
-    print (list_of_files01)
-    list_of_files02 = get_files_from_watchdog_log (f2)
-    print ("List of files 02")
-    print (list_of_files02)
+    list_of_files_rows = get_files_from_watchdog_log (f1)
+    print ("List of files rows")
+    print (list_of_files_rows)
+    list_of_files_cols = get_files_from_watchdog_log (f2)
+    print ("List of files cols")
+    print (list_of_files_cols)
 
     # Score Matrix
     score_matrix = []
 
-    # Loop over all files in list01 and list02 and compute a score for each write_code_location
-    for ifile in list_of_files01:
+    # # Loop over all files in list01 and list02 and compute a score for each write_code_location
+    for ifile in list_of_files_rows:
         # Gives the first row
         irow = []
-        for jfile in list_of_files02:
+        for jfile in list_of_files_cols:
             try:
                 irow.append (hash_from_file_info(ifile, jfile))
             except FileNotFoundError as e:
                 print (e)
                 irow.append(0.)
-            score_matrix.append(irow)
-    print ("Score Matrix ::")
-    print (score_matrix)
+        score_matrix.append(irow)
 
-    # Print best score per row
-    for irow in score_matrix:
-        score_max = 0.
-        for ival in irow:
-            if ival > score_max:
-                score_max = ival
+    # Find best score per row
+    with open("list1.txt", 'w') as f_rows:
+        with open("list2.txt", 'w') as f_cols:
+            for irow in range(len(score_matrix)):
+                # Find the couples that match the most according to the scores
+                max_score = max(score_matrix[irow])
+                max_idx_list = [i for i, j in enumerate(score_matrix[irow]) if j == max_score]
 
-        print ("Score Max of this row = " + str (score_max))
+                if max_score > 0.:
+                    for iidx in max_idx_list:
+                        f_rows.write(str(list_of_files_rows[irow]) + "\n")
+                        f_cols.write(str(list_of_files_cols[iidx]) + "\n")
+    f_rows.close()
+    f_cols.close()
 
 
 
