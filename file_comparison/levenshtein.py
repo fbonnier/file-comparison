@@ -3,7 +3,26 @@
 from fuzzywuzzy import fuzz
 from fuzzywuzzy import process
 
+# Compare two list of files
+# f1_path contains the first list of files
+# f2_path contains the second list of files
+# f1 and f2 must have the same number of lines (of files to compare, each line is a path of a file)
+# The files will be compared one by one and are supposed to have bijective relation:
+# f1:line 1 <-> f2:line 1
+# f1:line 2 <-> f2:line 2
+# f1:line n <-> f2:line n
 def levenshtein (f1_path, f2_path, buffer_size=32):
+
+    with open(f1_path, "r") as f1:
+        with open(f2_path, "r") as f2:
+            linesf1 = f1.readlines()
+            linesf2 = f2.readlines()
+            assert(len(linesf1) == len(linesf2))
+            for idx in range(len(linesf1)):
+                levenshtein_single(linesf1[idx].split("\n")[0], linesf2[idx].split("\n")[0])
+
+
+def levenshtein_single (f1_path, f2_path, buffer_size=32):
 
     # Total Score
     TOTAL_SCORE = 0
