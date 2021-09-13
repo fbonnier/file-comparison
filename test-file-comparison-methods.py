@@ -40,11 +40,11 @@ if __name__ == "__main__":
 
     if args.profile:
         if args.hamming:
-            profile.run('args.hamming(args.files[0].name, args.files[1].name, args.buffersize[0])')
+            profile.run('args.hamming(args.files[0].name, args.files[1].name, args.buffersize)')
         elif args.fuzzy:
-            profile.run('args.fuzzy(args.files[0].name, args.files[1].name, args.buffersize[0])')
+            profile.run('args.fuzzy(args.files[0].name, args.files[1].name, args.buffersize)')
         elif args.nilsimsa:
-            profile.run('args.nilsimsa(args.files[0].name, args.files[1].name, args.buffersize[0])')
+            profile.run('args.nilsimsa(args.files[0].name, args.files[1].name, args.buffersize)')
         elif args.npz:
             profile.run('args.npz(args.files[0].name, args.files[1].name)')
         elif args.finfo:
@@ -53,11 +53,11 @@ if __name__ == "__main__":
             profile.run('args.bijective(args.files[0].name, args.files[1].name)')
     else:
         if args.hamming:
-            args.hamming(args.files[0].name, args.files[1].name, args.buffersize[0])
+            args.hamming(args.files[0].name, args.files[1].name, args.buffersize)
         elif args.fuzzy:
-            args.fuzzy(args.files[0].name, args.files[1].name, args.buffersize[0])
+            args.fuzzy(args.files[0].name, args.files[1].name, args.buffersize)
         elif args.nilsimsa:
-            args.nilsimsa(args.files[0].name, args.files[1].name, args.buffersize[0])
+            args.nilsimsa(args.files[0].name, args.files[1].name, args.buffersize)
         elif args.npz:
             args.npz(args.files[0].name, args.files[1].name)
         elif args.finfo:
