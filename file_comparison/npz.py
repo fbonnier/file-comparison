@@ -160,10 +160,16 @@ def iterable_are_equal (item1, item2, comparison_path):
             all_failures[str(comparison_path+str(type(item1))+"->"+str(item1))] = "(delta= TODO)"
             nb_errors += 1
 
-
 def npz_values (f1_path, f2_path):
-    ## TODO
+    with open(f1_path, "r") as f1:
+        with open(f2_path, "r") as f2:
+            linesf1 = f1.readlines()
+            linesf2 = f2.readlines()
+            assert(len(linesf1) == len(linesf2))
+            for idx in range(len(linesf1)):
+                npz_single(linesf1[idx].split("\n")[0], linesf2[idx].split("\n")[0], buffer_size)
 
+def npz_single (f1_path, f2_path):
 
     ## Check if both files are NPZ files
     if ((not f1_path.endswith(".npz")) or (not f2_path.endswith(".npz"))):
