@@ -5,6 +5,15 @@ def compute_ratio (score):
     return ((256.0 - (128.0 - score)) / 256.0)
 
 def nilsimsa_files (f1_path, f2_path, buffer_size=32):
+    with open(f1_path, "r") as f1:
+        with open(f2_path, "r") as f2:
+            linesf1 = f1.readlines()
+            linesf2 = f2.readlines()
+            assert(len(linesf1) == len(linesf2))
+            for idx in range(len(linesf1)):
+                nilsimsa_single(linesf1[idx].split("\n")[0], linesf2[idx].split("\n")[0], buffer_size)
+
+def nilsimsa_single (f1_path, f2_path, buffer_size=32):
 
     with open(f1_path, "rb") as f1, open(f2_path, "rb") as f2:
         f1_byte = f1.read(buffer_size)
