@@ -11,7 +11,7 @@ from fuzzywuzzy import process
 # f1:line 1 <-> f2:line 1
 # f1:line 2 <-> f2:line 2
 # f1:line n <-> f2:line n
-def levenshtein (f1_path, f2_path, buffer_size=32):
+def levenshtein (f1_path, f2_path, buffer_size=32, hex=1):
 
     with open(f1_path, "r") as f1:
         with open(f2_path, "r") as f2:
@@ -19,7 +19,18 @@ def levenshtein (f1_path, f2_path, buffer_size=32):
             linesf2 = f2.readlines()
             assert(len(linesf1) == len(linesf2))
             for idx in range(len(linesf1)):
-                levenshtein_single(linesf1[idx].split("\n")[0], linesf2[idx].split("\n")[0])
+                # Set default filename
+                filename1 = linesf1[idx].split("\n")[0]
+                filename2 = linesf2[idx].split("\n")[0]
+
+                # Getting filename from URL hash
+                if hex == 1:
+                    filename1 = hashlib.md5(bytes(filename1, encoding='utf-8')).hexdigest()
+                if hex == 2:
+                    filename1 = hashlib.md5(bytes(filename1, encoding='utf-8')).hexdigest()
+                    filename2 = hashlib.md5(bytes(filename2, encoding='utf-8')).hexdigest()
+
+                levenshtein_single(filename1, filename2, buffer_size)
 
 
 def levenshtein_single (f1_path, f2_path, buffer_size=32):
