@@ -32,35 +32,40 @@ if __name__ == "__main__":
                         help='Hash from file infos')
     parser.add_argument('--profile', dest='profile', action='store_true',
                         help='Profiling the method')
-    parser.add_argument('--buffersize', type=int, metavar='Buffer Size', nargs=1, dest='buffersize', default=32,
+    parser.add_argument('--buffersize', type=int, metavar='Buffer_Size', nargs=1, dest='buffersize', default=32,
                         help='Size of buffer used in bytes (default is 32 bytes)')
+    parser.add_argument('--hex', type=int, metavar='Hexadigest_option', nargs=1, dest='hex', default=1,
+                        help='Option to specify the files that contains hexadigest filenames.\n\
+                        0: Both files contain plain urls and complete paths of result files\n\
+                        1: First file contains urls that should be hashed to retreive corresponding filenames\n\
+                        2: Both files contain urls/paths that should be hashed to retreive corresponding filenames')
 
     args = parser.parse_args()
     print (args)
 
     if args.profile:
         if args.hamming:
-            profile.run('args.hamming(args.files[0].name, args.files[1].name, args.buffersize)')
+            profile.run('args.hamming(args.files[0].name, args.files[1].name, args.buffersize, args.hex[0])')
         elif args.fuzzy:
-            profile.run('args.fuzzy(args.files[0].name, args.files[1].name, args.buffersize)')
+            profile.run('args.fuzzy(args.files[0].name, args.files[1].name, args.buffersize, args.hex[0])')
         elif args.nilsimsa:
-            profile.run('args.nilsimsa(args.files[0].name, args.files[1].name, args.buffersize)')
+            profile.run('args.nilsimsa(args.files[0].name, args.files[1].name, args.buffersize, args.hex[0])')
         elif args.npz:
-            profile.run('args.npz(args.files[0].name, args.files[1].name)')
+            profile.run('args.npz(args.files[0].name, args.files[1].name, args.hex[0])')
         elif args.finfo:
-            profile.run('args.finfo(args.files[0].name, args.files[1].name)')
+            profile.run('args.finfo(args.files[0].name, args.files[1].name, args.hex[0])')
         elif args.bijective:
-            profile.run('args.bijective(args.files[0].name, args.files[1].name)')
+            profile.run('args.bijective(args.files[0].name, args.files[1].name, args.hex[0])')
     else:
         if args.hamming:
-            args.hamming(args.files[0].name, args.files[1].name, args.buffersize)
+            args.hamming(args.files[0].name, args.files[1].name, args.buffersize, args.hex[0])
         elif args.fuzzy:
-            args.fuzzy(args.files[0].name, args.files[1].name, args.buffersize)
+            args.fuzzy(args.files[0].name, args.files[1].name, args.buffersize, args.hex[0])
         elif args.nilsimsa:
-            args.nilsimsa(args.files[0].name, args.files[1].name, args.buffersize)
+            args.nilsimsa(args.files[0].name, args.files[1].name, args.buffersize, args.hex[0])
         elif args.npz:
-            args.npz(args.files[0].name, args.files[1].name)
+            args.npz(args.files[0].name, args.files[1].name, args.hex[0])
         elif args.finfo:
-            args.finfo(args.files[0].name, args.files[1].name)
+            args.finfo(args.files[0].name, args.files[1].name, args.hex[0])
         elif args.bijective:
-            args.bijective(args.files[0].name, args.files[1].name)
+            args.bijective(args.files[0].name, args.files[1].name, args.hex[0])
