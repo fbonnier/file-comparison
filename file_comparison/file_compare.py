@@ -4,12 +4,14 @@
 from nilsimsa import Nilsimsa, compare_digests, convert_hex_to_ints
 
 import os
+import hashlib
 
 def compute_ratio (score):
     return ((256.0 - (128.0 - score)) / 256.0)
 
-def get_files_from_watchdog_log (watchdog_file):
+def get_files_from_watchdog_log (watchdog_file, is_hex):
     list_of_files = []
+    print (is_hex)
 
     with open (watchdog_file, 'r') as f1:
         lines = f1.readlines()
@@ -17,19 +19,41 @@ def get_files_from_watchdog_log (watchdog_file):
             iline = irawline.split('\n')[0]
             src_dest = iline.split()
             for ifile in src_dest:
-                if ifile not in list_of_files:
-                    list_of_files.append(ifile)
+                ifilename = ifile
+                if is_hex:
+                    ifilename = hashlib.md5(bytes(ifile, encoding='utf-8')).hexdigest()
+                    print ("IFileName = " + ifilename)
+                if ifilename not in list_of_files:
+                    list_of_files.append(ifilename)
 
     print (list_of_files)
     return list_of_files
 
-def find_bijective (f1, f2):
+def find_bijective (f1, f2, hex=1):
 
-    # Read files from watchdog logs
-    list_of_files_rows = get_files_from_watchdog_log (f1)
+    # Check hexadigest file format
+    list_of_files_rows = []
+    list_of_files_cols = []
+    print (hex)
+
+    if hex==1:
+        # Read files from watchdog logs
+        list_of_files_rows = get_files_from_watchdog_log (f1, True)
+        list_of_files_cols = get_files_from_watchdog_log (f2, False)
+
+    elif hex==2:
+        # Read files from watchdog logs
+        list_of_files_rows = get_files_from_watchdog_log (f1, True)
+        list_of_files_cols = get_files_from_watchdog_log (f2, True)
+    else:
+        # Read files from watchdog logs
+        list_of_files_rows = get_files_from_watchdog_log (f1, False)
+        list_of_files_cols = get_files_from_watchdog_log (f2, False)
+
+
+
     print ("List of files rows")
     print (list_of_files_rows)
-    list_of_files_cols = get_files_from_watchdog_log (f2)
     print ("List of files cols")
     print (list_of_files_cols)
 
