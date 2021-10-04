@@ -4,7 +4,7 @@ from nilsimsa import Nilsimsa, compare_digests, convert_hex_to_ints
 def compute_ratio (score):
     return ((256.0 - (128.0 - score)) / 256.0)
 
-def nilsimsa_files (f1_path, f2_path, buffer_size=32, hex=1):
+def nilsimsa_files (f1_path, f2_path, buffer_size=32):
     with open(f1_path, "r") as f1:
         with open(f2_path, "r") as f2:
             linesf1 = f1.readlines()
@@ -16,12 +16,6 @@ def nilsimsa_files (f1_path, f2_path, buffer_size=32, hex=1):
                 filename1 = linesf1[idx].split("\n")[0]
                 filename2 = linesf2[idx].split("\n")[0]
 
-                # Getting filename from URL hash
-                if hex == 1:
-                    filename1 = hashlib.md5(bytes(filename1, encoding='utf-8')).hexdigest()
-                if hex == 2:
-                    filename1 = hashlib.md5(bytes(filename1, encoding='utf-8')).hexdigest()
-                    filename2 = hashlib.md5(bytes(filename2, encoding='utf-8')).hexdigest()
                 nilsimsa_single(filename1, filename2, buffer_size)
 
 def nilsimsa_single (f1_path, f2_path, buffer_size=32):
