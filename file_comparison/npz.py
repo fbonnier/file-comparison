@@ -160,7 +160,7 @@ def iterable_are_equal (item1, item2, comparison_path):
             all_failures[str(comparison_path+str(type(item1))+"->"+str(item1))] = "(delta= TODO)"
             nb_errors += 1
 
-def npz_values (f1_path, f2_path, hex=1):
+def npz_values (f1_path, f2_path):
     with open(f1_path, "r") as f1:
         with open(f2_path, "r") as f2:
             linesf1 = f1.readlines()
@@ -172,12 +172,6 @@ def npz_values (f1_path, f2_path, hex=1):
                 filename1 = linesf1[idx].split("\n")[0]
                 filename2 = linesf2[idx].split("\n")[0]
 
-                # Getting filename from URL hash
-                if hex == 1:
-                    filename1 = hashlib.md5(bytes(filename1, encoding='utf-8')).hexdigest()
-                if hex == 2:
-                    filename1 = hashlib.md5(bytes(filename1, encoding='utf-8')).hexdigest()
-                    filename2 = hashlib.md5(bytes(filename2, encoding='utf-8')).hexdigest()
                 npz_single(filename1, filename2, buffer_size)
 
 def npz_single (f1_path, f2_path):
