@@ -45,27 +45,27 @@ if __name__ == "__main__":
 
     if args.profile:
         if args.hamming:
-            profile.run('args.hamming(args.files[0].name, args.files[1].name, args.buffersize, args.hex[0])')
+            profile.run('args.hamming(args.files[0].name, args.files[1].name, args.buffersize)')
         elif args.fuzzy:
-            profile.run('args.fuzzy(args.files[0].name, args.files[1].name, args.buffersize, args.hex[0])')
+            profile.run('args.fuzzy(args.files[0].name, args.files[1].name, args.buffersize)')
         elif args.nilsimsa:
-            profile.run('args.nilsimsa(args.files[0].name, args.files[1].name, args.buffersize, args.hex[0])')
+            profile.run('args.nilsimsa(args.files[0].name, args.files[1].name, args.buffersize)')
         elif args.npz:
-            profile.run('args.npz(args.files[0].name, args.files[1].name, args.hex[0])')
+            profile.run('args.npz(args.files[0].name, args.files[1].name')
         elif args.finfo:
-            profile.run('args.finfo(args.files[0].name, args.files[1].name, args.hex[0])')
+            profile.run('args.finfo(args.files[0].name, args.files[1].name)')
         elif args.bijective:
             profile.run('args.bijective(args.files[0].name, args.files[1].name, args.hex[0])')
     else:
         if args.hamming:
-            args.hamming(args.files[0].name, args.files[1].name, args.buffersize, args.hex[0])
+            args.hamming(args.files[0].name, args.files[1].name, args.buffersize)
         elif args.fuzzy:
-            args.fuzzy(args.files[0].name, args.files[1].name, args.buffersize, args.hex[0])
+            args.fuzzy(args.files[0].name, args.files[1].name, args.buffersize)
         elif args.nilsimsa:
-            args.nilsimsa(args.files[0].name, args.files[1].name, args.buffersize, args.hex[0])
+            args.nilsimsa(args.files[0].name, args.files[1].name, args.buffersize)
         elif args.npz:
-            args.npz(args.files[0].name, args.files[1].name, args.hex[0])
+            args.npz(args.files[0].name, args.files[1].name)
         elif args.finfo:
-            args.finfo(args.files[0].name, args.files[1].name, args.hex[0])
+            args.finfo(args.files[0].name, args.files[1].name)
         elif args.bijective:
             args.bijective(args.files[0].name, args.files[1].name, args.hex[0])
