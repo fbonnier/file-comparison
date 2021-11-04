@@ -24,7 +24,6 @@ def compute_ratio ():
 
     return (100. - (nb_errors*100./nb_values_total))
 
-
 def iterable_are_equal (item1, item2, comparison_path):
     keys_to_avoid = []
     common_keys = []

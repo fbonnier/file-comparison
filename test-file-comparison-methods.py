@@ -2,6 +2,7 @@ import os
 import file_comparison.file_compare as fc
 import file_comparison.nilsimsa as nl
 import file_comparison.npz as npz
+import file_comparison.neo as neo
 import file_comparison.hamming as hm
 import file_comparison.levenshtein as lv
 import profile
@@ -24,6 +25,9 @@ if __name__ == "__main__":
     parser.add_argument('--npz', dest='npz', action='store_const',
                         const=npz.npz_values,
                         help='Find the differences between two NPZ files')
+    parser.add_argument('--neo', dest='neo', action='store_const',
+                        const=neo.compare_neo_file,
+                        help='Find the differences between two NEO files')
     parser.add_argument('--finfo', dest='finfo', action='store_const',
                         const=fc.hash_from_file_info,
                         help='Hash from file infos')
@@ -52,6 +56,8 @@ if __name__ == "__main__":
             profile.run('args.nilsimsa(args.files[0].name, args.files[1].name, args.buffersize)')
         elif args.npz:
             profile.run('args.npz(args.files[0].name, args.files[1].name')
+        elif args.neo:
+            profile.run('args.neo(args.files[0].name, args.files[1].name')
         elif args.finfo:
             profile.run('args.finfo(args.files[0].name, args.files[1].name)')
         elif args.bijective:
@@ -65,6 +71,8 @@ if __name__ == "__main__":
             args.nilsimsa(args.files[0].name, args.files[1].name, args.buffersize)
         elif args.npz:
             args.npz(args.files[0].name, args.files[1].name)
+        elif args.neo:
+            args.neo(args.files[0].name, args.files[1].name)
         elif args.finfo:
             args.finfo(args.files[0].name, args.files[1].name)
         elif args.bijective:
