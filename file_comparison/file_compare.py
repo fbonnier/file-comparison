@@ -24,7 +24,7 @@ def get_files_from_watchdog_log (watchdog_file, is_hex=1):
             for ifile in src_dest:
                 ifilename = ifile
                 if is_hex:
-                    ifilename = str(os.environ["WORKDIR"]) + "expected_results/" + str(hashlib.md5(bytes(ifile, encoding='utf-8')).hexdigest())
+                    ifilename = str(os.environ["WORKDIR"]) + "/expected_results/" + str(hashlib.md5(bytes(ifile, encoding='utf-8')).hexdigest())
                     print ("IFileName = " + ifilename)
                 list_of_files[ifile] = ifilename
 
