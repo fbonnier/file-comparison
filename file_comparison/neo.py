@@ -2,6 +2,8 @@
 from collections.abc import Iterable
 import neo.io
 
+all_failures = {}
+
 
 def compute_ratio ():
     print ("Number of errors = " + str (nb_errors))
@@ -17,74 +19,77 @@ def compute_ratio ():
 
     return (100. - (nb_errors*100./nb_values_total))
 
-def compare_neo_blocks (neoblock1, neoblock2):
-    all_segs1 = []
-    for isegment in neoblock1.segments:
-        all_segs1.append([sig for sig in isegment.analogsignals])
-        all_segs1.append([sig for sig in isegment.spiketrains])
-        all_segs1.append([sig for sig in isegment.events])
-        all_segs1.append([sig for sig in isegment.epochs])
-        all_segs1.append([sig for sig in isegment.irregularlysampledsignals])
-        # print (isegment)
 
-def read_neo_block (neoblock):
-    for isegment in neoblock.segments:
-        print (isegment)
+def compare_segments (segment1, segment2, path):
+    try:
+        # Group objects
+        print (path + "->channelview")
+        # print (segment1.channelview)
+        for ivar_idx in range(len(segment1.channelview)):
+            if segment1.channelview[ivar_idx].all() != segment2.channelview[ivar_idx].all():
+                all_failures[str(path+str("->channelview[" + str(ivar_idx) + "]") + "->")] = segment1.channelview[ivar_idx] - segment2.channelview[ivar_idx]
+
+    except:
+        print (path + "->analogsignals")
+        for ivar_idx in range(len(segment1.analogsignals)):
+            if segment1.analogsignals[ivar_idx] != segment2.analogsignals[ivar_idx]:
+                all_failures[str(path+str("->analogsignals[" + str(ivar_idx) + "]") + "->")] = segment1.analogsignals[ivar_idx] - segment2.analogsignals[ivar_idx]
+
+        print (path + "->irregularlysampledsignals")
+        for ivar_idx in range(len(segment1.irregularlysampledsignals)):
+            if segment1.irregularlysampledsignals[ivar_idx] != segment2.irregularlysampledsignals[ivar_idx]:
+                all_failures[str(path+str("->irregularlysampledsignals[" + str(ivar_idx) + "]") + "->")] = segment1.irregularlysampledsignals[ivar_idx] - segment2.irregularlysampledsignals[ivar_idx]
+
+        print (path + "->spiketrains")
+        for ivar_idx in range(len(segment1.spiketrains)):
+            print (segment1.spiketrains[ivar_idx])
+            if segment1.spiketrains[ivar_idx].all() != segment2.spiketrains[ivar_idx].all():
+                all_failures[str(path+str("->spiketrains[" + str(ivar_idx) + "]") + "->")] = segment1.spiketrains[ivar_idx] - segment2.spiketrains[ivar_idx]
+
+        print (path + "->events")
+        for ivar_idx in range(len(segment1.events)):
+            if segment1.events[ivar_idx].all() != segment2.events[ivar_idx].all():
+                all_failures[str(path+str("->events[" + str(ivar_idx) + "]") + "->")] = segment1.events[ivar_idx] - segment2.events[ivar_idx]
+
+        print (path + "->epochs")
+        for ivar_idx in range(len(segment1.epochs)):
+            if segment1.epochs[ivar_idx].all() != segment2.epochs[ivar_idx].all():
+                all_failures[str(path+str("->epochs[" + str(ivar_idx) + "]") + "->")] = segment1.epochs[ivar_idx] - segment2.epochs[ivar_idx]
+
+
+def compare_groups (group1, group2, path):
+    assert (len(group1.groups) == len (group2.groups))
+
+    for igroup_idx in range(len(group1.groups)):
+        compare_groups (group1.groups[igroup_idx], group2.groups[igroup_idx], path + "->group[" + str(igroup_idx) + "]")
+
+    compare_segments (group1, group2, path)
+
+def compare_neo_blocks (neoblock1, neoblock2, path):
+
+    assert(len(neoblock1.segments) == len(neoblock2.segments))
+    print ("nombre de segment = " + str(len(neoblock1.segments)))
+    for isegment_idx in range(len(neoblock1.segments)):
+        compare_segments (neoblock1.segments[isegment_idx], neoblock2.segments[isegment_idx], path + "->segment[" + str(isegment_idx) + "]")
+
+    print ("groups")
+
+    assert(len(neoblock1.groups) == len(neoblock2.groups))
+    print ("nombre de groupes = " + str(len(neoblock1.groups)))
+    for igroup_idx in range(len(neoblock1.groups)):
+        compare_groups (neoblock1.groups[igroup_idx], neoblock2.groups[igroup_idx], path + "->group[" + str(igroup_idx) + "]")
 
 def compare_neo_file (filename1, filename2):
     try:
         neo_reader1 = neo.io.get_io(filename1)
-        neo_reader2 = neo.io.get_io(filename2)
+        # neo_reader2 = neo.io.get_io(filename2)
+
         blocks1 = neo_reader1.read()
-        blocks2 = neo_reader2.read()
+        print ("Block1 Check")
+        # blocks2 = neo_reader2.read()
         print ("nombre de blocks = " + str(len(blocks1)))
-        for iblock in blocks1:
-            read_neo_block(iblock)
+        for iblock_idx in range(len(blocks1)):
+            compare_neo_blocks(blocks1[iblock_idx], blocks1[iblock_idx], "R->block[" + str(iblock_idx) + "]")
     except Exception as e:
         print ("Neo.IO Error")
         print (e)
-
-def read_neo_file (filename):
-    try:
-        neo_reader = neo.io.get_io(filename)
-        blocks = neo_reader.read()
-        print ("nombre de blocks = " + str(len(blocks)))
-        for iblock in blocks:
-            read_neo_block(iblock)
-    except Exception as e:
-        print ("Neo.IO Error")
-        print (e)
-
-
-def npz_values (f1_path, f2_path):
-    with open(f1_path, "r") as f1:
-        with open(f2_path, "r") as f2:
-            linesf1 = f1.readlines()
-            linesf2 = f2.readlines()
-            assert(len(linesf1) == len(linesf2))
-            for idx in range(len(linesf1)):
-
-                # Set default filename
-                filename1 = linesf1[idx].split("\n")[0]
-                filename2 = linesf2[idx].split("\n")[0]
-
-                npz_single(filename1, filename2, buffer_size)
-
-def npz_single (f1_path, f2_path):
-
-    ## Check if both files are NPZ files
-    if ((not f1_path.endswith(".npz")) or (not f2_path.endswith(".npz"))):
-        print ("Error :: NPZ value comparison needs two NPZ files")
-        exit (1)
-
-    with np.load(f1_path, allow_pickle=True) as data_1:
-        with np.load(f2_path, allow_pickle=True) as data_2:
-            data_1_list = data_1.files
-            data_2_list = data_2.files
-            comparison_path="R"
-            iterable_are_equal (data_1, data_2, comparison_path)
-            # Print failures Line-by-Line
-            print(json.dumps(all_failures, indent=4))
-
-    ratio =  compute_ratio()
-    print ("Ratio = " + str(ratio) + " %")
