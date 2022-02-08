@@ -5,6 +5,7 @@ import file_comparison.npz as npz
 import file_comparison.neo as neo
 import file_comparison.hamming as hm
 import file_comparison.levenshtein as lv
+import file_comparison.downloader as downloader
 import profile
 import argparse
 
@@ -47,6 +48,9 @@ if __name__ == "__main__":
     args = parser.parse_args()
     print (args)
 
+    if args.bijective:
+        args.bijective(args.files[0].name, args.files[1].name, args.hex[0])
+
     if args.profile:
         if args.hamming:
             profile.run('args.hamming(args.files[0].name, args.files[1].name, args.buffersize)')
@@ -60,8 +64,6 @@ if __name__ == "__main__":
             profile.run('args.neo(args.files[0].name, args.files[1].name')
         elif args.finfo:
             profile.run('args.finfo(args.files[0].name, args.files[1].name)')
-        elif args.bijective:
-            profile.run('args.bijective(args.files[0].name, args.files[1].name, args.hex[0])')
     else:
         if args.hamming:
             args.hamming(args.files[0].name, args.files[1].name, args.buffersize)
@@ -75,5 +77,3 @@ if __name__ == "__main__":
             args.neo(args.files[0].name, args.files[1].name)
         elif args.finfo:
             args.finfo(args.files[0].name, args.files[1].name)
-        elif args.bijective:
-            args.bijective(args.files[0].name, args.files[1].name, args.hex[0])
