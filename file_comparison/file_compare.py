@@ -13,8 +13,8 @@ def compute_ratio (score):
     return ((256.0 - (128.0 - score)) / 256.0)
 
 def get_files_from_watchdog_log (watchdog_file, is_hex=1):
-    list_of_files = {}
-    print (is_hex)
+    list_of_files = []
+    print ("Is HEX ? " + str(is_hex))
 
     with open (watchdog_file, 'r') as f1:
         lines = f1.readlines()
@@ -22,16 +22,22 @@ def get_files_from_watchdog_log (watchdog_file, is_hex=1):
             iline = irawline.split('\n')[0]
             src_dest = iline.split()
             for ifile in src_dest:
-                ifilename = ifile
+                idirname = os.path.dirname(ifile)
+                ifilename = os.path.basename(ifile)
+                ifilehex = ifilename
+                # if not idirname:
+                #     idirname = str(os.environ["WORKDIR"]) + "expected_results"
+                ifilesize = os.path.getsize(ifile)
                 if is_hex:
-                    ifilename = str(os.environ["WORKDIR"]) + "/expected_results/" + str(hashlib.md5(bytes(ifile, encoding='utf-8')).hexdigest())
-                    print ("IFileName = " + ifilename)
-                list_of_files[ifile] = ifilename
-
+                    ifilehex = str(hashlib.md5(bytes(ifilename + str(ifilesize), encoding='utf-8')).hexdigest())
+                print ("IFileName = " + idirname + "/" + ifilename)
+                list_of_files.append({"url": ifile, "file": idirname + "/" + ifilehex})
     print (list_of_files)
     return list_of_files
 
 def find_bijective (f1, f2, hex=1):
+
+    expected_res_path = str(os.environ["WORKDIR"]) + "/expected_results/"
 
     # Check hexadigest file format
     # list_of_files_rows = []
@@ -39,16 +45,23 @@ def find_bijective (f1, f2, hex=1):
 
     if hex==1:
         # Read files from watchdog logs
+        # The produced files
+        print ("L1:")
         adjacent_matrix_list1 = get_files_from_watchdog_log (f1, True)
+        print ("L2:")
         adjacent_matrix_list2 = get_files_from_watchdog_log (f2, False)
 
     elif hex==2:
         # Read files from watchdog logs
+        print ("L1:")
         adjacent_matrix_list1 = get_files_from_watchdog_log (f1, True)
+        print ("L2:")
         adjacent_matrix_list2 = get_files_from_watchdog_log (f2, True)
     else:
         # Read files from watchdog logs
+        print ("L1:")
         adjacent_matrix_list1 = get_files_from_watchdog_log (f1, False)
+        print ("L2:")
         adjacent_matrix_list2 = get_files_from_watchdog_log (f2, False)
 
 
@@ -73,21 +86,30 @@ def find_bijective (f1, f2, hex=1):
                 irow.append(0.)
         score_matrix.append(irow)
 
-    # Find best score per row
-    with open("list1.txt", 'w') as f_rows:
-        with open("list2.txt", 'w') as f_cols:
-            for irow in range(len(score_matrix)):
-                # Find the couples that match the most according to the scores
-                max_score = max(score_matrix[irow])
-                max_idx_list = [i for i, j in enumerate(score_matrix[irow]) if j == max_score]
+    pairs = []
 
-                if max_score > 0.:
-                    for iidx in max_idx_list:
-                        # print (list(adjacent_matrix_list1.values())[irow])
-                        f_rows.write(str(list(adjacent_matrix_list1.values())[irow]) + "\n")
-                        f_cols.write(str(list(adjacent_matrix_list2.values())[iidx]) + "\n")
+    # Find best score per row
+    # with open("list1.txt", 'w') as f_rows:
+    #     with open("list2.txt", 'w') as f_cols:
+    for irow in range(len(score_matrix)):
+        # Find the couples that match the most according to the scores
+        max_score = max(score_matrix[irow])
+        max_idx_list = [i for i, j in enumerate(score_matrix[irow]) if j == max_score]
+
+        if max_score > 0.:
+            for iidx in max_idx_list:
+                # print (list(adjacent_matrix_list1.values())[irow])
+                # f_rows.write(str(list(adjacent_matrix_list1.values())[irow]) + "\n")
+                # f_cols.write(str(list(adjacent_matrix_list2.values())[iidx]) + "\n")
+                pairs.append (make_pair(str(list(adjacent_matrix_list1.values())[irow]), str(list(adjacent_matrix_list2.values())[iidx])))
+
     f_rows.close()
     f_cols.close()
+
+    print ("PAIRS ::")
+    print(pairs)
+
+    return pairs
 
 
 ##
