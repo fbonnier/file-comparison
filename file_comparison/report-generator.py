@@ -18,31 +18,36 @@
 #  "differences":{},
 # },
 # input:
-#       - file1: file pointer
-#       - file2: file pointer
+#       - file1: file absolute path
+#       - file2: file absolute path
 #       - method: method used to compare the files (neo, numpy, bytes)
 #       - score: score of the comparison
 #       - differences: list of differences
-def generate_report_1_file (file1, file2, method, score, differences):
-# Block to return
+def generate_report_1_file (file1_path, file2_path, method, score, differences):
+
+
+
+    # Block to return
     blck = {"file1":
-                {
-                    "name":,
-                    "path":,
-                    "size":,
-                    "type":,
-                },
-            "file2":
-                {
-                    "name":,
-                    "path":,
-                    "size":,
-                    "type":,
-                },
-            "method":,
-            "score": score,
-            "differences": differences
-            }
+    {
+        "name":os.path.basename(file1_path),
+        "path":os.path.dirname(file1_path),
+        "size":os.stat(file1_path).st_size,
+        "type":os.path.splitext(os.path.basename(file1_path))[1],
+    },
+    "file2":
+    {
+        "name":os.path.basename(file2_path),
+        "path":os.path.dirname(file2_path),
+        "size":os.stat(file2_path).st_size,
+        "type":os.path.splitext(os.path.basename(file2_path))[1],
+    },
+    "method": method,
+    "score": score,
+    "differences": differences
+    }
+
+
     return blck
 
 """
