@@ -5,6 +5,7 @@ import file_comparison.npz as npz
 import file_comparison.neo as neo
 import file_comparison.hamming as hm
 import file_comparison.levenshtein as lv
+import file_comparison.report_generator as report
 import file_comparison.downloader as downloader
 import profile
 import argparse
@@ -48,17 +49,56 @@ if __name__ == "__main__":
     args = parser.parse_args()
     print (args)
 
+    method = ""
+    if args.hamming:
+        method = "hamming"
+    elif args.fuzzy:
+        method = "fuzzy"
+    elif args.nilsimsa:
+        method = "nilsimsa"
+    elif args.npz:
+        method = "npz"
+    elif args.neo:
+        method = "neo"
+    elif args.finfo:
+        method = "finfo"
+
     # Build Adjacency Matrix from list of files
     # The matrix is compacted as a list of pairs
     adjacency_matrix = fc.find_bijective (args.files[0].name, args.files[1].name, args.hex[0])
     print (adjacency_matrix)
 
+    # Get adviced method
     # advice_method = fc.advice_method (adjacency_matrix)
 
-    for ifile1, ifile2 in adjacency_matrix:
-        print (ifile1)
-        print (ifile2)
+    # if advice_method != method:
+    #     print ("Warning: Advice method and chosen are differents")
+    #     print ("Advice method: " + advice_method)
+    #     print ("Chosen method: " + method)
+    #     print ("Warning: it is recommended to use adviced method. Chosen method is used in this run.")
+    #     print ("\n")
+
+    print ("\nCOUPLES ::\n")
+    for tuple_left, tuple_right  in adjacency_matrix:
+        print (tuple_left)
+        print (tuple_right)
         print ("\n")
+
+    # Compare the files
+
+    # for ifile1, ifile2 in adjacency_matrix:
+        # fc.
+
+    score = [0.0]
+    differences = {}
+
+    final_report = []
+    # Generate Comparison Report
+    for ifile1, ifile2 in adjacency_matrix:
+        final_report.append(report.generate_report_1_file (ifile1["url"], ifile2["url"], method, score, differences))
+
+    print ("FINAL REPORT:")
+    print (final_report)
 
     # if args.bijective:
     #     args.bijective(args.files[0].name, args.files[1].name, args.hex[0])

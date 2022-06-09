@@ -66,10 +66,13 @@ def find_bijective (f1, f2, hex=1):
 
 
 
+    print ("\n")
     print ("adjacent_matrix_list1")
     print (adjacent_matrix_list1)
-    print ("adjacent_matrix_list2")
+    print ("\n")
+    print ("adjacent_matrix_list1")
     print (adjacent_matrix_list2)
+    print ("\n")
 
     # Score Matrix
     score_matrix = []
@@ -80,7 +83,7 @@ def find_bijective (f1, f2, hex=1):
         irow = []
         for jfile in adjacent_matrix_list2:
             try:
-                irow.append (hash_from_file_info([ifile, adjacent_matrix_list1[ifile]], [jfile, adjacent_matrix_list2[jfile]]))
+                irow.append (hash_from_file_info(ifile, jfile))
             except FileNotFoundError as e:
                 print (e)
                 irow.append(0.)
@@ -101,13 +104,8 @@ def find_bijective (f1, f2, hex=1):
                 # print (list(adjacent_matrix_list1.values())[irow])
                 # f_rows.write(str(list(adjacent_matrix_list1.values())[irow]) + "\n")
                 # f_cols.write(str(list(adjacent_matrix_list2.values())[iidx]) + "\n")
-                pairs.append (make_pair(str(list(adjacent_matrix_list1.values())[irow]), str(list(adjacent_matrix_list2.values())[iidx])))
-
-    f_rows.close()
-    f_cols.close()
-
-    print ("PAIRS ::")
-    print(pairs)
+                ituple = tuple ((adjacent_matrix_list1[irow], adjacent_matrix_list2[iidx]))
+                pairs.append (ituple)
 
     return pairs
 
@@ -121,10 +119,10 @@ def hash_from_file_info (f1_pair, f2_pair):
     #   * file name
     #   * file size
     #   * file path
-    url1 = f1_pair[0]
-    path1 = f1_pair[1]
-    url2 = f2_pair[0]
-    path2 = f2_pair[1]
+    url1 = f1_pair["url"]
+    path1 = f1_pair["file"]
+    url2 = f2_pair["url"]
+    path2 = f2_pair["file"]
     print ("Dirname f1= " + os.path.dirname(path1))
     print ("Basename f1= " + os.path.basename(url1))
     print ("Size f1 = " + str(os.path.getsize(path1)))
@@ -142,3 +140,6 @@ def hash_from_file_info (f1_pair, f2_pair):
     return (ratio*100)
     ## Hash is done using Nilsimsa algorithm to get strong colisions
     # f1_hash = Nilsimsa (bytes(os.path.dirname + ))
+
+
+# def advice_method (adjacency_matrix)

@@ -1,5 +1,5 @@
 # Report generator Module
-
+import os
 # Generates the final report that compiles differences and scores of file comparison
 # The output report is an array of file couples organized like the following
 # {"file1":{
@@ -18,36 +18,32 @@
 #  "differences":{},
 # },
 # input:
-#       - file1: file absolute path
-#       - file2: file absolute path
+#       - file1: file path
+#       - file2: file path
 #       - method: method used to compare the files (neo, numpy, bytes)
 #       - score: score of the comparison
 #       - differences: list of differences
-def generate_report_1_file (file1_path, file2_path, method, score, differences):
-
-
+def generate_report_1_file (file1, file2, method, score, differences):
 
     # Block to return
     blck = {"file1":
-    {
-        "name":os.path.basename(file1_path),
-        "path":os.path.dirname(file1_path),
-        "size":os.stat(file1_path).st_size,
-        "type":os.path.splitext(os.path.basename(file1_path))[1],
-    },
-    "file2":
-    {
-        "name":os.path.basename(file2_path),
-        "path":os.path.dirname(file2_path),
-        "size":os.stat(file2_path).st_size,
-        "type":os.path.splitext(os.path.basename(file2_path))[1],
-    },
-    "method": method,
-    "score": score,
-    "differences": differences
-    }
-
-
+                {
+                    "name":os.path.basename(file1),
+                    "path":os.path.dirname(file1),
+                    "size":os.path.getsize(file1),
+                    "type":os.path.splitext(file1)[1],
+                },
+            "file2":
+                {
+                    "name":os.path.basename(file2),
+                    "path":os.path.dirname(file2),
+                    "size":os.path.getsize(file2),
+                    "type":os.path.splitext(file2)[1],
+                },
+            "method":method,
+            "score": score,
+            "differences": differences
+            }
     return blck
 
 """
