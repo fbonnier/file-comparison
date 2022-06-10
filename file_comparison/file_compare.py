@@ -25,7 +25,7 @@ class FileInfo:
 
 
             self.name = os.path.basename(file_path)
-            self.url = os.path.dirname(file_path)
+            self.url = os.path.dirname(file_path) + "/"
             self.extention = os.path.splitext(file_path)[1]
             self.size = file.length
 
@@ -33,7 +33,7 @@ class FileInfo:
             # Get stats from local location
             try:
                 self.name = os.path.basename(file_path)
-                self.url = os.path.dirname(file_path)
+                self.url = os.path.dirname(file_path) + "/"
                 self.extention = os.path.splitext(file_path)[1]
                 self.size = os.path.getsize(file_path)
             except:

@@ -95,7 +95,7 @@ if __name__ == "__main__":
     final_report = []
     # Generate Comparison Report
     for ifile1, ifile2 in adjacency_matrix:
-        final_report.append(report.generate_report_1_file (ifile1.url + ifile.name, ifile1.url + ifile.name, method, score, differences))
+        final_report.append(report.generate_report_1_file (ifile1.url + ifile1.name, ifile2.url + ifile2.name, method, score, differences))
 
     print ("FINAL REPORT:")
     print (final_report)
