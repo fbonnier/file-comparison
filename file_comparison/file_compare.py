@@ -5,9 +5,42 @@ from nilsimsa import Nilsimsa, compare_digests, convert_hex_to_ints
 
 import os
 import hashlib
+import validators
+import urllib.request
 
 adjacent_matrix_list1 = {}
 adjacent_matrix_list2 = {}
+
+class FileInfo:
+    name = ""
+    url = ""
+    extention = ""
+    size = 0.
+
+    def __init__(self, file_path):
+
+        if validators.url (file_path):
+            # the file location is an URL
+            file = urllib.request.urlopen(file_path)
+
+
+            self.name = os.path.basename(file_path)
+            self.url = os.path.dirname(file_path)
+            self.extention = os.path.splitext(file_path)[1]
+            self.size = file.length
+
+        else:
+            # Get stats from local location
+            try:
+                self.name = os.path.basename(file_path)
+                self.url = os.path.dirname(file_path)
+                self.extention = os.path.splitext(file_path)[1]
+                self.size = os.path.getsize(file_path)
+            except:
+                print ("FATAL ERROR ::")
+                print (file_path)
+                print ("Is neither a valid URL or local file")
+                exit (EXIT_FAILURE)
 
 def compute_ratio (score):
     return ((256.0 - (128.0 - score)) / 256.0)
@@ -22,22 +55,17 @@ def get_files_from_watchdog_log (watchdog_file, is_hex=1):
             iline = irawline.split('\n')[0]
             src_dest = iline.split()
             for ifile in src_dest:
-                idirname = os.path.dirname(ifile)
-                ifilename = os.path.basename(ifile)
-                ifilehex = ifilename
-                # if not idirname:
-                #     idirname = str(os.environ["WORKDIR"]) + "expected_results"
-                ifilesize = os.path.getsize(ifile)
+                finfo = FileInfo (ifile)
+                ifilehex = finfo.name
+
                 if is_hex:
-                    ifilehex = str(hashlib.md5(bytes(ifilename + str(ifilesize), encoding='utf-8')).hexdigest())
-                print ("IFileName = " + idirname + "/" + ifilename)
-                list_of_files.append({"url": ifile, "file": idirname + "/" + ifilehex})
-    print (list_of_files)
+                    ifilehex = str(hashlib.md5(bytes(finfo.name + str(finfo.size), encoding='utf-8')).hexdigest())
+                print ("IFileName = " + finfo.url + "/" + finfo.name)
+                list_of_files.append(finfo)
+
     return list_of_files
 
 def find_bijective (f1, f2, hex=1):
-
-    expected_res_path = str(os.environ["WORKDIR"]) + "/expected_results/"
 
     # Check hexadigest file format
     # list_of_files_rows = []
@@ -110,27 +138,58 @@ def find_bijective (f1, f2, hex=1):
     return pairs
 
 
+# Determine and return the name of the file and the size in two classes
+# 1. The file is a local path location
+# 2. The file is remote URL
+# def get_file_info (file_path):
+#
+#     finfo = FileInfo ()
+#
+#     # Determine URL or local path ?
+#     if validator.url (filepath):
+#         # the file location is an URL
+#         site = urllib.urlopen(file_path)
+#         meta = site.info()
+#
+#         finfo = FileInfo (os.path.basename(file_path), os.path.dirname(file_path), os.path.splitext(file_path)[1], meta.getheaders("Content-Length")[0])
+#
+#     else:
+#         # Get stats from local location
+#         try:
+#             finfo = FileInfo (os.path.basename(file_path), os.path.dirname(file_path), os.path.basename(file_path), os.path.splitext(file_path)[1], os.path.getsize(file_path))
+#         except:
+#             print ("FATAL ERROR ::")
+#             print (file_path)
+#             print ("Is neither a valid URL or local file")
+#             exit (EXIT_FAILURE)
+#
+#     return finfo
+
 ##
 # Parameters are pairs (arrays of 2 items)
 # array[0] : original url of the file, original name
 # array[1] : true path of the file on disk (hashed, moved or transformed name)
-def hash_from_file_info (f1_pair, f2_pair):
+def hash_from_file_info (file1_info, file2_info):
     ## Hash file informations
     #   * file name
     #   * file size
     #   * file path
-    url1 = f1_pair["url"]
-    path1 = f1_pair["file"]
-    url2 = f2_pair["url"]
-    path2 = f2_pair["file"]
-    print ("Dirname f1= " + os.path.dirname(path1))
-    print ("Basename f1= " + os.path.basename(url1))
-    print ("Size f1 = " + str(os.path.getsize(path1)))
-    print ("Dirname f2= " + os.path.dirname(path2))
-    print ("Basename f2= " + os.path.basename(url2))
-    print ("Size f2 = " + str(os.path.getsize(path2)))
-    all_info_f1 = os.path.basename(url1) + str(os.path.getsize(path1))
-    all_info_f2 = os.path.basename(url2) + str(os.path.getsize(path2))
+    # url1 = f1_pair["url"]
+    # path1 = f1_pair["file"]
+    # url2 = f2_pair["url"]
+    # path2 = f2_pair["file"]
+    #
+    # file1_info = get_file_info (f1_pair["url"])
+    # file2_info = get_file_info (f2_pair["url"])
+
+    print ("Dirname f1= " + file1_info.url)
+    print ("Basename f1= " + file1_info.name)
+    print ("Size f1 = " + str(file1_info.size))
+    print ("Dirname f2= " + file2_info.url)
+    print ("Basename f2= " + file2_info.name)
+    print ("Size f2 = " + str(file2_info.size))
+    all_info_f1 = file1_info.name + str(file1_info.size)
+    all_info_f2 = file2_info.name + str(file2_info.size)
     print (all_info_f1)
     print (Nilsimsa(all_info_f1))
     print (all_info_f2)
