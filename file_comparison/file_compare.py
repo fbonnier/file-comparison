@@ -2,14 +2,21 @@
 
 # Nilsimsa
 from nilsimsa import Nilsimsa, compare_digests, convert_hex_to_ints
+import neo
 
 import os
 import hashlib
 import validators
 import urllib.request
+import file_comparison.npz as npz
+import file_comparison.neo
+import file_comparison.nilsimsa
+
 
 adjacent_matrix_list1 = {}
 adjacent_matrix_list2 = {}
+
+all_methods = {"npz":npz.npz_single, "neo":file_comparison.neo.compare_neo_file, "byte":file_comparison.nilsimsa.nilsimsa_single}
 
 class FileInfo:
     name = ""
@@ -44,6 +51,33 @@ class FileInfo:
 
 def compute_ratio (score):
     return ((256.0 - (128.0 - score)) / 256.0)
+
+def get_adviced_method (adjacency_matrix):
+    adviced_methods = []
+    for icouple in adjacency_matrix:
+
+        # NPZ
+        if icouple[0].extention == ".npz" and icouple[1].extention == ".npz":
+            adviced_methods.append ("npz")
+            continue
+
+        # NEO
+        try:
+            neo_reader1 = neo.io.get_io(icouple[0].url + icouple[0].name)
+            neo_reader2 = neo.io.get_io(icouple[1].url + icouple[1].name)
+            adviced_methods.append ("neo")
+            continue
+
+        except IOError as e:
+            print ("\nWarning :: NEO :: " + str(e))
+            print ("\n")
+
+        adviced_methods.append ("byte")
+
+    print ("\nAdviced Methods ::")
+    print (adviced_methods)
+    return adviced_methods
+
 
 def get_files_from_watchdog_log (watchdog_file, is_hex=1):
     list_of_files = []

@@ -15,12 +15,12 @@ def compute_ratio ():
     print ("Number of values = " + str (nb_values_total))
     print ("Number of failures = " + str (len(all_failures)) + "\n")
 
-    for ifail in all_failures:
-        print (type(ifail))
-        print (ifail)
-        print (type(all_failures[ifail]))
-        print (all_failures[ifail])
-        print ("\n")
+    # for ifail in all_failures:
+    #     print (type(ifail))
+    #     print (ifail)
+    #     print (type(all_failures[ifail]))
+    #     print (all_failures[ifail])
+    #     print ("\n")
 
     return (100. - (nb_errors*100./nb_values_total))
 
@@ -171,7 +171,9 @@ def npz_values (f1_path, f2_path):
                 filename1 = linesf1[idx].split("\n")[0]
                 filename2 = linesf2[idx].split("\n")[0]
 
-                npz_single(filename1, filename2, buffer_size)
+                ratio, file_diffs = npz_single(filename1, filename2, buffer_size)
+
+    return ratio, all_failures
 
 def npz_single (f1_path, f2_path):
 
@@ -187,7 +189,8 @@ def npz_single (f1_path, f2_path):
             comparison_path="R"
             iterable_are_equal (data_1, data_2, comparison_path)
             # Print failures Line-by-Line
-            print(json.dumps(all_failures, indent=4))
+            # print(json.dumps(all_failures, indent=4))
 
     ratio =  compute_ratio()
-    print ("Ratio = " + str(ratio) + " %")
+    # print ("Ratio = " + str(ratio) + " %")
+    return ratio, all_failures

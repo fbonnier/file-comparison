@@ -66,10 +66,10 @@ if __name__ == "__main__":
     # Build Adjacency Matrix from list of files
     # The matrix is compacted as a list of pairs
     adjacency_matrix = fc.find_bijective (args.files[0].name, args.files[1].name, args.hex[0])
-    print (adjacency_matrix)
+    # print (adjacency_matrix)
 
     # Get adviced method
-    # advice_method = fc.advice_method (adjacency_matrix)
+    advice_methods = fc.get_adviced_method (adjacency_matrix)
 
     # if advice_method != method:
     #     print ("Warning: Advice method and chosen are differents")
@@ -78,24 +78,23 @@ if __name__ == "__main__":
     #     print ("Warning: it is recommended to use adviced method. Chosen method is used in this run.")
     #     print ("\n")
 
-    print ("\nCOUPLES ::\n")
-    for tuple_left, tuple_right  in adjacency_matrix:
-        print (tuple_left)
-        print (tuple_right)
-        print ("\n")
-
-    # Compare the files
-
-    # for ifile1, ifile2 in adjacency_matrix:
-        # fc.
-
-    score = [0.0]
-    differences = {}
+    # print ("\nCOUPLES ::\n")
+    # for tuple_left, tuple_right  in adjacency_matrix:
+    #     print (tuple_left)
+    #     print (tuple_right)
+    #     print ("\n")
 
     final_report = []
+    # Compare the files
+    for icouple, imethod in zip(adjacency_matrix, advice_methods):
+        # print(icouple, imethod)
+        score, file_diff = report.compute_differences(icouple[0], icouple[1], imethod)
+        final_report.append(report.generate_report_1_file (icouple[0], icouple[1], imethod, score, file_diff))
+
+
     # Generate Comparison Report
-    for ifile1, ifile2 in adjacency_matrix:
-        final_report.append(report.generate_report_1_file (ifile1.url + ifile1.name, ifile2.url + ifile2.name, method, score, differences))
+    # for ifile1, ifile2 in adjacency_matrix:
+    #     final_report.append(report.generate_report_1_file (ifile1, ifile2, method, score, differences))
 
     print ("FINAL REPORT:")
     print (final_report)

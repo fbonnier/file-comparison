@@ -1,5 +1,6 @@
 # Report generator Module
 import os
+import file_comparison.file_compare as file_compare
 # Generates the final report that compiles differences and scores of file comparison
 # The output report is an array of file couples organized like the following
 # {"file1":{
@@ -24,21 +25,22 @@ import os
 #       - score: score of the comparison
 #       - differences: list of differences
 def generate_report_1_file (file1, file2, method, score, differences):
-
+    file1_path = file1.url + file1.name
+    file2_path = file2.url + file2.name
     # Block to return
     blck = {"file1":
                 {
-                    "name":os.path.basename(file1),
-                    "path":os.path.dirname(file1),
-                    "size":os.path.getsize(file1),
-                    "type":os.path.splitext(file1)[1],
+                    "name":os.path.basename(file1_path),
+                    "path":os.path.dirname(file1_path),
+                    "size":os.path.getsize(file1_path),
+                    "type":os.path.splitext(file1_path)[1],
                 },
             "file2":
                 {
-                    "name":os.path.basename(file2),
-                    "path":os.path.dirname(file2),
-                    "size":os.path.getsize(file2),
-                    "type":os.path.splitext(file2)[1],
+                    "name":os.path.basename(file2_path),
+                    "path":os.path.dirname(file2_path),
+                    "size":os.path.getsize(file2_path),
+                    "type":os.path.splitext(file2_path)[1],
                 },
             "method":method,
             "score": score,
@@ -87,3 +89,20 @@ byte method objects
     'block x':
 }
 """
+
+def compute_differences (file1, file2, method):
+
+    ratio = 0.
+    differences = {}
+    try:
+        print (method)
+        print (file_compare.all_methods[method])
+        ratio, differences = file_compare.all_methods[method](file1.url+file1.name, file2.url+file2.name)
+        print ("SCORE = " + str(ratio))
+
+    except:
+        print ("\nError: " + method + " not recognized\n")
+        ratio = 0.
+        differences = {"error" : "ERROR"}
+
+    return ratio, differences
