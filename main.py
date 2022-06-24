@@ -9,6 +9,7 @@ import file_comparison.report_generator as report
 import file_comparison.downloader as downloader
 import profile
 import argparse
+import json
 
 if __name__ == "__main__":
 
@@ -97,7 +98,7 @@ if __name__ == "__main__":
     #     final_report.append(report.generate_report_1_file (ifile1, ifile2, method, score, differences))
 
     print ("FINAL REPORT:")
-    print (final_report)
+    print (json.dumps(final_report, indent=4))
 
     # if args.bijective:
     #     args.bijective(args.files[0].name, args.files[1].name, args.hex[0])

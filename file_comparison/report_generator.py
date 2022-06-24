@@ -100,9 +100,9 @@ def compute_differences (file1, file2, method):
         ratio, differences = file_compare.all_methods[method](file1.url+file1.name, file2.url+file2.name)
         print ("SCORE = " + str(ratio))
 
-    except:
-        print ("\nError: " + method + " not recognized\n")
+    except Exception as e:
+        print ("\nError: method " + method + " not recognized\n")
         ratio = 0.
-        differences = {"error" : "ERROR"}
+        differences = {"error" : str(e)}
 
     return ratio, differences

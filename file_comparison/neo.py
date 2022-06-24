@@ -91,5 +91,4 @@ def compare_neo_file (filename1, filename2):
         for iblock_idx in range(len(blocks1)):
             compare_neo_blocks(blocks1[iblock_idx], blocks1[iblock_idx], "R->block[" + str(iblock_idx) + "]")
     except Exception as e:
-        print ("Neo.IO Error")
-        print (e)
+        print ("Neo :: " + str(type(e).__name__) + " " + str(e))

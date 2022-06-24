@@ -56,6 +56,8 @@ def get_adviced_method (adjacency_matrix):
     adviced_methods = []
     for icouple in adjacency_matrix:
 
+        # Guessing the file type based on its extension
+
         # NPZ
         if icouple[0].extention == ".npz" and icouple[1].extention == ".npz":
             adviced_methods.append ("npz")
@@ -68,9 +70,13 @@ def get_adviced_method (adjacency_matrix):
             adviced_methods.append ("neo")
             continue
 
-        except IOError as e:
-            print ("\nWarning :: NEO :: " + str(e))
-            print ("\n")
+        # except IOError as e:
+        #     print ("Warning :: NEO :: " + icouple[0].url + icouple[0].name + " :: " + str(e))
+        #     print (icouple[0].url + icouple[0].name + "\n")
+
+        except Exception  as e:
+            print ("\nError :: NEO ::" + str(type(e).__name__) + " " + str(e))
+            print (icouple[0].url + icouple[0].name + "\n")
 
         adviced_methods.append ("byte")
 
@@ -216,7 +222,7 @@ def hash_from_file_info (file1_info, file2_info):
     # file1_info = get_file_info (f1_pair["url"])
     # file2_info = get_file_info (f2_pair["url"])
 
-    print ("Dirname f1= " + file1_info.url)
+    print ("\nDirname f1= " + file1_info.url)
     print ("Basename f1= " + file1_info.name)
     print ("Size f1 = " + str(file1_info.size))
     print ("Dirname f2= " + file2_info.url)
@@ -229,7 +235,7 @@ def hash_from_file_info (file1_info, file2_info):
     print (all_info_f2)
     print (Nilsimsa(all_info_f2))
     ratio = compute_ratio (compare_digests (Nilsimsa(all_info_f1).hexdigest(), Nilsimsa(all_info_f2).hexdigest()))
-    print ("FINFO Ratio = " + str(ratio*100))
+    print ("FINFO Ratio = " + str(ratio*100) + "\n")
     return (ratio*100)
     ## Hash is done using Nilsimsa algorithm to get strong colisions
     # f1_hash = Nilsimsa (bytes(os.path.dirname + ))
