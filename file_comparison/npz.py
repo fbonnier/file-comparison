@@ -4,6 +4,7 @@ import numpy as np
 from collections.abc import Iterable
 import neo.io
 import json
+import file_comparison.report_generator as rg
 
 nb_values_total = 0
 nb_errors = 0
@@ -156,7 +157,8 @@ def iterable_are_equal (item1, item2, comparison_path):
         nb_values_total += 1
         # if values are not equal
         if (item1 != item2):
-            all_failures[str(comparison_path+str(type(item1))+"->"+str(item1))] = "(delta= TODO)"
+            delta = rg.compute_1el_difference (item1, item2)
+            all_failures[str(comparison_path+str(type(item1))+"->"+str(item1))] = delta
             nb_errors += 1
 
 def npz_values (f1_path, f2_path):

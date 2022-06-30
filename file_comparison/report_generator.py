@@ -1,6 +1,33 @@
 # Report generator Module
 import os
 import file_comparison.file_compare as file_compare
+from nltk.metrics.distance import *
+
+error_diff_types = ["type", "len"]
+
+
+def compute_1el_difference (item1, item2):
+    # Test types: if types are different, return error type
+    if not type(item1) == type(item2):
+        return ({"type": "error", "value": error_diff_types [0]})
+
+    # Test string values
+    # Compute Levenshtein distance between two strings
+    try:
+        return nltk.metrics.distance.edit_distance(w1, w2)
+    except:
+        pass
+
+    # Test other values
+    # Compute Absolute difference between two values
+    try:
+        return abs(w1 - w2)
+    except:
+        pass
+
+
+
+
 # Generates the final report that compiles differences and scores of file comparison
 # The output report is an array of file couples organized like the following
 # {"file1":{
