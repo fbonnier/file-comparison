@@ -128,7 +128,8 @@ def compute_differences (file1, file2, method):
         print ("SCORE = " + str(ratio))
 
     except Exception as e:
-        print ("\nError: method " + method + " not recognized\n")
+        print ("\nError: method " + method + " Exception for " + file1.name + " and " + file2.name)
+        print (e)
         ratio = 0.
         differences = {"error" : str(e)}
 
