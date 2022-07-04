@@ -72,6 +72,8 @@ if __name__ == "__main__":
     # Get adviced method
     advice_methods = fc.get_adviced_method (adjacency_matrix)
 
+    
+
     # if advice_method != method:
     #     print ("Warning: Advice method and chosen are differents")
     #     print ("Advice method: " + advice_method)
