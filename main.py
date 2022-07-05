@@ -72,21 +72,6 @@ if __name__ == "__main__":
     # Get adviced method
     advice_methods = fc.get_adviced_method (adjacency_matrix)
 
-    
-
-    # if advice_method != method:
-    #     print ("Warning: Advice method and chosen are differents")
-    #     print ("Advice method: " + advice_method)
-    #     print ("Chosen method: " + method)
-    #     print ("Warning: it is recommended to use adviced method. Chosen method is used in this run.")
-    #     print ("\n")
-
-    # print ("\nCOUPLES ::\n")
-    # for tuple_left, tuple_right  in adjacency_matrix:
-    #     print (tuple_left)
-    #     print (tuple_right)
-    #     print ("\n")
-
     final_report = []
     # Compare the files
     for icouple, imethod in zip(adjacency_matrix, advice_methods):
