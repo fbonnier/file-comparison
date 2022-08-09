@@ -11,6 +11,8 @@ import profile
 import argparse
 import json
 
+from file_comparison.method import Method
+
 if __name__ == "__main__":
 
     parser = argparse.ArgumentParser(description='Computes file comparison using ')
@@ -25,12 +27,12 @@ if __name__ == "__main__":
     parser.add_argument('--nilsimsa', dest='nilsimsa', action='store_const',
                         const=nl.nilsimsa_files,
                         help='Find the Nilsimsa hash using nilsimsa module')
-    parser.add_argument('--npz', dest='npz', action='store_const',
-                        const=npz.npz_values,
-                        help='Find the differences between two NPZ files')
-    parser.add_argument('--neo', dest='neo', action='store_const',
-                        const=neo.compare_neo_file,
-                        help='Find the differences between two NEO files')
+    # parser.add_argument('--npz', dest='npz', action='store_const',
+    #                     const=npz.npz_values,
+    #                     help='Find the differences between two NPZ files')
+    # parser.add_argument('--neo', dest='neo', action='store_const',
+    #                     const=neo.compare_neo_file,
+    #                     help='Find the differences between two NEO files')
     parser.add_argument('--finfo', dest='finfo', action='store_const',
                         const=fc.hash_from_file_info,
                         help='Hash from file infos')
@@ -51,18 +53,18 @@ if __name__ == "__main__":
     print (args)
 
     method = ""
-    if args.hamming:
-        method = "hamming"
-    elif args.fuzzy:
-        method = "fuzzy"
-    elif args.nilsimsa:
-        method = "nilsimsa"
-    elif args.npz:
-        method = "npz"
-    elif args.neo:
-        method = "neo"
-    elif args.finfo:
-        method = "finfo"
+    # if args.hamming:
+    #     method = "hamming"
+    # elif args.fuzzy:
+    #     method = "fuzzy"
+    # elif args.nilsimsa:
+    #     method = "nilsimsa"
+    # elif args.npz:
+    #     method = "npz"
+    # elif args.neo:
+    #     method = "neo"
+    # elif args.finfo:
+    #     method = "finfo"
 
     # Build Adjacency Matrix from list of files
     # The matrix is compacted as a list of pairs
@@ -76,8 +78,16 @@ if __name__ == "__main__":
     # Compare the files
     for icouple, imethod in zip(adjacency_matrix, advice_methods):
         # print(icouple, imethod)
-        score, file_diff = report.compute_differences(icouple[0], icouple[1], imethod)
-        final_report.append(report.generate_report_1_file (icouple[0], icouple[1], imethod, score, file_diff))
+        # score, file_diff = report.compute_differences(icouple[0], icouple[1], imethod)
+        # final_report.append(report.generate_report_1_file (icouple[0], icouple[1], imethod, score, file_diff))
+        method = Method (imethod, icouple[0], icouple[1])
+        is_checked, check_error = method.check_file_formats()
+
+        print (is_checked)
+        if (is_checked):
+            method.compute_differences_report()
+            method.compute_score()
+            final_report.append (method.differences_report)
 
 
     # Generate Comparison Report

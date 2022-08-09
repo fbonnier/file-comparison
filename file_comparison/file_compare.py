@@ -16,7 +16,7 @@ import file_comparison.nilsimsa
 adjacent_matrix_list1 = {}
 adjacent_matrix_list2 = {}
 
-all_methods = {"npz":npz.npz_single, "neo":file_comparison.neo.compare_neo_file, "byte":file_comparison.nilsimsa.nilsimsa_single}
+# all_methods = {"npz":npz.npz_single, "neo":file_comparison.neo.compare_neo_file, "byte":file_comparison.nilsimsa.nilsimsa_single}
 
 class FileInfo:
     name = ""
