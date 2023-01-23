@@ -13,68 +13,67 @@ import json
 
 from file_comparison.method import Method
 
-if __name__ == "__main__":
+def run_file_comparison (jsonfile):
+    list_expected_files = []
+    list_produced_files = []
 
-    parser = argparse.ArgumentParser(description='Computes file comparison using ')
-    parser.add_argument('files', type=argparse.FileType('r'), metavar='files', nargs='+',
-                        help='Files to compare')
-    parser.add_argument('--hamming', dest='hamming', action='store_const',
-                        const=hm.hamming_files,
-                        help='Find the Hamming distance using bit comparison')
-    parser.add_argument('--fuzzy', dest='fuzzy', action='store_const',
-                        const=lv.levenshtein,
-                        help='Find the Levenshtein distance using FuzzyWuzzy module')
-    parser.add_argument('--nilsimsa', dest='nilsimsa', action='store_const',
-                        const=nl.nilsimsa_files,
-                        help='Find the Nilsimsa hash using nilsimsa module')
-    # parser.add_argument('--npz', dest='npz', action='store_const',
-    #                     const=npz.npz_values,
-    #                     help='Find the differences between two NPZ files')
-    # parser.add_argument('--neo', dest='neo', action='store_const',
-    #                     const=neo.compare_neo_file,
-    #                     help='Find the differences between two NEO files')
-    parser.add_argument('--finfo', dest='finfo', action='store_const',
-                        const=fc.hash_from_file_info,
-                        help='Hash from file infos')
-    parser.add_argument('--bijective', dest='bijective', action='store_const',
-                        const=fc.find_bijective,
-                        help='Hash from file infos')
-    parser.add_argument('--profile', dest='profile', action='store_true',
-                        help='Profiling the method')
-    parser.add_argument('--buffersize', type=int, metavar='Buffer_Size', nargs=1, dest='buffersize', default=32,
-                        help='Size of buffer used in bytes (default is 32 bytes)')
-    parser.add_argument('--hex', type=int, metavar='Hexadigest_option', nargs=1, dest='hex', default=1,
-                        help='Option to specify the files that contains hexadigest filenames.\n\
-                        0: Both files contain plain urls and complete paths of result files\n\
-                        1: First file contains urls that should be hashed to retreive corresponding filenames\n\
-                        2: Both files contain urls/paths that should be hashed to retreive corresponding filenames')
+    try:
+        json_data = json.load (jsonfile)
+        list_expected_files.append (json_data["expected files"])
+        list_produced_files.append (json_data["produced files"])
 
-    args = parser.parse_args()
-    print (args)
+        method = ""
+
+        # Build Adjacency Matrix from list of files
+        # The matrix is compacted as a list of pairs
+        adjacency_matrix = fc.find_bijective (list_expected_files, list_produced_files, args.hex[0])
+
+        # Get adviced method
+        advice_methods = fc.get_adviced_method (adjacency_matrix)
+
+        # Final report to include to JSON file
+        final_report = []
+
+        # Compare the files
+        for icouple, imethod in zip(adjacency_matrix, advice_methods):
+            # print(icouple, imethod)
+            # score, file_diff = report.compute_differences(icouple[0], icouple[1], imethod)
+            # final_report.append(report.generate_report_1_file (icouple[0], icouple[1], imethod, score, file_diff))
+            method = Method (imethod, icouple[0], icouple[1])
+            is_checked, check_error = method.check_file_formats()
+
+            print (is_checked)
+            if (is_checked):
+                method.compute_differences_report()
+                method.compute_score()
+                final_report.append (method.differences_report)
+
+    except Exception as e:
+        print (e)
+        return e
+        
+    # print ("FINAL REPORT:")
+    # print (json.dumps(final_report, indent=4))
+
+
+
+
+
+def run_file_comparison(file1, file2):
+
 
     method = ""
-    # if args.hamming:
-    #     method = "hamming"
-    # elif args.fuzzy:
-    #     method = "fuzzy"
-    # elif args.nilsimsa:
-    #     method = "nilsimsa"
-    # elif args.npz:
-    #     method = "npz"
-    # elif args.neo:
-    #     method = "neo"
-    # elif args.finfo:
-    #     method = "finfo"
 
     # Build Adjacency Matrix from list of files
     # The matrix is compacted as a list of pairs
-    adjacency_matrix = fc.find_bijective (args.files[0].name, args.files[1].name, args.hex[0])
-    # print (adjacency_matrix)
+    adjacency_matrix = fc.find_bijective (args.files[0].name, args.files[1].name)
 
     # Get adviced method
     advice_methods = fc.get_adviced_method (adjacency_matrix)
 
+    # Final report to include to JSON file
     final_report = []
+
     # Compare the files
     for icouple, imethod in zip(adjacency_matrix, advice_methods):
         # print(icouple, imethod)
@@ -89,13 +88,124 @@ if __name__ == "__main__":
             method.compute_score()
             final_report.append (method.differences_report)
 
+    
+    # print ("FINAL REPORT:")
+    # print (json.dumps(final_report, indent=4))
 
-    # Generate Comparison Report
-    # for ifile1, ifile2 in adjacency_matrix:
-    #     final_report.append(report.generate_report_1_file (ifile1, ifile2, method, score, differences))
 
-    print ("FINAL REPORT:")
-    print (json.dumps(final_report, indent=4))
+
+
+if __name__ == "__main__":
+
+    parser = argparse.ArgumentParser(description='Computes file comparison using ')
+    parser.add_argument('--files', type=argparse.FileType('r'), metavar='files', nargs='2',
+                        help='Files to compare')
+    parser.add_argument('--json', type=argparse.FileType('r'), metavar='json', nargs='1',
+                        help='JSON File containing metadata of files to compare')
+    # parser.add_argument('--hamming', dest='hamming', action='store_const',
+    #                     const=hm.hamming_files,
+    #                     help='Find the Hamming distance using bit comparison')
+    # parser.add_argument('--fuzzy', dest='fuzzy', action='store_const',
+    #                     const=lv.levenshtein,
+                        # help='Find the Levenshtein distance using FuzzyWuzzy module')
+    # parser.add_argument('--nilsimsa', dest='nilsimsa', action='store_const',
+    #                     const=nl.nilsimsa_files,
+    #                     help='Find the Nilsimsa hash using nilsimsa module')
+    # parser.add_argument('--npz', dest='npz', action='store_const',
+    #                     const=npz.npz_values,
+    #                     help='Find the differences between two NPZ files')
+    # parser.add_argument('--neo', dest='neo', action='store_const',
+    #                     const=neo.compare_neo_file,
+    #                     help='Find the differences between two NEO files')
+    # parser.add_argument('--finfo', dest='finfo', action='store_const',
+    #                     const=fc.hash_from_file_info,
+    #                     help='Hash from file infos')
+    # parser.add_argument('--bijective', dest='bijective', action='store_const',
+    #                     const=fc.find_bijective,
+    #                     help='Hash from file infos')
+    parser.add_argument('--profile', dest='profile', action='store_true',
+                        help='Profiling the method')
+    # parser.add_argument('--buffersize', type=int, metavar='Buffer_Size', nargs=1, dest='buffersize', default=32,
+    #                     help='Size of buffer used in bytes (default is 32 bytes)')
+    # parser.add_argument('--hex', type=int, metavar='Hexadigest_option', nargs=1, dest='hex', default=1,
+    #                     help='Option to specify the files that contains hexadigest filenames.\n\
+    #                     0: Both files contain plain urls and complete paths of result files\n\
+    #                     1: First file contains urls that should be hashed to retreive corresponding filenames\n\
+    #                     2: Both files contain urls/paths that should be hashed to retreive corresponding filenames')
+
+    args = parser.parse_args()
+    print (args)
+
+    if args.profile:
+        try:
+            profile.run('run_file_comparison(args.json[0].name)')
+        except Exception as e1:
+            try:
+                profile.run('run_file_comparison(args.files[0].name, args.files[1].name)')
+            except Exception as e2:
+                print (e1)
+                print (e2)
+                # return [e1, e2]
+
+
+
+
+    else:
+        try:
+            run_file_comparison(args.json[0].name)
+        except Exception as e1:
+            try:
+                run_file_comparison(args.files[0].name, args.files[1].name)
+            except Exception as e2:
+                print (e1)
+                print (e2)
+                # return [e1, e2]
+
+
+    # method = ""
+    # if args.hamming:
+    #     method = "hamming"
+    # elif args.fuzzy:
+    #     method = "fuzzy"
+    # elif args.nilsimsa:
+    #     method = "nilsimsa"
+    # elif args.npz:
+    #     method = "npz"
+    # elif args.neo:
+    #     method = "neo"
+    # elif args.finfo:
+    #     method = "finfo"
+
+    # # Build Adjacency Matrix from list of files
+    # # The matrix is compacted as a list of pairs
+    # adjacency_matrix = fc.find_bijective (args.files[0].name, args.files[1].name, args.hex[0])
+    # # print (adjacency_matrix)
+
+    # # Get adviced method
+    # advice_methods = fc.get_adviced_method (adjacency_matrix)
+
+    # final_report = []
+    # # Compare the files
+    # for icouple, imethod in zip(adjacency_matrix, advice_methods):
+    #     # print(icouple, imethod)
+    #     # score, file_diff = report.compute_differences(icouple[0], icouple[1], imethod)
+    #     # final_report.append(report.generate_report_1_file (icouple[0], icouple[1], imethod, score, file_diff))
+    #     method = Method (imethod, icouple[0], icouple[1])
+    #     is_checked, check_error = method.check_file_formats()
+
+    #     print (is_checked)
+    #     if (is_checked):
+    #         method.compute_differences_report()
+    #         method.compute_score()
+    #         final_report.append (method.differences_report)
+
+
+    # # Generate Comparison Report
+    # # for ifile1, ifile2 in adjacency_matrix:
+    # #     final_report.append(report.generate_report_1_file (ifile1, ifile2, method, score, differences))
+
+    # print ("FINAL REPORT:")
+    # print (json.dumps(final_report, indent=4))
 
     # if args.bijective:
     #     args.bijective(args.files[0].name, args.files[1].name, args.hex[0])

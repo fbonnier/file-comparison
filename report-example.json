@@ -1,0 +1,26 @@
+{
+    "Metadata" : {
+        "workdir": "/tmpdir/test/workdir"
+        "workflow": {
+            "run": {"url": "http://test.com/run.cwl", "path": "/tmpdir/test/run.cwl"},
+            "data": {"url": "http://test.com/data.yml", "path": "/tmpdir/test/data.yml"}
+        },
+        "run": {"url": "http://test.com/code.tar", "path": "/tmpdir/test/workdir/code", "pre-instruction": ["untar", "compile", "move inputs"], "instruction": "python3 run.py --para1 1 --para2 file > out.txt"},
+        "inputs": [{"url": "http://test.com/input1.dat", "path": "/tmpdir/test/workdir/code/inputs/input1.dat"}, {"url": "http://test.com/input2.json", "path": "/tmpdir/test/workdir/code/inputs/input2.json"}],
+        "outputs": [{"url": "http://test.com/input1.dat", "path": "/tmpdir/test/workdir/code/outputs/output1.dat"}, {"url": "http://test.com/output2.json", "path": "/tmpdir/test/workdir/code/inputs/output2.json"}],
+        "environment": {"pip install": [""], "module deps": [""], "profiling configuration": [""]}
+    },
+
+    "Run": {
+      "run": {"nCores": 2},
+      "outputs": [{"url": "", "path": "/tmpdir/test/workdir/code/outputs/output1.dat"}, {"url": "", "path": "/tmpdir/test/workdir/code/inputs/output2.json"}],
+      "errors": [],
+      "profiling data": {"exec time (ms)": 2, "nCores": 2, "parallel efficiency (%)": 80, "memory leak (bytes)": 2000}
+    }
+
+    "Comparison": [
+      {
+        ""
+      },
+    ]
+}

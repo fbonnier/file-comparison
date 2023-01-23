@@ -1,0 +1,44 @@
+#!/bin/bash
+
+JSON=""
+FILE1=""
+FILE2=""
+LIST1=""
+LIST2=""
+
+RUN_INSTR="python3 $( dirname -- "$0"; )/main.py "
+RUN_INSTR_ORIGIN=$RUN_INSTR
+
+NARGS=$(($#-1))
+
+for (( iarg=1; iarg<=NARGS; iarg++)); do
+    jarg=$((iarg+1))
+    echo "${!iarg} ${!jarg}"
+
+    if [ ${!iarg} == "--json" ]; then
+        JSON=${!jarg}
+        RUN_INSTR="$RUN_INSTR --json $JSON"
+
+    elif [ ${!iarg} == "--files" ]; then
+        karg=$((iarg+2))
+        FILE1=${!jarg}
+        FILE2=${!karg}
+        RUN_INSTR="$RUN_INSTR --files $FILE1 $FILE2"
+
+    elif [ ${!iarg} == "--lists" ]; then
+        karg=$((iarg+2))
+        LIST1=${!jarg}
+        LIST2=${!karg}
+
+        RUN_INSTR="$RUN_INSTR --lists $LIST1 $LIST2"
+    fi
+done
+
+
+if [ "$RUN_INSTR" == "$RUN_INSTR_ORIGIN" ]; then
+    echo "Paramters are missing"
+else
+    echo $RUN_INSTR
+    $RUN_INSTR
+fi
+
