@@ -102,6 +102,8 @@ if __name__ == "__main__":
                         help='Files to compare')
     parser.add_argument('--json', type=argparse.FileType('r'), metavar='json', nargs='1',
                         help='JSON File containing metadata of files to compare')
+    parser.add_argument('--watchdog', type=argparse.FileType('r'), metavar='watchdog', nargs='1',
+                        help='Watchdog File containing files to compare with JSON report')
     # parser.add_argument('--hamming', dest='hamming', action='store_const',
     #                     const=hm.hamming_files,
     #                     help='Find the Hamming distance using bit comparison')
@@ -146,9 +148,6 @@ if __name__ == "__main__":
                 print (e1)
                 print (e2)
                 # return [e1, e2]
-
-
-
 
     else:
         try:
