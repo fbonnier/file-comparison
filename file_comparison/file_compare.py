@@ -18,11 +18,17 @@ adjacent_matrix_list2 = {}
 
 # all_methods = {"npz":npz.npz_single, "neo":file_comparison.neo.compare_neo_file, "byte":file_comparison.nilsimsa.nilsimsa_single}
 
+def build_adjacency_matrix():
+    pass
+
 class FileInfo:
     name = ""
     url = ""
     extention = ""
     size = 0.
+
+    def finfo_to_dict (self): 
+        return {"name": self.name, "url": self.url, "size": self.size}
 
     def __init__(self, file_path):
 
@@ -85,25 +91,25 @@ def get_adviced_method (adjacency_matrix):
     return adviced_methods
 
 
-def get_files_from_watchdog_log (watchdog_file, is_hex=1):
-    list_of_files = []
-    print ("Is HEX ? " + str(is_hex))
+# def get_files_from_watchdog_log (watchdog_file, is_hex=1):
+#     list_of_files = []
+#     print ("Is HEX ? " + str(is_hex))
 
-    with open (watchdog_file, 'r') as f1:
-        lines = f1.readlines()
-        for irawline in lines :
-            iline = irawline.split('\n')[0]
-            src_dest = iline.split()
-            for ifile in src_dest:
-                finfo = FileInfo (ifile)
-                ifilehex = finfo.name
+#     with open (watchdog_file, 'r') as f1:
+#         lines = f1.readlines()
+#         for irawline in lines :
+#             iline = irawline.split('\n')[0]
+#             src_dest = iline.split()
+#             for ifile in src_dest:
+#                 finfo = FileInfo (ifile)
+#                 ifilehex = finfo.name
 
-                if is_hex:
-                    ifilehex = str(hashlib.md5(bytes(finfo.name + str(finfo.size), encoding='utf-8')).hexdigest())
-                print ("IFileName = " + finfo.url + "/" + finfo.name)
-                list_of_files.append(finfo)
+#                 if is_hex:
+#                     ifilehex = str(hashlib.md5(bytes(finfo.name + str(finfo.size), encoding='utf-8')).hexdigest())
+#                 print ("IFileName = " + finfo.url + "/" + finfo.name)
+#                 list_of_files.append(finfo)
 
-    return list_of_files
+#     return list_of_files
 
 def find_bijective (f1, f2, hex=1):
 
@@ -111,36 +117,36 @@ def find_bijective (f1, f2, hex=1):
     # list_of_files_rows = []
     # list_of_files_cols = []
 
-    if hex==1:
-        # Read files from watchdog logs
-        # The produced files
-        print ("L1:")
-        adjacent_matrix_list1 = get_files_from_watchdog_log (f1, True)
-        print ("L2:")
-        adjacent_matrix_list2 = get_files_from_watchdog_log (f2, False)
+    # if hex==1:
+    #     # Read files from watchdog logs
+    #     # The produced files
+    #     print ("L1:")
+    #     adjacent_matrix_list1 = get_files_from_watchdog_log (f1, True)
+    #     print ("L2:")
+    #     adjacent_matrix_list2 = get_files_from_watchdog_log (f2, False)
 
-    elif hex==2:
-        # Read files from watchdog logs
-        print ("L1:")
-        adjacent_matrix_list1 = get_files_from_watchdog_log (f1, True)
-        print ("L2:")
-        adjacent_matrix_list2 = get_files_from_watchdog_log (f2, True)
-    else:
-        # Read files from watchdog logs
-        print ("L1:")
-        adjacent_matrix_list1 = get_files_from_watchdog_log (f1, False)
-        print ("L2:")
-        adjacent_matrix_list2 = get_files_from_watchdog_log (f2, False)
+    # elif hex==2:
+    #     # Read files from watchdog logs
+    #     print ("L1:")
+    #     adjacent_matrix_list1 = get_files_from_watchdog_log (f1, True)
+    #     print ("L2:")
+    #     adjacent_matrix_list2 = get_files_from_watchdog_log (f2, True)
+    # else:
+    #     # Read files from watchdog logs
+    #     print ("L1:")
+    #     adjacent_matrix_list1 = get_files_from_watchdog_log (f1, False)
+    #     print ("L2:")
+    #     adjacent_matrix_list2 = get_files_from_watchdog_log (f2, False)
 
 
 
-    print ("\n")
-    print ("adjacent_matrix_list1")
-    print (adjacent_matrix_list1)
-    print ("\n")
-    print ("adjacent_matrix_list1")
-    print (adjacent_matrix_list2)
-    print ("\n")
+    # print ("\n")
+    # print ("adjacent_matrix_list1")
+    # print (adjacent_matrix_list1)
+    # print ("\n")
+    # print ("adjacent_matrix_list1")
+    # print (adjacent_matrix_list2)
+    # print ("\n")
 
     # Score Matrix
     score_matrix = []
@@ -151,10 +157,20 @@ def find_bijective (f1, f2, hex=1):
         irow = []
         for jfile in adjacent_matrix_list2:
             try:
-                irow.append (hash_from_file_info(ifile, jfile))
+                irow.append (hash_from_file_metadata(ifile, jfile))
+                # irow.append (hash_from_file_info(ifile, jfile))
             except FileNotFoundError as e:
                 print (e)
+                print("Does File exist ?")
                 irow.append(0.)
+            except KeyError as e:
+                print(e)
+                print("Does file hash exist ?")
+                irow.append(0.)
+            except Exception as e:
+                print(e)
+                print("Unsupported error")
+                irow.append (0.)
         score_matrix.append(irow)
 
     pairs = []
@@ -240,5 +256,10 @@ def hash_from_file_info (file1_info, file2_info):
     ## Hash is done using Nilsimsa algorithm to get strong colisions
     # f1_hash = Nilsimsa (bytes(os.path.dirname + ))
 
+def hash_from_file_metadata (file1:dict, file2:dict) -> float:
+    ratio = compute_ratio (compare_digests (file1["hash"], file2["hash"]))
+    return ratio*100
 
 # def advice_method (adjacency_matrix)
+
+

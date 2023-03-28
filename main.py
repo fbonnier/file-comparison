@@ -14,25 +14,25 @@ import json
 from file_comparison.method import Method
 
 def run_file_comparison (jsonfile):
-    list_expected_files = []
-    list_produced_files = []
+    # list_expected_files = []
+    # list_produced_files = []
 
     try:
         json_data = json.load (jsonfile)
-        list_expected_files.append (json_data["expected files"])
-        list_produced_files.append (json_data["produced files"])
+        # list_expected_files.append (json_data["Metadata"]["run"]["outputs"])
+        # list_produced_files.append (json_data["Outputs"])
 
         method = ""
 
         # Build Adjacency Matrix from list of files
         # The matrix is compacted as a list of pairs
-        adjacency_matrix = fc.find_bijective (list_expected_files, list_produced_files, args.hex[0])
+        adjacency_matrix = fc.find_bijective (json_data["Metadata"]["run"]["outputs"], json_data["Outputs"], args.hex[0])
 
         # Get adviced method
         advice_methods = fc.get_adviced_method (adjacency_matrix)
 
         # Final report to include to JSON file
-        final_report = []
+        report_block = []
 
         # Compare the files
         for icouple, imethod in zip(adjacency_matrix, advice_methods):
@@ -42,11 +42,11 @@ def run_file_comparison (jsonfile):
             method = Method (imethod, icouple[0], icouple[1])
             is_checked, check_error = method.check_file_formats()
 
-            print (is_checked)
+            # print (is_checked)
             if (is_checked):
                 method.compute_differences_report()
                 method.compute_score()
-                final_report.append (method.differences_report)
+                report_block.append ({"f1": icouple[0].finfo_to_dict(), "f2": icouple[1], "Method": str(method.__name__), "score": "method.differences_report", "rmse": None, "mape": None, "mse": None, "report": None, "nerrors": 0, "ndiff": 0, "nvalues": 0})
 
     except Exception as e:
         print (e)
@@ -102,8 +102,8 @@ if __name__ == "__main__":
                         help='Files to compare')
     parser.add_argument('--json', type=argparse.FileType('r'), metavar='json', nargs='1',
                         help='JSON File containing metadata of files to compare')
-    parser.add_argument('--watchdog', type=argparse.FileType('r'), metavar='watchdog', nargs='1',
-                        help='Watchdog File containing files to compare with JSON report')
+    # parser.add_argument('--watchdog', type=argparse.FileType('r'), metavar='watchdog', nargs='1',
+    #                     help='Watchdog File containing files to compare with JSON report')
     # parser.add_argument('--hamming', dest='hamming', action='store_const',
     #                     const=hm.hamming_files,
     #                     help='Find the Hamming distance using bit comparison')
