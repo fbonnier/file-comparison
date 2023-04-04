@@ -160,11 +160,11 @@ if __name__ == "__main__":
     #                     2: Both files contain urls/paths that should be hashed to retreive corresponding filenames')
 
     args = parser.parse_args()
-    jsonfile = args.json[0]
-    file1 = args.files[0]
-    file2 = args.files[1]
-    print (args)
+    jsonfile = args.json[0] if args.json else None
 
+    file1 = args.files[0] if args.files else None
+    file2 = args.files[1] if args.files else None
+    
     if args.profile:
         if jsonfile:
             try:
