@@ -18,7 +18,6 @@ class Method:
     __check_methods__ = {"neo": file_comparison.neo.check_file_formats, "npz": file_comparison.npz.check_file_formats, "byte": file_comparison.nilsimsa.check_file_formats}
     file1 = None
     file2 = None
-    ipair = None
     score = 0.
     differences_report = None
     number_of_errors = 0
@@ -26,6 +25,8 @@ class Method:
     rmse_score = 0.
     mse_score = 0.
     mape_score = 0.
+    errors = []
+    log = []
 
     # 1.1
     def __init__ (self, ipair: dict):
@@ -33,20 +34,34 @@ class Method:
         self.__name__ = ipair["method"]
         # TODO: Replace assert by Exception
         assert self.__name__ in self.__difference_methods__, "Method \"" + self.__name__ + "\" unsupported. Method should be \"npz\", \"neo\" or \"byte\""
-        self.ipair = ipair
+        self.file1 = ipair["File1"]
+        self.file2 = ipair["File2"]
 
     # 2
     def check_file_formats (self):
-        
-        if self.ipair:
-            self.check_file_formats_pair()
-        
+        check1 = False
+        check2 = False
+        error1 = None
+        error2 = None
+
+        if not (self.file1 or self.file2):
+            return False, "Method.check_file_formats: Unknown files"
         else:
             try:
-                return self.__check_methods__[self.__name__](self.file1, self.file2), {}
+                check1, error1 = self.__check_methods__[self.__name__](self.file1["path"])
             except Exception as e:
-                self.differences_report = [{"Fatal Error": "check_file_formats FAIL " + str(type(e)) + ": file have Unknown or different file formats -- " + str(e)}]
-                return False, file_comparison.report_generator.generate_report_1_file (self.file1, self.file2, self.__name__, self.score, self.differences_report)
+                check1 = False
+                error1 = "Method.check_file_formats: " + e
+            try:
+                check2, error2 = self.__check_methods__[self.__name__](self.file2["path"])
+            except Exception as e:
+                check2 = False
+                error2 = "Method.check_file_formats: " + e
+                # self.differences_report = [{"Fatal Error": "check_file_formats FAIL " + str(type(e)) + ": file have Unknown or different file formats -- " + str(e)}]
+                # return False, file_comparison.report_generator.generate_report_1_file (self.file1, self.file2, self.__name__, self.score, self.differences_report)
+        check = check1 and check2
+        error = [error1,  error2] if error1 and error2 else None
+        return check, error 
 
     # 2.pair
     def check_file_formats_pair (self):
@@ -66,25 +81,23 @@ class Method:
         return self.score
 
     # 3
-    def compute_differences_report (self):
-        if self.ipair:
-            try:
-                # TODO
-                self.differences_report, self.number_of_errors, self.number_of_values = self.__difference_methods__[self.__name__](self.ipair)
-            except Exception as e:
-                self.ipair["log"].append (e)
-                self.ipair["error"].append (e)
+    def compute_differences (self):
+        if not (self.file1 or self.file2):
+            return "Method.compute_differences: Unknown files"
+        
+        try:
+            # TODO
+            self.differences_report, self.number_of_errors, self.number_of_values = self.__difference_methods__[self.__name__](self.ipair)
+        except Exception as e:
+            self.log.append (e)
+            self.errors.append (e)
 
 
-        else:
-            # TODO catch exception and report instead of assert
-            assert self.file1 != None, "No file specified"
-            assert self.file2 != None, "No file specified"
-
-            try:
-                self.differences_report, self.number_of_errors, self.number_of_values = self.__difference_methods__[self.__name__](self.file1, self.file2)
-            except Exception as e:
-                print (e)
+        
+            # try:
+            #     self.differences_report, self.number_of_errors, self.number_of_values = self.__difference_methods__[self.__name__](self.file1, self.file2)
+            # except Exception as e:
+            #     print (e)
 
         # except Exception as e:
         #     self.differences_report = [{"Fatal Error": "check_file_formats FAIL " + str(type(e)) + ": file have Unknown or different file formats -- " + str(e)}]

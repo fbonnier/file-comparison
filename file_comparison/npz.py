@@ -47,14 +47,13 @@ def compute_differences_report (file1, file2):
     return all_failures, nb_errors, nb_values_total
 
 # 2
-def check_file_formats (file1, file2):
+def check_file_formats (filepath):
     try:
-        np.load(file1.url + file1.name, allow_pickle=True)
-        np.load(file2.url + file2.name, allow_pickle=True)
-        return True
+        np.load(filepath, allow_pickle=True)
+        return True, None
     except Exception as e:
         print ("Error " + str(type(e)) + " :: NPZ method: " + str(e))
-        return False
+        return False, str(e)
 
 def iterable_are_equal (item1, item2, comparison_path, all_failures, nb_errors, nb_values_total):
     keys_to_avoid = []

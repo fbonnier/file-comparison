@@ -12,10 +12,11 @@ import file_comparison.method as method
 import profile
 import argparse
 import json
+import sys
 
 
 def run_file_comparison (jsonfile):
-
+    error_glob = None
     try:
         json_data = json.load (jsonfile)
         method = ""
@@ -36,21 +37,20 @@ def run_file_comparison (jsonfile):
             imethod = method.Method (ipair)
             
             # Check files format
-            if imethod.check_file_formats_pair ():
-                pass
-            else:
+            check, error = imethod.check_file_formats_pair ()
+            if not check:
                 # if the files are not the same format: Error
-                ipair["error"].append ("Method.check_file_format, files aren't the same file format")
-                break
+                ipair["error"].append (error)
+                continue
 
             # Compute differences between data
-            imethod.compute_differences ()
+            # error = imethod.compute_differences ()
 
             # Compute different scores and stats
-            imethod.compute_score ()
+            # imethod.compute_score ()
 
             # imethod.
-            ipair = imethod.topair(ipair)
+            # ipair = imethod.topair(ipair)
 
         # for icouple, imethod in zip(adjacency_matrix, advice_methods):
         #     # print(icouple, imethod)
@@ -66,10 +66,17 @@ def run_file_comparison (jsonfile):
         #         report_block.append ({"f1": icouple[0].finfo_to_dict(), "f2": icouple[1], "Method": str(method.__name__), "score": "method.differences_report", "rmse": None, "mape": None, "mse": None, "report": None, "nerrors": 0, "ndiff": 0, "nvalues": 0})
 
     except Exception as e:
-        print (e)
-        return e
-        
-    # print ("FINAL REPORT:")
+        error_glob = str(e)
+
+    json_data["Reusability Verification"] = {}
+    json_data["Reusability Verification"]["error"] = error_glob
+    
+    json_data["Reusability Verification"]["files"] = pairs
+    # Methods report
+    with open(jsonfile.name, "w") as f:
+        json.dump(json_data, f, indent=4)
+    # Exit Done ?
+    sys.exit()
     # print (json.dumps(final_report, indent=4))
 
 

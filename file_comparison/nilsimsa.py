@@ -7,8 +7,13 @@ def compute_differences_report (file1, file2):
 def compute_score (number_of_errors, number_of_values):
     pass
 
-def check_file_formats (file1, file2):
-    pass
+def check_file_formats (filepath):
+    try:
+        fp = open(filepath, "b")
+        return True, None
+    except Exception as e:
+        return False, str(e)
+
 
 def compute_ratio (score):
     return ((256.0 - (128.0 - score)) / 256.0)

@@ -2,45 +2,48 @@
 from collections.abc import Iterable
 import neo.io
 
-class NeoCompare:
-
-    file1 = None
-    file2 = None
-    data_file1 = {}
-    data_file2 = {}
-    differences = {}
-    missing_data = {}
-
-    def __init__(self, file1, file2):
-        self.file1 = file1
-        self.file2 = file2
-        # 1. Check files are supported
-        if check_file_formats (file1) and check_file_formats (file2):
-
-            # 2. Extract all raw data
-            extract_neo_data (file1, self.data_file1)
-            extract_neo_data (file2, self.data_file2)
-
-    def __compute_scores__ (self):
-        pass
 
 
-    # Root Mean Squared Error
-    def rmse (self, prod, expect):
-        self.rmse_score = sqrt(mean_squared_error(prod, expect))
-        return self.rmse_score
 
-    # Mean Squared Error
-    def mse (self, prod, expect):
-        prod, expect = np.array(prod), np.array(expect)
-        self.mse_score = np.square(np.subtract(prod, expect)).mean()
-        return self.mse_score
+# class NeoCompare:
 
-    # Mean Absolute Percentage Error
-    def mape (self, prod, expect):
-        prod, expect = np.array(prod), np.array(expect)
-        self.mape_score = np.mean(np.abs((prod - expect) / prod)) * 100
-        return self.mape_score
+#     file1 = None
+#     file2 = None
+#     data_file1 = {}
+#     data_file2 = {}
+#     differences = {}
+#     missing_data = {}
+
+#     def __init__(self, file1, file2):
+#         self.file1 = file1
+#         self.file2 = file2
+#         # 1. Check files are supported
+#         if check_file_formats (file1) and check_file_formats (file2):
+
+#             # 2. Extract all raw data
+#             extract_neo_data (file1, self.data_file1)
+#             extract_neo_data (file2, self.data_file2)
+
+#     def __compute_scores__ (self):
+#         pass
+
+
+#     # Root Mean Squared Error
+#     def rmse (self, prod, expect):
+#         self.rmse_score = sqrt(mean_squared_error(prod, expect))
+#         return self.rmse_score
+
+#     # Mean Squared Error
+#     def mse (self, prod, expect):
+#         prod, expect = np.array(prod), np.array(expect)
+#         self.mse_score = np.square(np.subtract(prod, expect)).mean()
+#         return self.mse_score
+
+#     # Mean Absolute Percentage Error
+#     def mape (self, prod, expect):
+#         prod, expect = np.array(prod), np.array(expect)
+#         self.mape_score = np.mean(np.abs((prod - expect) / prod)) * 100
+#         return self.mape_score
 
 def compute_score (number_of_errors, number_of_values):
     score = 100. - (number_of_errors*100./number_of_values)
@@ -52,13 +55,13 @@ def check_array_size_warning (array1, array2):
         # print ("NEO Error:" + self.file1.url + self.file1.name + " and " + self.file2.url + self.file2.name + " do not have the same number of " + str(type(array1).__name__))
         print ("NEO Warning: Number of " + str(type(array1).__name__) + " are not equal: not all " + str(type(array1).__name__) + " will be compared" )
 
-def check_file_format (file):
+def check_file_format (filepath):
     try:
-        neo.io.get_io(file.url + file.name)
-        return True
+        neo.io.get_io(filepath)
+        return True, None
     except Exception as e:
         print ("Error " + str(type(e)) + " :: Neo method: " + str(e))
-        return False
+        return False, str(e)
 
 
 
@@ -217,24 +220,24 @@ def extract_neo_segment (segment, path, data):
 #     for igroup_idx in range(len(neoblock1.groups)):
 #         compare_groups (neoblock1.groups[igroup_idx], neoblock2.groups[igroup_idx], path + "->group[" + str(igroup_idx) + "]")
 
-# def compute_differences_report (file1, file2, path, all_failures, nb_errors, nb_values_total):
-#     try:
-#         file_path1 = self.file1.url + self.file1.name
-#         file_path2 = self.file2.url + self.file2.name
-#
-#         neo_reader1 = neo.io.get_io(self.file1.url + self.file1.name)
-#         neo_reader2 = neo.io.get_io(self.file2.url + self.file2.name)
-#
-#         blocks1 = neo_reader1.read()
-#         blocks2 = neo_reader2.read()
-#
-#         # Assert blocks have same size
-#         if len(blocks1) != len(blocks2):
-#             print ("NEO Error:" + file_path1 + " and " + file_path2 + " do not have the same number of neo:blocks")
-#             print ("NEO Warning: Number of blocks are not equal: not all blocks will be compared" )
-#
-#         print ("nombre de blocks = " + str(len(blocks1)))
-#         for iblock_idx in range(min(len(blocks1), len(blocks2))):
-#             compare_neo_blocks(blocks1[iblock_idx], blocks2[iblock_idx], "R->block[" + str(iblock_idx) + "]")
-#     except Exception as e:
-#         print ("Neo :: " + str(type(e).__name__) + " " + str(e))
+def compute_differences_report (file1, file2, path, all_failures, nb_errors, nb_values_total):
+    try:
+        file_path1 = self.file1.url + self.file1.name
+        file_path2 = self.file2.url + self.file2.name
+
+        neo_reader1 = neo.io.get_io(self.file1.url + self.file1.name)
+        neo_reader2 = neo.io.get_io(self.file2.url + self.file2.name)
+
+        blocks1 = neo_reader1.read()
+        blocks2 = neo_reader2.read()
+
+        # Assert blocks have same size
+        if len(blocks1) != len(blocks2):
+            print ("NEO Error:" + file_path1 + " and " + file_path2 + " do not have the same number of neo:blocks")
+            print ("NEO Warning: Number of blocks are not equal: not all blocks will be compared" )
+
+        print ("nombre de blocks = " + str(len(blocks1)))
+        for iblock_idx in range(min(len(blocks1), len(blocks2))):
+            compare_neo_blocks(blocks1[iblock_idx], blocks2[iblock_idx], "R->block[" + str(iblock_idx) + "]")
+    except Exception as e:
+        print ("Neo :: " + str(type(e).__name__) + " " + str(e))
