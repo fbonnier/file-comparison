@@ -17,8 +17,8 @@ import sys
 
 def run_file_comparison_json (jsonfile):
     error_glob = None
+    json_data = json.load (jsonfile)
     try:
-        json_data = json.load (jsonfile)
         method = ""
 
         # Build Adjacency Matrix from list of files
