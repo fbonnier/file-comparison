@@ -122,9 +122,9 @@ def run_file_comparison(file1, file2):
 if __name__ == "__main__":
 
     parser = argparse.ArgumentParser(description='Computes file comparison using ')
-    parser.add_argument('--files', type=argparse.FileType('r'), metavar='files', nargs='2',
+    parser.add_argument('--files', type=argparse.FileType('r'), metavar='files', nargs=2,
                         help='Files to compare')
-    parser.add_argument('--json', type=argparse.FileType('r'), metavar='json', nargs='1',
+    parser.add_argument('--json', type=argparse.FileType('r'), metavar='json', nargs=1,
                         help='JSON File containing metadata of files to compare')
     # parser.add_argument('--watchdog', type=argparse.FileType('r'), metavar='watchdog', nargs='1',
     #                     help='Watchdog File containing files to compare with JSON report')
