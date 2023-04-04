@@ -166,15 +166,16 @@ if __name__ == "__main__":
     print (args)
 
     if args.profile:
-        try:
-            profile.run('run_file_comparison(args.json[0].name)')
-        except Exception as e1:
+        if jsonfile:
             try:
-                profile.run('run_file_comparison(args.files[0].name, args.files[1].name)')
-            except Exception as e2:
+                profile.run('run_file_comparison_json(jsonfile.name)')
+            except Exception as e1:
                 print (e1)
+        elif file1 and file2:
+            try:
+                profile.run('run_file_comparison_files(file1.name, file2.name)')
+            except Exception as e2:
                 print (e2)
-                # return [e1, e2]
 
     else:
         if jsonfile:
@@ -184,9 +185,8 @@ if __name__ == "__main__":
                 print (e1)
         elif file1 and file2:
             try:
-                run_file_comparison_files(args.files[0].name, args.files[1].name)
+                run_file_comparison_files(file1.name, file2.name)
             except Exception as e2:
-                print (e1)
                 print (e2)
                 
 
