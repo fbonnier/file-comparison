@@ -15,7 +15,7 @@ import json
 import sys
 
 
-def run_file_comparison (jsonfile):
+def run_file_comparison_json (jsonfile):
     error_glob = None
     try:
         json_data = json.load (jsonfile)
@@ -83,7 +83,7 @@ def run_file_comparison (jsonfile):
 
 
 
-def run_file_comparison(file1, file2):
+def run_file_comparison_files(file1, file2):
 
 
     method = ""
@@ -160,6 +160,9 @@ if __name__ == "__main__":
     #                     2: Both files contain urls/paths that should be hashed to retreive corresponding filenames')
 
     args = parser.parse_args()
+    jsonfile = args.json[0]
+    file1 = args.files[0]
+    file2 = args.files[1]
     print (args)
 
     if args.profile:
@@ -174,16 +177,18 @@ if __name__ == "__main__":
                 # return [e1, e2]
 
     else:
-        try:
-            run_file_comparison(args.json[0].name)
-        except Exception as e1:
+        if jsonfile:
             try:
-                run_file_comparison(args.files[0].name, args.files[1].name)
+                run_file_comparison_json(jsonfile.name)
+            except Exception as e1:
+                print (e1)
+        elif file1 and file2:
+            try:
+                run_file_comparison_files(args.files[0].name, args.files[1].name)
             except Exception as e2:
                 print (e1)
                 print (e2)
-                # return [e1, e2]
-
+                
 
     # method = ""
     # if args.hamming:
