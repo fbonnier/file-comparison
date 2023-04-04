@@ -55,7 +55,7 @@ def check_array_size_warning (array1, array2):
         # print ("NEO Error:" + self.file1.url + self.file1.name + " and " + self.file2.url + self.file2.name + " do not have the same number of " + str(type(array1).__name__))
         print ("NEO Warning: Number of " + str(type(array1).__name__) + " are not equal: not all " + str(type(array1).__name__) + " will be compared" )
 
-def check_file_format (filepath):
+def check_file_formats (filepath):
     try:
         neo.io.get_io(filepath)
         return True, None

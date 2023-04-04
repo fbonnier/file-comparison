@@ -37,7 +37,7 @@ def run_file_comparison (jsonfile):
             imethod = method.Method (ipair)
             
             # Check files format
-            check, error = imethod.check_file_formats_pair ()
+            check, error = imethod.check_file_formats ()
             if not check:
                 # if the files are not the same format: Error
                 ipair["error"].append (error)
