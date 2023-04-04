@@ -6,7 +6,7 @@ import neo
 
 import os
 import hashlib
-import validators
+# import validators
 import urllib.request
 import file_comparison.npz as npz
 import file_comparison.neo
@@ -21,39 +21,39 @@ adjacent_matrix_list2 = {}
 def build_adjacency_matrix():
     pass
 
-class FileInfo:
-    name = ""
-    url = ""
-    extention = ""
-    size = 0.
+# class FileInfo:
+#     name = ""
+#     url = ""
+#     extention = ""
+#     size = 0.
 
-    def finfo_to_dict (self): 
-        return {"name": self.name, "url": self.url, "size": self.size}
+#     def finfo_to_dict (self): 
+#         return {"name": self.name, "url": self.url, "size": self.size}
 
-    def __init__(self, file_path):
+#     def __init__(self, file_path):
 
-        if validators.url (file_path):
-            # the file location is an URL
-            file = urllib.request.urlopen(file_path)
+#         if validators.url (file_path):
+#             # the file location is an URL
+#             file = urllib.request.urlopen(file_path)
 
 
-            self.name = os.path.basename(file_path)
-            self.url = os.path.dirname(file_path) + "/"
-            self.extention = os.path.splitext(file_path)[1]
-            self.size = file.length
+#             self.name = os.path.basename(file_path)
+#             self.url = os.path.dirname(file_path) + "/"
+#             self.extention = os.path.splitext(file_path)[1]
+#             self.size = file.length
 
-        else:
-            # Get stats from local location
-            try:
-                self.name = os.path.basename(file_path)
-                self.url = os.path.dirname(file_path) + "/"
-                self.extention = os.path.splitext(file_path)[1]
-                self.size = os.path.getsize(file_path)
-            except:
-                print ("FATAL ERROR ::")
-                print (file_path)
-                print ("Is neither a valid URL or local file")
-                exit (EXIT_FAILURE)
+#         else:
+#             # Get stats from local location
+#             try:
+#                 self.name = os.path.basename(file_path)
+#                 self.url = os.path.dirname(file_path) + "/"
+#                 self.extention = os.path.splitext(file_path)[1]
+#                 self.size = os.path.getsize(file_path)
+#             except:
+#                 print ("FATAL ERROR ::")
+#                 print (file_path)
+#                 print ("Is neither a valid URL or local file")
+#                 exit (EXIT_FAILURE)
 
 def compute_ratio (score):
     return ((256.0 - (128.0 - score)) / 256.0)
