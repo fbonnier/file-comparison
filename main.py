@@ -22,8 +22,6 @@ def run_file_comparison_json (jsonfile):
     with open(jsonfile, "r") as f:
         json_data = json.load (f)
         try:
-            method = ""
-
             # Build Adjacency Matrix from list of files
             # The matrix is compacted as a list of pairs
             pairs = bijective.find_bijective (json_data["Metadata"]["run"]["outputs"], json_data["Outputs"])
