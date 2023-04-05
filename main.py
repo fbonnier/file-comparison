@@ -26,23 +26,23 @@ def run_file_comparison_json (jsonfile):
             # The matrix is compacted as a list of pairs
             pairs = bijective.find_bijective (json_data["Metadata"]["run"]["outputs"], json_data["Outputs"])
 
-            # Get adviced method
-            for ipair in pairs:
-                ipair = method.get_adviced_method (ipair)
+            # # Get adviced method
+            # for ipair in pairs:
+            #     ipair = method.get_adviced_method (ipair)
 
-            # Final report to include to JSON file
-            report_block = []
+            # # Final report to include to JSON file
+            # report_block = []
 
-            # Compare the files
-            for ipair in pairs:
-                imethod = method.Method (ipair)
+            # # Compare the files
+            # for ipair in pairs:
+            #     imethod = method.Method (ipair)
                 
-                # Check files format
-                check, error = imethod.check_file_formats ()
-                if not check:
-                    # if the files are not the same format: Error
-                    ipair["error"].append (error)
-                    continue
+            #     # Check files format
+            #     check, error = imethod.check_file_formats ()
+            #     if not check:
+            #         # if the files are not the same format: Error
+            #         ipair["error"].append (error)
+            #         continue
 
                 # Compute differences between data
                 # error = imethod.compute_differences ()
