@@ -208,23 +208,40 @@ class Method:
 
 def get_adviced_method (ipair):
     
-    # Guessing the file type based on its extension
-    # NPZ
+    # Guessing the file
+    
+    ########## NUMPY ##########
+    # allow_pickle, bytes encoded
     try:
-        data1 = numpy.load(ipair["File1"]["path"])
-        data2 = numpy.load(ipair["File2"]["path"])
+        data1 = numpy.load(ipair["File1"]["path"], allow_pickle=True, encoding='bytes')
+        data2 = numpy.load(ipair["File2"]["path"], allow_pickle=True, encoding='bytes')
 
         ipair["method"] = "npz"
+        return ipair
+    except Exception as e:
+        pass
 
-    except Exception as enumpy:
+    # allow_pickle, ascii encoded
+    try:
+        data1 = numpy.load(ipair["File1"]["path"], allow_pickle=True, encoding='ASCII')
+        data2 = numpy.load(ipair["File2"]["path"], allow_pickle=True, encoding='ASCII')
 
-        # NEO
-        try:
-            neo_reader1 = neo.io.get_io(ipair["File1"]["path"])
-            neo_reader2 = neo.io.get_io(ipair["File2"]["path"])
-            ipair["method"] =  "neo"
+        ipair["method"] = "npz"
+        return ipair
+    except Exception as e:
+        pass
 
-        except Exception as eneo:
-            ipair["method"] = "byte"
+        ########## NEO ##########
+    try:
+        neo_reader1 = neo.io.get_io(ipair["File1"]["path"])
+        neo_reader2 = neo.io.get_io(ipair["File2"]["path"])
+        ipair["method"] =  "neo"
+        return ipair
+
+    except Exception as eneo:
+        pass
+
+    ########## BYTES ##########
+    ipair["method"] = "byte"
 
     return ipair
