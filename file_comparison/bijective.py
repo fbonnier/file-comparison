@@ -27,32 +27,32 @@ def are_same_file_format (file1, file2):
 def compute_ratio (score):
     return ((256.0 - (128.0 - score)) / 256.0)
 
-def find_bijective (list_of_file1, list_of_file2):
+def find_bijective (produced_outputs, expected_outputs):
 
     # Walk the files and build blocks of pairs
     blocks_of_pairs = [] 
-    for ifile1 in list_of_file1:
+    for ifile1 in produced_outputs:
         partner = {"ifile2": None, "score": 0}
         # Search for nearest partner
-        for ifile2 in list_of_file2:
+        for ifile2 in expected_outputs:
             new_score = compute_ratio(compare_digests(Nilsimsa(ifile1["filename"] + str(ifile1["size"])).hexdigest(), Nilsimsa(ifile2["filename"] + str(ifile2["size"])).hexdigest()))
-            # new_score = compute_ratio(compare_digests(hex(ifile1["hash"]), hex(ifile2["hash"])))
-            # new_score = 0.1
             if partner["score"] < new_score:
                 partner["ifile2"] = ifile2
                 partner["score"] = new_score
         block = {"File1": None, "File2": None, "hash score": None, "format": None, "error": [], "method": None}
         block["File1"] = ifile1
+        block["File1"]["origin"] = "produced"
         block["File2"] = partner["ifile2"]
+        block["File2"]["origin"] = "expected"
         block["hash score"] = partner["score"]
 
-        # # Compare file formats
-        # format_block = are_same_file_format (ifile1, partner["ifile2"])
-        # if format_block["format score"]:
-        #     block["format"] = format_block["format"][0]
-        # else:
-        #     block["format"] = format_block["format"]
-        #     block["error"].append(format_block["error"])
+        # Compare file formats
+        format_block = are_same_file_format (ifile1, partner["ifile2"])
+        if format_block["format score"]:
+            block["format"] = format_block["format"][0]
+        else:
+            block["format"] = format_block["format"]
+            block["error"].append(format_block["error"])
 
         blocks_of_pairs.append(block)
 

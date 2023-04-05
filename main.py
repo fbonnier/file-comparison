@@ -24,11 +24,11 @@ def run_file_comparison_json (jsonfile):
         try:
             # Build Adjacency Matrix from list of files
             # The matrix is compacted as a list of pairs
-            pairs = bijective.find_bijective (json_data["Metadata"]["run"]["outputs"], json_data["Outputs"])
+            pairs = bijective.find_bijective (produced_outputs=json_data["Outputs"], expected_outputs=json_data["Metadata"]["run"]["outputs"])
 
-            # # Get adviced method
-            # for ipair in pairs:
-            #     ipair = method.get_adviced_method (ipair)
+            # Get adviced method
+            for ipair in pairs:
+                ipair = method.get_adviced_method (ipair)
 
             # # Final report to include to JSON file
             # report_block = []
