@@ -35,7 +35,8 @@ def find_bijective (list_of_file1, list_of_file2):
         partner = {"ifile2": None, "score": 0}
         # Search for nearest partner
         for ifile2 in list_of_file2:
-            new_score = compute_ratio(compare_digests(hex(ifile1["hash"]), hex(ifile2["hash"])))
+            new_score = compute_ratio(compare_digests(Nilsimsa(ifile1["filename"] + str(ifile1["size"])).hexdigest(), Nilsimsa(ifile2["filename"] + str(ifile2["size"])).hexdigest()))
+            # new_score = compute_ratio(compare_digests(hex(ifile1["hash"]), hex(ifile2["hash"])))
             # new_score = 0.1
             if partner["score"] < new_score:
                 partner["ifile2"] = ifile2
