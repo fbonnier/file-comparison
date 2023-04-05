@@ -89,8 +89,8 @@ class Method:
             # TODO
             self.differences_report, self.number_of_errors, self.number_of_values = self.__difference_methods__[self.__name__](self.ipair)
         except Exception as e:
-            self.log.append (e)
-            self.errors.append (e)
+            self.log.append ("Method.compute_differences: " + str(e))
+            self.errors.append ("Method.compute_differences: " + str(e))
 
 
         
@@ -217,6 +217,10 @@ def get_adviced_method (ipair):
         data2 = numpy.load(ipair["File2"]["path"], allow_pickle=True, encoding='bytes')
 
         ipair["method"] = "npz"
+        ipair["File1"]["encoding"] = "bytes"
+        ipair["File2"]["encoding"] = "bytes"
+        ipair["File1"]["allow_pickle"] = True
+        ipair["File2"]["allow_pickle"] = True
         return ipair
     except Exception as e:
         pass
@@ -227,6 +231,10 @@ def get_adviced_method (ipair):
         data2 = numpy.load(ipair["File2"]["path"], allow_pickle=True, encoding='ASCII')
 
         ipair["method"] = "npz"
+        ipair["File1"]["encoding"] = "ASCII"
+        ipair["File2"]["encoding"] = "ASCII"
+        ipair["File1"]["allow_pickle"] = True
+        ipair["File2"]["allow_pickle"] = True
         return ipair
     except Exception as e:
         pass
@@ -236,6 +244,10 @@ def get_adviced_method (ipair):
         neo_reader1 = neo.io.get_io(ipair["File1"]["path"])
         neo_reader2 = neo.io.get_io(ipair["File2"]["path"])
         ipair["method"] =  "neo"
+        ipair["File1"]["encoding"] = None
+        ipair["File2"]["encoding"] = None
+        ipair["File1"]["allow_pickle"] = None
+        ipair["File2"]["allow_pickle"] = None
         return ipair
 
     except Exception as eneo:
@@ -243,5 +255,9 @@ def get_adviced_method (ipair):
 
     ########## BYTES ##########
     ipair["method"] = "byte"
+    ipair["File1"]["encoding"] = None
+    ipair["File2"]["encoding"] = None
+    ipair["File1"]["allow_pickle"] = None
+    ipair["File2"]["allow_pickle"] = None
 
     return ipair

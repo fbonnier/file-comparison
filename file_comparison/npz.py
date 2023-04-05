@@ -33,14 +33,13 @@ def compute_differences_report (file1, file2):
     nb_values_total = 0
     all_failures = {}
 
-    with np.load(file1.url + file1.name, allow_pickle=True) as data_1:
-        with np.load(file2.url + file2.name, allow_pickle=True) as data_2:
-            data_1_list = data_1.files
-            data_2_list = data_2.files
-            comparison_path="R"
-            all_failures, nb_errors, nb_values_total = iterable_are_equal (data_1, data_2, comparison_path, all_failures, nb_errors, nb_values_total)
-            # Print failures Line-by-Line
-            # print(json.dumps(all_failures, indent=4))
+    with np.load(file1["path"], allow_pickle=file1["allow_pickle"], encoding=file1["encoding"]) as data_1, np.load(file2["path"], allow_pickle=file2["allow_pickle"], encoding=file2["encoding"]) as data_2:
+        # data_1_list = data_1.files
+        # data_2_list = data_2.files
+        comparison_path="R"
+        all_failures, nb_errors, nb_values_total = iterable_are_equal (data_1, data_2, comparison_path, all_failures, nb_errors, nb_values_total)
+        # Print failures Line-by-Line
+        # print(json.dumps(all_failures, indent=4))
 
     # ratio =  compute_ratio()
     # print ("Ratio = " + str(ratio) + " %")
