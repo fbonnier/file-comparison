@@ -18,6 +18,7 @@ import sys
 def run_file_comparison_json (jsonfile):
     error_glob = None
     json_data = None
+    pairs = None
     with open(jsonfile, "r") as f:
         json_data = json.load (f)
         try:
