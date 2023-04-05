@@ -18,8 +18,8 @@ import sys
 def run_file_comparison_json (jsonfile):
     error_glob = None
     with open(jsonfile, "w") as f:
-        pass
-        # json_data = json.load (f) 
+        json_data = json.load (f)
+        print (json_data) 
         # try:
         #     method = ""
 
