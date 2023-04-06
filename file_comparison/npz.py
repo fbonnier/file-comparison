@@ -137,11 +137,11 @@ def iterable_are_equal (item1, item2, comparison_path, block_diff):
 
     #############   NUMPY.NPZ.Files  #################
     # Convert npz files into compatible arrays
-    if ((type(item1) == np.lib.npyio.NpzFile) and (type(item2) == np.lib.npyio.NpzFile)):
+    # if ((type(item1) == np.lib.npyio.NpzFile) and (type(item2) == np.lib.npyio.NpzFile)):
         
     #     block_diff = compare_numpy_npz (item1, item2, comparison_path+str(type(item1))+"->", block_diff)
     #     return block_diff
-        pass
+        # pass
 
         
 
@@ -150,26 +150,26 @@ def iterable_are_equal (item1, item2, comparison_path, block_diff):
     # elif ((type(item1) == np.ndarray) and (type(item2) == np.ndarray)):
     #     block_diff = compare_numpy_arrays (item1, item2, comparison_path+str(type(item1))+"->", block_diff)
     #     return block_diff
-        pass
+        # pass
 
     #############   NEO.BLOCK   ###################
     # TODO
-    elif (type(item1) == neo.core.block.Block) and (type(item2) == neo.core.block.Block):
+    # elif (type(item1) == neo.core.block.Block) and (type(item2) == neo.core.block.Block):
     #     # TODO
     #     block_diff = fcneo.compare_neo_blocks (item1, item2, comparison_path+str(item1.name)+str(type(item1))+"->", block_diff)
     #     return block_diff
-        pass
+        # pass
 
 
     ############    NEO.SEGMENT ##################
     # TODO
-    elif (type(item1) == neo.core.Segment) and (type(item2) == neo.core.Segment):
+    # elif (type(item1) == neo.core.Segment) and (type(item2) == neo.core.Segment):
     #     block_diff = fcneo.compare_segments(item1, item2, comparison_path+str(item1.name)+str(type(item1))+"->", block_diff)
     #     return block_diff
-        pass
+        # pass
         
-    elif ((isinstance(item1, Iterable)) and (isinstance(item2, Iterable)) and (type(item1)!=str) and (type(item1)!= bytes) ):
-        pass
+    # elif ((isinstance(item1, Iterable)) and (isinstance(item2, Iterable)) and (type(item1)!=str) and (type(item1)!= bytes) ):
+    #     pass
 
     #     #################   LIST    ###################
     #     if ((type(item1) == list) and (type(item2) == list)):
@@ -187,11 +187,13 @@ def iterable_are_equal (item1, item2, comparison_path, block_diff):
             
 
     # If item1 and item2 are not iterable (are values)
-    else :
-        block_diff["nvalues"] += 1
+    # else :
+    #     block_diff["nvalues"] += 1
     #     # if values are not equal
     #     if (item1 != item2):
     #         delta = rg.compute_1el_difference (item1, item2)
     #         block_diff["report"][str(comparison_path+str(type(item1))+"->"+str(item1))] = delta
     #         block_diff["nerrors"] += 1
-        return block_diff
+        # return block_diff
+    block_diff["nvalues"] += 1
+    return block_diff
