@@ -87,7 +87,7 @@ class Method:
         
         try:
             # TODO
-            self.differences_report, self.number_of_errors, self.number_of_values = self.__difference_methods__[self.__name__](self.file1, self.file2)
+            self.differences_report, self.number_of_errors, self.number_of_values, self.log = self.__difference_methods__[self.__name__](self.file1, self.file2)
             
         except Exception as e:
             self.log.append ("Method.compute_differences: " + str(e))
