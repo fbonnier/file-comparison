@@ -34,12 +34,14 @@ def compute_differences_report (file1, file2):
     all_failures = {}
     try:
         data1 = np.load(file1["path"], allow_pickle=file1["allow_pickle"], encoding=file1["encoding"])
+        print (data1)
         data2 = np.load(file2["path"], allow_pickle=file2["allow_pickle"], encoding=file2["encoding"])
+        print (data2)
     # with np.load(file1["path"], allow_pickle=file1["allow_pickle"], encoding=file1["encoding"]) as data_1, np.load(file2["path"], allow_pickle=file2["allow_pickle"], encoding=file2["encoding"]) as data_2:
         comparison_path="R"
-        all_failures, nb_errors, nb_values_total = iterable_are_equal (data1, data2, comparison_path, all_failures, nb_errors, nb_values_total)
+        # all_failures, nb_errors, nb_values_total = iterable_are_equal (data1, data2, comparison_path, all_failures, nb_errors, nb_values_total)
     except Exception as e:
-        print ("NPZ compute_differences_report:" + str(e))
+        print ("NPZ compute_differences_report: " + str(e))
 
     return all_failures, nb_errors, nb_values_total
 
