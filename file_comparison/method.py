@@ -83,11 +83,12 @@ class Method:
     # 3
     def compute_differences (self):
         if not (self.file1 or self.file2):
-            return "Method.compute_differences: Unknown files"
+            self.errors.append("Method.compute_differences: Unknown files")
         
         try:
             # TODO
             self.differences_report, self.number_of_errors, self.number_of_values = self.__difference_methods__[self.__name__](self.ipair)
+            
         except Exception as e:
             self.log.append ("Method.compute_differences: " + str(e))
             self.errors.append ("Method.compute_differences: " + str(e))
@@ -105,15 +106,16 @@ class Method:
 
     def topair (self, ipair):
         ipair["method"] = self.__name__
+        ipair["error"] = self.errors
+        ipair["log"] = self.log
         ipair["score"] = self.score
-        ipair["rmse"] = self.rmse_score
-        ipair["mape"] = self.mape_score
-        ipair["mse"] = self.mse_score
         ipair["differences"] = self.differences_report
-        # ipair["mse"] = self.mse_score
-        # ipair["mse"] = self.mse_score
-        # ipair["mse"] = self.mse_score
-
+        ipair["number_of_errors"] = self.number_of_errors
+        ipair["number_of_values"] = self.number_of_values
+        ipair["rmse_score"] = self.rmse_score
+        ipair["mse_score"] = self.mse_score
+        ipair["mape_score"] = self.mape_score
+        
         return ipair
 
 # class Method:

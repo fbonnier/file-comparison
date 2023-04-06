@@ -47,13 +47,17 @@ def run_file_comparison_json (jsonfile):
                 ##############################
 
                 # Compute differences between data
-                error = imethod.compute_differences ()
+                imethod.compute_differences ()
 
                 # Compute different scores and stats
                 # imethod.compute_score ()
 
-                # imethod.
-                # ipair = imethod.topair(ipair)
+                # Get all data from associated method and pair
+                ipair = imethod.topair(ipair)
+                
+                # ipair["rmse_score"] = imethod.rmse_score
+
+
 
             # for icouple, imethod in zip(adjacency_matrix, advice_methods):
             #     # print(icouple, imethod)
