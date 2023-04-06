@@ -49,7 +49,8 @@ def compare_dicts (item1, item2, comparison_path, all_failures, nb_errors, nb_va
     # Iterate on items of item1 and item2
     for item in common_keys:
         all_failures, nb_errors, nb_values_total, log = iterable_are_equal(item1[item], item2[item], comparison_path+str(type(item1))+"->"+item+"->", all_failures, nb_errors, nb_values_total, log)
-        return all_failures, nb_errors, nb_values_total, log
+        
+    return all_failures, nb_errors, nb_values_total, log
     
 
 def compare_numpy_arrays (item1, item2, comparison_path, all_failures, nb_errors, nb_values_total, log):
@@ -87,7 +88,7 @@ def compare_numpy_npz (item1, item2, comparison_path, all_failures, nb_errors, n
     # Iterate on keys
     for ivar in common_keys:
         all_failures, nb_errors, nb_values_total, log = iterable_are_equal(item1[ivar], item2[ivar], comparison_path+str(type(item1))+"->"+str(ivar)+"->", all_failures, nb_errors, nb_values_total, log)
-        return all_failures, nb_errors, nb_values_total, log
+    return all_failures, nb_errors, nb_values_total, log
 
 
 # 4
@@ -111,7 +112,7 @@ def compute_differences_report (file1, file2):
     try:
         data1 = np.load(file1["path"], allow_pickle=file1["allow_pickle"], encoding=file1["encoding"])
         data2 = np.load(file2["path"], allow_pickle=file2["allow_pickle"], encoding=file2["encoding"])
-    # with np.load(file1["path"], allow_pickle=file1["allow_pickle"], encoding=file1["encoding"]) as data_1, np.load(file2["path"], allow_pickle=file2["allow_pickle"], encoding=file2["encoding"]) as data_2:
+
         comparison_path="R"
         all_failures, nb_errors, nb_values_total, log = iterable_are_equal (data1, data2, comparison_path, all_failures, nb_errors, nb_values_total, log)
     except Exception as e:
@@ -145,13 +146,16 @@ def iterable_are_equal (item1, item2, comparison_path, all_failures, nb_errors, 
     # Convert npz files into compatible arrays
     if ((type(item1) == np.lib.npyio.NpzFile) and (type(item2) == np.lib.npyio.NpzFile)):
         
-        all_failures, nb_errors, nb_values_total, log = compare_numpy_npz (item1, item2, comparison_path, all_failures, nb_errors, nb_values_total, log)
+        all_failures, nb_errors, nb_values_total, log = compare_numpy_npz (item1, item2, comparison_path+str(type(item1))+"->", all_failures, nb_errors, nb_values_total, log)
+        return all_failures, nb_errors, nb_values_total, log
+
         
 
     #############   NUMPY.arrays  #################
     # Convert numpy arrays into compatible arrays
     elif ((type(item1) == np.ndarray) and (type(item2) == np.ndarray)):
         all_failures, nb_errors, nb_values_total, log = compare_numpy_arrays (item1, item2, comparison_path+str(type(item1))+"->", all_failures, nb_errors, nb_values_total, log)
+        return all_failures, nb_errors, nb_values_total, log
 
     #############   NEO.BLOCK   ###################
     # TODO
@@ -159,113 +163,34 @@ def iterable_are_equal (item1, item2, comparison_path, all_failures, nb_errors, 
         # TODO
         all_failures, nb_errors, nb_values_total, log = fcneo.compare_neo_blocks (item1, item2, comparison_path+str(item1.name)+str(type(item1))+"->", all_failures, nb_errors, nb_values_total, log)
         return all_failures, nb_errors, nb_values_total, log
-        # Convert neo.blocks into compatible arrays
-        # if (len(item1.segments) != len(item2.segments)):
-        #     all_failures[str(comparison_path+str(item1.name)+str(type(item1))+"->")] = "List of segments don't have same length"
 
-        # for ivar in range( min ( len(item1.segments), len(item2.segments))):
-        #     all_failures, nb_errors, nb_values_total = iterable_are_equal(item1.segments[ivar], item2.segments[ivar], comparison_path+str(item1.name)+str(type(item1))+"->", all_failures, nb_errors, nb_values_total)
 
     ############    NEO.SEGMENT ##################
     # TODO
     elif (type(item1) == neo.core.Segment) and (type(item2) == neo.core.Segment):
         all_failures, nb_errors, nb_values_total, log = fcneo.compare_segments(item1, item2, comparison_path+str(item1.name)+str(type(item1))+"->",all_failures, nb_errors, nb_values_total, log)
         return all_failures, nb_errors, nb_values_total, log
-        #############   AnalogSignal    ##############
-        # if (len(item1.analogsignals) != len(item2.analogsignals)):
-        #     all_failures[str(comparison_path+str(item1.name)+str(type(item1))+"->")] = "List of AnalogSignal don't have same length"
-        #
-        # if (len(item1.analogsignals)>0):
-        #     for ivar in range (len(item1.analogsignals)):
-        #         all_failures, nb_errors, nb_values_total = iterable_are_equal (item1.analogsignals[ivar], item2.analogsignals[ivar], comparison_path+str(item1.name)+str(type(item1))+"->", all_failures, nb_errors, nb_values_total)
-
-        #############   SpikeTrain    ##############
-        # if (len(item1.spiketrains) != len(item2.spiketrains)):
-        #     all_failures[str(comparison_path+str(item1.name)+str(type(item1))+"->")] = "List of SpikeTrain don't have same length"
-        #
-        # if (len(item1.spiketrains)>0):
-        #     for ivar in range (len(item1.spiketrains)):
-        #         iterable_are_equal (item1.spiketrains[ivar], item2.spiketrains[ivar], comparison_path+str(item1.name)+str(type(item1))+"->")
-
-        #############   Event    ##############
-        # if (len(item1.events) != len(item2.events)):
-        #     all_failures[str(comparison_path+str(item1.name)+str(type(item1))+"->")] = "List of Event don't have same length"
-        #
-        # if (len(item1.events)>0):
-        #     for ivar in range (len(item1.events)):
-        #         iterable_are_equal (item1.events[ivar], item2.events[ivar], comparison_path+str(item1.name)+str(type(item1))+"->")
-
-        #############   Epoch    ##############
-        # if (len(item1.epochs) != len(item2.epochs)):
-        #     all_failures[str(comparison_path+str(item1.name)+str(type(item1))+"->")] = "List of Epoch don't have same length"
-        #
-        # if (len(item1.epochs)>0):
-        #     for ivar in range (len(item1.epochs)):
-        #         iterable_are_equal (item1.epochs[ivar], item2.epochs[ivar], comparison_path+str(item1.name)+str(type(item1))+"->")
-
-        #############   IrregularlySampledSignal    ##############
-        # if (len(item1.irregularlysampledsignals) != len(item2.irregularlysampledsignals)):
-        #     all_failures[str(comparison_path+str(item1.name)+str(type(item1))+"->")] = "List of IrregularlySampledSignal don't have same length"
-        #
-        # if (len(item1.irregularlysampledsignals)>0):
-        #     for ivar in range (len(item1.irregularlysampledsignals)):
-        #         iterable_are_equal (item1.irregularlysampledsignals[ivar], item2.irregularlysampledsignals[ivar], comparison_path+str(item1.name)+str(type(item1))+"->")
-
+        
     elif ((isinstance(item1, Iterable)) and (isinstance(item2, Iterable)) and (type(item1)!=str) and (type(item1)!= bytes) ):
 
         #################   LIST    ###################
         if ((type(item1) == list) and (type(item2) == list)):
-            all_failures, nb_errors, nb_values_total, log = compare_lists (item1, item2, comparison_path, all_failures, nb_errors, nb_values_total, log)
+            all_failures, nb_errors, nb_values_total, log = compare_lists (item1, item2, comparison_path+str(type(item1))+"->", all_failures, nb_errors, nb_values_total, log)
+            return all_failures, nb_errors, nb_values_total, log
             
         #################   DICT    ###################
         # Check if item1 and item2 provide keys to check keys
         if ((type(item1) == dict) and (type(item2) == dict)):
-            all_failures, nb_errors, nb_values_total, log = compare_dicts (item1, item2, comparison_path, all_failures, nb_errors, nb_values_total, log)
+            all_failures, nb_errors, nb_values_total, log = compare_dicts (item1, item2, comparison_path+str(type(item1))+"->", all_failures, nb_errors, nb_values_total, log)
+            return all_failures, nb_errors, nb_values_total, log
             
 
     # If item1 and item2 are not iterable (are values)
     else :
         nb_values_total += 1
-        print (str(comparison_path+str(type(item1))))
         # if values are not equal
         if (item1 != item2):
             delta = rg.compute_1el_difference (item1, item2)
             all_failures[str(comparison_path+str(type(item1))+"->"+str(item1))] = delta
             nb_errors += 1
             return all_failures, nb_errors, nb_values_total, log
-
-# def npz_values (f1_path, f2_path):
-#     with open(f1_path, "r") as f1:
-#         with open(f2_path, "r") as f2:
-#             linesf1 = f1.readlines()
-#             linesf2 = f2.readlines()
-#             assert(len(linesf1) == len(linesf2))
-#             for idx in range(len(linesf1)):
-#
-#                 # Set default filename
-#                 filename1 = linesf1[idx].split("\n")[0]
-#                 filename2 = linesf2[idx].split("\n")[0]
-#
-#                 ratio, file_diffs = npz_single(filename1, filename2, buffer_size)
-#
-#     return ratio, all_failures
-
-# def npz_single (f1_path, f2_path):
-#
-#     ## Check if both files are NPZ files
-#     if ((not f1_path.endswith(".npz")) or (not f2_path.endswith(".npz"))):
-#         print ("Error :: NPZ value comparison needs two NPZ files")
-#         exit (1)
-#
-#     with np.load(f1_path, allow_pickle=True) as data_1:
-#         with np.load(f2_path, allow_pickle=True) as data_2:
-#             data_1_list = data_1.files
-#             data_2_list = data_2.files
-#             comparison_path="R"
-#             iterable_are_equal (data_1, data_2, comparison_path)
-#             # Print failures Line-by-Line
-#             # print(json.dumps(all_failures, indent=4))
-#
-#     ratio =  compute_ratio()
-#     # print ("Ratio = " + str(ratio) + " %")
-#     return ratio, all_failures
