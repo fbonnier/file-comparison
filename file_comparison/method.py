@@ -92,6 +92,7 @@ class Method:
             self.number_of_errors = block_diff["nerrors"]
             self.number_of_values = block_diff["nvalues"]
             self.log = block_diff["log"]
+            self.errors += block_diff["error"]
             
         except Exception as e:
             self.log.append ("Method.compute_differences: " + str(e))

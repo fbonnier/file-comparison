@@ -77,7 +77,7 @@ def compare_numpy_npz (item1, item2, comparison_path, block_diff):
 
     # common_keys = item1.files - keys_to_avoid
     if len(keys_to_avoid) > 0:
-        block_diff["repor"][str(comparison_path+str(type(item1))+"->KeysAvoided")] = keys_to_avoid
+        block_diff["report"][str(comparison_path+str(type(item1))+"->KeysAvoided")] = keys_to_avoid
         block_diff["nerrors"] += len(keys_to_avoid)
         block_diff["nvalues"] += len(keys_to_avoid)
 
@@ -102,16 +102,15 @@ def compute_score (number_of_errors, number_of_values):
 # 3
 def compute_differences_report (file1, file2):
 
-    block_diff = {"report": {}, "nerrors": 0, "nvalues": 0, "log": []}
-    comparison_path="R"
+    block_diff = {"report": {}, "nerrors": 0, "nvalues": 0, "log": [], "error": []}
+    comparison_path = "R"
     try:
         with np.load(file1["path"], allow_pickle=file1["allow_pickle"], encoding=file1["encoding"]) as data1, np.load(file2["path"], allow_pickle=file2["allow_pickle"], encoding=file2["encoding"]) as data2:
 
             block_diff = iterable_are_equal (data1, data2, comparison_path, block_diff)
 
     except Exception as e:
-        print ("NPZ compute_differences_report: " + str(e))
-        block_diff["report"][comparison_path] = "NPZ compute_differences_report: " + str(e)
+        block_diff["error"].append("NPZ compute_differences_report: " + str(e))
         block_diff["nerrors"] += 1
 
     return block_diff
@@ -130,7 +129,7 @@ def iterable_are_equal (item1, item2, comparison_path, block_diff):
     if (type (item1) not in known_types or type(item2) not in known_types):
         # Return error, unkown type
         block_diff["log"].append(comparison_path + " " + str(type(item1)) + " " + str(type(item2)))
-        block_diff ["report"][comparison_path+"->"+str(type(item1))] = comparison_path + " " + str(type(item1)) + " " + str(type(item2)) + " are not in KNOWN Types"
+        block_diff ["error"].append(comparison_path + " " + str(type(item1)) + " " + str(type(item2)) + " are not in KNOWN Types")
         block_diff["nerrors"]+=1
         block_diff["nvalues"]+=1
         return block_diff
