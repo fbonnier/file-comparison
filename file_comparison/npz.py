@@ -105,9 +105,10 @@ def compute_differences_report (file1, file2):
     block_diff = {"report": {}, "nerrors": 0, "nvalues": 0, "log": [], "error": []}
     comparison_path = "R"
     try:
-        with np.load(file1["path"], allow_pickle=file1["allow_pickle"], encoding=file1["encoding"]) as data1, np.load(file2["path"], allow_pickle=file2["allow_pickle"], encoding=file2["encoding"]) as data2:
+        data1 = np.load(file1["path"], allow_pickle=file1["allow_pickle"], encoding=file1["encoding"])
+        data2 = np.load(file2["path"], allow_pickle=file2["allow_pickle"], encoding=file2["encoding"])
 
-            block_diff = iterable_are_equal (data1, data2, comparison_path, block_diff)
+        block_diff = iterable_are_equal (data1, data2, comparison_path, block_diff)
 
     except Exception as e:
         block_diff["error"].append("NPZ compute_differences_report: " + str(e))
@@ -126,13 +127,13 @@ def check_file_formats (filepath):
 
 def iterable_are_equal (item1, item2, comparison_path, block_diff):
     
-    if (type (item1) not in known_types or type(item2) not in known_types):
-        # Return error, unkown type
-        block_diff["log"].append(comparison_path + " " + str(type(item1)) + " " + str(type(item2)))
-        block_diff ["error"].append(comparison_path + " " + str(type(item1)) + " " + str(type(item2)) + " are not in KNOWN Types")
-        block_diff["nerrors"]+=1
-        block_diff["nvalues"]+=1
-        return block_diff
+    # if (type (item1) not in known_types or type(item2) not in known_types):
+    #     # Return error, unkown type
+    #     block_diff["log"].append(comparison_path + " " + str(type(item1)) + " " + str(type(item2)))
+    #     block_diff ["error"].append(comparison_path + " " + str(type(item1)) + " " + str(type(item2)) + " are not in KNOWN Types")
+    #     block_diff["nerrors"]+=1
+    #     block_diff["nvalues"]+=1
+    #     return block_diff
 
     #############   NUMPY.NPZ.Files  #################
     # Convert npz files into compatible arrays
