@@ -36,7 +36,6 @@ def compute_differences_report (file1, file2):
     try:
         data1 = np.load(file1["path"], allow_pickle=file1["allow_pickle"], encoding=file1["encoding"])
         data2 = np.load(file2["path"], allow_pickle=file2["allow_pickle"], encoding=file2["encoding"])
-        print (type (data1))
     # with np.load(file1["path"], allow_pickle=file1["allow_pickle"], encoding=file1["encoding"]) as data_1, np.load(file2["path"], allow_pickle=file2["allow_pickle"], encoding=file2["encoding"]) as data_2:
         comparison_path="R"
         all_failures, nb_errors, nb_values_total, log = iterable_are_equal (data1, data2, comparison_path, all_failures, nb_errors, nb_values_total)
@@ -58,6 +57,10 @@ def iterable_are_equal (item1, item2, comparison_path, all_failures, nb_errors, 
     keys_to_avoid = []
     common_keys = []
     log = []
+
+    print (type (item1))
+    print (type (item2))
+    print ("\n")
 
     if (type (item1) not in known_types or type(item2) not in known_types):
         # Return error, unkown type
