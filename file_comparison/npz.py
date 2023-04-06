@@ -15,6 +15,81 @@ known_types = [np.lib.npyio.NpzFile, np.ndarray, neo.core.block.Block, neo.core.
 # nb_values_total = 0
 # nb_errors = 0
 
+def compare_lists (list1:list, list2:list, comparison_path, all_failures, nb_errors, nb_values_total, log):
+
+    log.append(comparison_path+str(type(list1)))
+    if len(list1) != len(list2):
+        all_failures[str(comparison_path+str(type(list1))+"->")] = "List don't have same length"
+    
+    for id_ilist in range(min(len(list1), len(list2))):
+        all_failures, nb_errors, nb_values_total, log = iterable_are_equal (list1[id_ilist], list2[id_ilist], comparison_path+str(type(list1))+"->", all_failures, nb_errors, nb_values_total, log)
+    
+    return all_failures, nb_errors, nb_values_total, log
+
+def compare_dicts (item1, item2, comparison_path, all_failures, nb_errors, nb_values_total, log):
+    keys_to_avoid = []
+    common_keys = []
+    log.append (comparison_path+str(type(item1)))
+
+    for ikey in item1.keys():
+        if not ikey in item2:
+            keys_to_avoid.append(ikey)
+
+    for ikey in item2.keys():
+        if not ikey in item1:
+            keys_to_avoid.append(ikey)
+
+    common_keys = item1.keys() - keys_to_avoid
+
+    if len(keys_to_avoid) > 0:
+        all_failures[str(comparison_path+str(type(item1))+"->KeysAvoided")] = keys_to_avoid
+        nb_errors += 1
+        nb_values_total += 1
+
+    # Iterate on items of item1 and item2
+    for item in common_keys:
+        all_failures, nb_errors, nb_values_total, log = iterable_are_equal(item1[item], item2[item], comparison_path+str(type(item1))+"->"+item+"->", all_failures, nb_errors, nb_values_total, log)
+        return all_failures, nb_errors, nb_values_total, log
+    
+
+def compare_numpy_arrays (item1, item2, comparison_path, all_failures, nb_errors, nb_values_total, log):
+
+    log.append(comparison_path+str(type(item1)))
+    
+    all_failures, nb_errors, nb_values_total, log = iterable_are_equal(item1.tolist(), item2.tolist(), comparison_path+str(type(item1))+"->", all_failures, nb_errors, nb_values_total, log)
+
+    return all_failures, nb_errors, nb_values_total, log
+
+def compare_numpy_npz (item1, item2, comparison_path, all_failures, nb_errors, nb_values_total, log):
+
+    keys_to_avoid = []
+    common_keys = []
+
+    # Check keys_to_avoid# # TODO
+    for ikey in item1.files:
+        if not ikey in item2.files:
+            keys_to_avoid.append(ikey)
+        elif not ikey in common_keys:
+            common_keys.append(ikey)
+
+    for ikey in item2.files:
+        if not ikey in item1.files:
+            keys_to_avoid.append(ikey)
+        elif not ikey in common_keys:
+            common_keys.append(ikey)
+
+    # common_keys = item1.files - keys_to_avoid
+    if len(keys_to_avoid) >0:
+        all_failures[str(comparison_path+str(type(item1))+"->KeysAvoided")] = keys_to_avoid
+        nb_errors += len(keys_to_avoid)
+        nb_values_total += len(keys_to_avoid)
+
+    # Iterate on keys
+    for ivar in common_keys:
+        all_failures, nb_errors, nb_values_total, log = iterable_are_equal(item1[ivar], item2[ivar], comparison_path+str(type(item1))+"->"+str(ivar)+"->", all_failures, nb_errors, nb_values_total, log)
+        return all_failures, nb_errors, nb_values_total, log
+
+
 # 4
 def compute_score (number_of_errors, number_of_values):
     #TODO Catch Exception instead of assert
@@ -38,7 +113,7 @@ def compute_differences_report (file1, file2):
         data2 = np.load(file2["path"], allow_pickle=file2["allow_pickle"], encoding=file2["encoding"])
     # with np.load(file1["path"], allow_pickle=file1["allow_pickle"], encoding=file1["encoding"]) as data_1, np.load(file2["path"], allow_pickle=file2["allow_pickle"], encoding=file2["encoding"]) as data_2:
         comparison_path="R"
-        all_failures, nb_errors, nb_values_total, log = iterable_are_equal (data1, data2, comparison_path, all_failures, nb_errors, nb_values_total)
+        all_failures, nb_errors, nb_values_total, log = iterable_are_equal (data1, data2, comparison_path, all_failures, nb_errors, nb_values_total, log)
     except Exception as e:
         print ("NPZ compute_differences_report: " + str(e))
 
@@ -53,19 +128,15 @@ def check_file_formats (filepath):
         print ("Error " + str(type(e)) + " :: NPZ method: " + str(e))
         return False, str(e)
 
-def iterable_are_equal (item1, item2, comparison_path, all_failures, nb_errors, nb_values_total):
-    keys_to_avoid = []
-    common_keys = []
-    log = []
-
-    print (type (item1))
-    print (type (item2))
-    print ("\n")
-
+def iterable_are_equal (item1, item2, comparison_path, all_failures, nb_errors, nb_values_total, log):
+    # keys_to_avoid = []
+    # common_keys = []
+    
     if (type (item1) not in known_types or type(item2) not in known_types):
         # Return error, unkown type
+        log.append(comparison_path + " " + str(type(item1)) + " " + str(type(item2)))
         print (comparison_path + " " + str(type(item1)) + " " + str(type(item2)) + " are not in KNOWN Types\n")
-        all_failures [str(comparison_path)+ " " + str(type(item1))] = "Unknown Type"
+        all_failures [str(comparison_path)+ " " + str(type(item1))] = "Unknown Types " + str(type(item1)) + " " + str(type(item2))
         nb_errors+=1
         nb_values_total+=1
         return all_failures, nb_errors, nb_values_total, log
@@ -73,41 +144,20 @@ def iterable_are_equal (item1, item2, comparison_path, all_failures, nb_errors, 
     #############   NUMPY.NPZ.Files  #################
     # Convert npz files into compatible arrays
     if ((type(item1) == np.lib.npyio.NpzFile) and (type(item2) == np.lib.npyio.NpzFile)):
-        # Check keys_to_avoid# # TODO
-        for ikey in item1.files:
-            if not ikey in item2.files:
-                keys_to_avoid.append(ikey)
-            elif not ikey in common_keys:
-                common_keys.append(ikey)
-
-        for ikey in item2.files:
-            if not ikey in item1.files:
-                keys_to_avoid.append(ikey)
-            elif not ikey in common_keys:
-                common_keys.append(ikey)
-
-        # common_keys = item1.files - keys_to_avoid
-        if len(keys_to_avoid) >0:
-            all_failures[str(comparison_path+str(type(item1))+"->KeysAvoided")] = keys_to_avoid
-            nb_errors += len(keys_to_avoid)
-            nb_values_total += len(keys_to_avoid)
-
-        # Iterate on keys
-        for ivar in common_keys:
-            all_failures, nb_errors, nb_values_total = iterable_are_equal(item1[ivar], item2[ivar], comparison_path+str(type(item1))+"->"+str(ivar)+"->", all_failures, nb_errors, nb_values_total)
-            return all_failures, nb_errors, nb_values_total, log
+        
+        all_failures, nb_errors, nb_values_total, log = compare_numpy_npz (item1, item2, comparison_path, all_failures, nb_errors, nb_values_total, log)
+        
 
     #############   NUMPY.arrays  #################
     # Convert numpy arrays into compatible arrays
     elif ((type(item1) == np.ndarray) and (type(item2) == np.ndarray)):
-        log.append("Enter iterable NUMPY array")
-        all_failures, nb_errors, nb_values_total = iterable_are_equal(item1.tolist(), item2.tolist(), comparison_path+str(type(item1))+"->", all_failures, nb_errors, nb_values_total)
-        return all_failures, nb_errors, nb_values_total, log
+        all_failures, nb_errors, nb_values_total, log = compare_numpy_arrays (item1, item2, comparison_path+str(type(item1))+"->", all_failures, nb_errors, nb_values_total, log)
 
     #############   NEO.BLOCK   ###################
     # TODO
     elif (type(item1) == neo.core.block.Block) and (type(item2) == neo.core.block.Block):
-        all_failures, nb_errors, nb_values_total = fcneo.compare_neo_blocks (item1, item2, comparison_path+str(item1.name)+str(type(item1))+"->", all_failures, nb_errors, nb_values_total)
+        # TODO
+        all_failures, nb_errors, nb_values_total, log = fcneo.compare_neo_blocks (item1, item2, comparison_path+str(item1.name)+str(type(item1))+"->", all_failures, nb_errors, nb_values_total, log)
         return all_failures, nb_errors, nb_values_total, log
         # Convert neo.blocks into compatible arrays
         # if (len(item1.segments) != len(item2.segments)):
@@ -119,7 +169,7 @@ def iterable_are_equal (item1, item2, comparison_path, all_failures, nb_errors, 
     ############    NEO.SEGMENT ##################
     # TODO
     elif (type(item1) == neo.core.Segment) and (type(item2) == neo.core.Segment):
-        all_failures, nb_errors, nb_values_total = fcneo.compare_segments(item1, item2, comparison_path+str(item1.name)+str(type(item1))+"->",all_failures, nb_errors, nb_values_total)
+        all_failures, nb_errors, nb_values_total, log = fcneo.compare_segments(item1, item2, comparison_path+str(item1.name)+str(type(item1))+"->",all_failures, nb_errors, nb_values_total, log)
         return all_failures, nb_errors, nb_values_total, log
         #############   AnalogSignal    ##############
         # if (len(item1.analogsignals) != len(item2.analogsignals)):
@@ -165,41 +215,18 @@ def iterable_are_equal (item1, item2, comparison_path, all_failures, nb_errors, 
 
         #################   LIST    ###################
         if ((type(item1) == list) and (type(item2) == list)):
-            if len(item1) != len(item2):
-                all_failures[str(comparison_path+str(type(item1))+"->")] = "List don't have same length"
-            for id_ilist in range(min(len(item1), len(item2))):
-                all_failures, nb_errors, nb_values_total = iterable_are_equal (item1[id_ilist], item2[id_ilist], comparison_path+str(type(item1))+"->", all_failures, nb_errors, nb_values_total)
-                return all_failures, nb_errors, nb_values_total, log
+            all_failures, nb_errors, nb_values_total, log = compare_lists (item1, item2, comparison_path, all_failures, nb_errors, nb_values_total, log)
+            
         #################   DICT    ###################
         # Check if item1 and item2 provide keys to check keys
         if ((type(item1) == dict) and (type(item2) == dict)):
-            keys_to_avoid = []
-            common_keys = []
-
-            for ikey in item1.keys():
-                if not ikey in item2:
-                    # print ("%s not present in one dataset" %(comparison_path+str(type(item1))+"->" +"->"+ str(ikey)))
-                    keys_to_avoid.append(ikey)
-
-            for ikey in item2.keys():
-                if not ikey in item1:
-                    # print ("%s not present in one dataset" %(comparison_path+str(type(item1))+"->"+"->"+str(ikey)))
-                    keys_to_avoid.append(ikey)
-
-            common_keys = item1.keys() - keys_to_avoid
-            if len(keys_to_avoid) >0:
-                all_failures[str(comparison_path+str(type(item1))+"->KeysAvoided")] = keys_to_avoid
-                nb_errors += 1
-                nb_values_total += 1
-
-            # Iterate on items of item1 and item2
-            for item in common_keys:
-                all_failures, nb_errors, nb_values_total = iterable_are_equal(item1[item], item2[item], comparison_path+str(type(item1))+"->"+item+"->", all_failures, nb_errors, nb_values_total)
-                return all_failures, nb_errors, nb_values_total, log
+            all_failures, nb_errors, nb_values_total, log = compare_dicts (item1, item2, comparison_path, all_failures, nb_errors, nb_values_total, log)
+            
 
     # If item1 and item2 are not iterable (are values)
     else :
         nb_values_total += 1
+        print (str(comparison_path+str(type(item1))))
         # if values are not equal
         if (item1 != item2):
             delta = rg.compute_1el_difference (item1, item2)
