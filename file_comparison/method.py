@@ -19,7 +19,9 @@ class Method:
     file1 = None
     file2 = None
     score = 0.
+    quantity_score = 0.
     differences_report = None
+    mean_value = 0.
     number_of_errors = 0
     number_of_values = 0
     rmse_score = 0.
@@ -73,12 +75,31 @@ class Method:
 
     # 4
     def compute_score (self):
-        try:
-            self.score = self.__score_methods__[self.__name__](self.number_of_errors, self.number_of_values)
-            self.mape_score = self.mape()
-        except Exception as e:
-            print (e)
-        return self.score
+
+        # Calculate the ratio of different values compared to total number of values
+        self.quantity_score = 100. - self.number_of_errors*100./self.number_of_values
+
+        # Calculate MAPE
+        ape = [ipair["ape"] for ipair in self.differences_report if ipair["ape"]]
+        if ape:
+            self.mape_score = 100. - (sum(ape)/len(ape) * 100.)
+
+        # Calculate Mean Error
+        deltas = [ipair["delta"] for ipair in self.differences_report if ipair["delta"]]
+        if deltas:
+            self.mean_error = sum(deltas)/len(deltas)
+            
+        # Calculate MSE
+        # TODO
+
+        # Calculate RMSE
+        # TODO
+
+        # try:
+        #     self.score = self.__score_methods__[self.__name__](self.number_of_errors, self.number_of_values)
+        # except Exception as e:
+        #     print (e)
+        # return self.score
 
     # 3
     def compute_differences (self):

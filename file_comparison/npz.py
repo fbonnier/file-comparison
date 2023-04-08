@@ -176,8 +176,8 @@ def iterable_are_equal (item1, item2, comparison_path, block_diff):
         block_diff["nvalues"] += 1
         # if values are not equal
         if (item1 != item2):
-            delta = rg.compute_1el_difference (item1, item2)
-            block_diff["report"][str(comparison_path+str(type(item1))+"->"+str(item1))] = delta
+            block_delta = rg.compute_1el_difference (item1, item2)
+            block_diff["report"][str(comparison_path+str(type(item1))+"->"+str(item1))] = block_delta
             block_diff["nerrors"] += 1
         
     return block_diff

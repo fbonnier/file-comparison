@@ -7,23 +7,48 @@ error_diff_types = ["type", "len"]
 
 
 def compute_1el_difference (item1, item2):
+    block_diff_1el = {"type1": str(type(item1)), "value1": item1, "type2": str(type(item1)), "value2": item2, "delta": None, "levenshtein": None, "rmse": None, "mse": None, "ape": None, "error": None}
     # Test types: if types are different, return error type
-    if not type(item1) == type(item2):
-        return ({"type": "error", "value": error_diff_types [0]})
+    if type(item1) != type(item2):
+        block_diff_1el["error"] = "Values are not the same type"
+        return (block_diff_1el)
+
+    # Test delta
+    # Compute Absolute difference between two values
+    try:
+        block_diff_1el["delta"] = abs(item1 - item2)
+    except:
+        pass
 
     # Test string values
     # Compute Levenshtein distance between two strings
     try:
-        return nltk.metrics.distance.edit_distance(w1, w2)
+        block_diff_1el["levenshtein"] = nltk.metrics.distance.edit_distance(item1, item2)
     except:
         pass
 
-    # Test other values
-    # Compute Absolute difference between two values
+    # # Test rmse
+    # # Compute Root Mean Square Error between two values
+    # try:
+    #     block_diff_1el["rmse"] = nltk.metrics.distance.edit_distance(item1, item2)
+    # except:
+    #     pass
+
+    # # Test mse
+    # # Compute Mean Square Error between two values
+    # try:
+    #     block_diff_1el["mse"] = nltk.metrics.distance.edit_distance(item1, item2)
+    # except:
+    #     pass
+
+    # Test mape
+    # Compute Absolute Percentage Error between two values
     try:
-        return abs(w1 - w2)
+        block_diff_1el["ape"] = abs((item1-item2)/item1)
     except:
         pass
+
+    return block_diff_1el
 
 
 
