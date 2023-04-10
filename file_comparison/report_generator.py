@@ -13,12 +13,12 @@ def compute_1el_difference (item1, item2):
         block_diff_1el["error"] = "Values are not the same type"
         return (block_diff_1el)
 
-    # # Test delta
-    # # Compute Absolute difference between two values
-    # try:
-    #     block_diff_1el["delta"] = abs(item1 - item2)
-    # except:
-    #     pass
+    # Test delta
+    # Compute Absolute difference between two values
+    try:
+        block_diff_1el["delta"] = abs(item1 - item2)
+    except:
+        pass
 
     # # Test string values
     # # Compute Levenshtein distance between two strings
