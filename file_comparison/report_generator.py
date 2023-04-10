@@ -8,10 +8,10 @@ error_diff_types = ["type", "len"]
 
 def compute_1el_difference (item1, item2):
     block_diff_1el = {"type1": str(type(item1)), "value1": item1, "type2": str(type(item1)), "value2": item2, "delta": None, "levenshtein": None, "rmse": None, "mse": None, "ape": None, "error": None}
-    # Test types: if types are different, return error type
-    if type(item1) != type(item2):
-        block_diff_1el["error"] = "Values are not the same type"
-        return (block_diff_1el)
+    # # Test types: if types are different, return error type
+    # if type(item1) != type(item2):
+    #     block_diff_1el["error"] = "Values are not the same type"
+    #     return (block_diff_1el)
 
     # # Test delta
     # # Compute Absolute difference between two values
