@@ -80,11 +80,11 @@ class Method:
         self.quantity_score = 100. - self.number_of_errors*100./self.number_of_values
 
         # Calculate MAPE
-        apes = [ipair["ape"] for ipair in self.differences_report if self.differences_report[ipair]["ape"]]
-        # apes = []
-        # for ipair in self.differences_report:
-        #     print (ipair)
-        #     print ("\n")
+        # apes = [ipair["ape"] for ipair in self.differences_report if self.differences_report[ipair]["ape"]]
+        apes = []
+        for ipair in self.differences_report:
+            print (ipair)
+            print ("\n")
             # if ipair["ape"]:
             #     apes.append(ipair["ape"])
 

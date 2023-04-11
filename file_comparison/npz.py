@@ -12,7 +12,7 @@ known_types = [np.lib.npyio.NpzFile, np.ndarray, neo.core.block.Block, neo.core.
 
 def compare_lists (list1:list, list2:list, comparison_path: str, block_diff: dict):
 
-    block_diff["log"].append(comparison_path+str(type(list1)))
+    # block_diff["log"].append(comparison_path+str(type(list1)))
     if len(list1) != len(list2):
         block_diff["report"][str(comparison_path+str(type(list1))+"->")] = "List don't have same length"
         block_diff["nerrors"] += 1
@@ -25,7 +25,7 @@ def compare_lists (list1:list, list2:list, comparison_path: str, block_diff: dic
 def compare_dicts (item1, item2, comparison_path, block_diff):
     keys_to_avoid = []
     common_keys = []
-    block_diff["log"].append (comparison_path+str(type(item1)))
+    # block_diff["log"].append (comparison_path+str(type(item1)))
 
     for ikey in item1.keys():
         if not ikey in item2:
@@ -51,7 +51,7 @@ def compare_dicts (item1, item2, comparison_path, block_diff):
 
 def compare_numpy_arrays (item1, item2, comparison_path, block_diff):
 
-    block_diff["log"].append(comparison_path+str(type(item1)))
+    # block_diff["log"].append(comparison_path+str(type(item1)))
     
     block_diff = iterable_are_equal(item1.tolist(), item2.tolist(), comparison_path+str(type(item1))+"->", block_diff)
 
@@ -179,7 +179,7 @@ def iterable_are_equal (item1, item2, comparison_path, block_diff):
         # if values are not equal
         if (item1 != item2):
             block_delta = rg.compute_1el_difference (item1, item2)
-            block_delta["log"] = str(comparison_path+str(type(item1))+"->"+str(item1))
+            block_delta["log"].append(str(comparison_path+str(type(item1))+"->"+str(item1)))
             block_diff["report"].append(block_delta)
             block_diff["nerrors"] += 1
         
