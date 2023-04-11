@@ -20,12 +20,12 @@ def compute_1el_difference (item1, item2):
     except:
         pass
 
-    # # Test string values
-    # # Compute Levenshtein distance between two strings
-    # try:
-    #     block_diff_1el["levenshtein"] = nltk.metrics.distance.edit_distance(item1, item2)
-    # except:
-    #     pass
+    # Test string values
+    # Compute Levenshtein distance between two strings
+    try:
+        block_diff_1el["levenshtein"] = nltk.metrics.distance.edit_distance(item1, item2)
+    except:
+        pass
 
     # # # Test rmse
     # # # Compute Root Mean Square Error between two values
