@@ -79,27 +79,27 @@ class Method:
         # Calculate the ratio of different values compared to total number of values
         self.quantity_score = 100. - self.number_of_errors*100./self.number_of_values
 
-        # Calculate MAPE
-        ape = [ipair["ape"] for ipair in self.differences_report if ipair["ape"]]
-        if ape:
-            self.mape_score = 100. - (sum(ape)/len(ape) * 100.)
+        # # Calculate MAPE
+        # ape = [ipair["ape"] for ipair in self.differences_report if ipair["ape"]]
+        # if ape:
+        #     self.mape_score = 100. - (sum(ape)/len(ape) * 100.)
 
-        # Calculate Mean Error
-        deltas = [ipair["delta"] for ipair in self.differences_report if ipair["delta"]]
-        if deltas:
-            self.mean_error = sum(deltas)/len(deltas)
+        # # Calculate Mean Error
+        # deltas = [ipair["delta"] for ipair in self.differences_report if ipair["delta"]]
+        # if deltas:
+        #     self.mean_error = sum(deltas)/len(deltas)
             
-        # Calculate MSE
-        # TODO
+        # # Calculate MSE
+        # # TODO
 
-        # Calculate RMSE
-        # TODO
+        # # Calculate RMSE
+        # # TODO
 
-        # try:
-        #     self.score = self.__score_methods__[self.__name__](self.number_of_errors, self.number_of_values)
-        # except Exception as e:
-        #     print (e)
-        # return self.score
+        # # try:
+        # #     self.score = self.__score_methods__[self.__name__](self.number_of_errors, self.number_of_values)
+        # # except Exception as e:
+        # #     print (e)
+        # # return self.score
 
     # 3
     def compute_differences (self):
@@ -118,17 +118,6 @@ class Method:
         except Exception as e:
             self.log.append ("Method.compute_differences: " + str(e))
             self.errors.append ("Method.compute_differences: " + str(e))
-
-
-        
-            # try:
-            #     self.differences_report, self.number_of_errors, self.number_of_values = self.__difference_methods__[self.__name__](self.file1, self.file2)
-            # except Exception as e:
-            #     print (e)
-
-        # except Exception as e:
-        #     self.differences_report = [{"Fatal Error": "check_file_formats FAIL " + str(type(e)) + ": file have Unknown or different file formats -- " + str(e)}]
-        #     return False, file_comparison.report_generator.generate_report_1_file (self.file1, self.file2, self.__name__, self.score, self.differences_report)
 
     def topair (self, ipair):
         ipair["method"] = self.__name__
