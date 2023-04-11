@@ -41,12 +41,12 @@ def compute_1el_difference (item1, item2):
     # # except:
     # #     pass
 
-    # # Test mape
-    # # Compute Absolute Percentage Error between two values
-    # try:
-    #     block_diff_1el["ape"] = abs((item1-item2)/item1)
-    # except:
-    #     pass
+    # Test ape
+    # Compute Absolute Percentage Error between two values
+    try:
+        block_diff_1el["ape"] = abs((item1-item2)/item1)
+    except:
+        pass
 
     return block_diff_1el
 
