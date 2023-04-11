@@ -20,7 +20,7 @@ class Method:
     file2 = None
     score = 0.
     quantity_score = 0.
-    differences_report = None
+    differences_report = []
     mean_value = 0.
     number_of_errors = 0
     number_of_values = 0

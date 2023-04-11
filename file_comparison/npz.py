@@ -102,7 +102,7 @@ def compute_score (number_of_errors, number_of_values):
 # 3
 def compute_differences_report (file1, file2):
 
-    block_diff = {"report": {}, "nerrors": 0, "nvalues": 0, "log": [], "error": []}
+    block_diff = {"report": [], "nerrors": 0, "nvalues": 0, "log": [], "error": []}
     comparison_path = "R"
     try:
         data1 = np.load(file1["path"], allow_pickle=file1["allow_pickle"], encoding=file1["encoding"])
@@ -179,7 +179,8 @@ def iterable_are_equal (item1, item2, comparison_path, block_diff):
         # if values are not equal
         if (item1 != item2):
             block_delta = rg.compute_1el_difference (item1, item2)
-            block_diff["report"][str(comparison_path+str(type(item1))+"->"+str(item1))] = block_delta
+            block_delta["log"] = str(comparison_path+str(type(item1))+"->"+str(item1))
+            block_diff["report"].append(block_delta)
             block_diff["nerrors"] += 1
         
     return block_diff
