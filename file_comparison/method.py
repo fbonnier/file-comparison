@@ -83,11 +83,13 @@ class Method:
         # apes = [ipair["ape"] for ipair in self.differences_report if ipair["ape"]]
         apes = []
         for ipair in self.differences_report:
-            if ipair["ape"]:
-                apes.append(ipair["ape"])
-                
-        if apes:
-            self.mape_score = 100. - (sum(apes)/len(apes) * 100.)
+            print (ipair)
+            print ("\n")
+            # if ipair["ape"]:
+            #     apes.append(ipair["ape"])
+
+        # if apes:
+        #     self.mape_score = 100. - (sum(apes)/len(apes) * 100.)
 
         # # Calculate Mean Error
         # deltas = [ipair["delta"] for ipair in self.differences_report if ipair["delta"]]
