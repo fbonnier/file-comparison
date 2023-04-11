@@ -79,10 +79,15 @@ class Method:
         # Calculate the ratio of different values compared to total number of values
         self.quantity_score = 100. - self.number_of_errors*100./self.number_of_values
 
-        # # Calculate MAPE
-        # ape = [ipair["ape"] for ipair in self.differences_report if ipair["ape"]]
-        # if ape:
-        #     self.mape_score = 100. - (sum(ape)/len(ape) * 100.)
+        # Calculate MAPE
+        # apes = [ipair["ape"] for ipair in self.differences_report if ipair["ape"]]
+        apes = []
+        for ipair in self.differences_report:
+            if ipair["ape"]:
+                apes.append(ipair["ape"])
+                
+        if apes:
+            self.mape_score = 100. - (sum(apes)/len(apes) * 100.)
 
         # # Calculate Mean Error
         # deltas = [ipair["delta"] for ipair in self.differences_report if ipair["delta"]]
