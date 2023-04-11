@@ -109,8 +109,8 @@ def compute_differences_report (file1, file2):
         data2 = np.load(file2["path"], allow_pickle=file2["allow_pickle"], encoding=file2["encoding"])
 
         block_diff = iterable_are_equal (data1, data2, comparison_path, block_diff)
-        print (block_diff)
-        print ("\n")
+        # print (block_diff)
+        # print ("\n")
 
     except Exception as e:
         block_diff["error"].append("NPZ compute_differences_report: " + str(e))

@@ -80,7 +80,7 @@ class Method:
         self.quantity_score = 100. - self.number_of_errors*100./self.number_of_values
 
         # Calculate MAPE
-        # apes = [ipair["ape"] for ipair in self.differences_report if ipair["ape"]]
+        apes = [ipair["ape"] for ipair in self.differences_report if self.differences_report[ipair]["ape"]]
         # apes = []
         # for ipair in self.differences_report:
         #     print (ipair)
@@ -88,8 +88,8 @@ class Method:
             # if ipair["ape"]:
             #     apes.append(ipair["ape"])
 
-        # if apes:
-        #     self.mape_score = 100. - (sum(apes)/len(apes) * 100.)
+        if apes:
+            self.mape_score = 100. - (sum(apes)/len(apes) * 100.)
 
         # # Calculate Mean Error
         # deltas = [ipair["delta"] for ipair in self.differences_report if ipair["delta"]]
