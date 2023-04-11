@@ -116,6 +116,7 @@ class Method:
         try:
             # TODO
             block_diff = self.__difference_methods__[self.__name__](self.file1, self.file2)
+            print (block_diff)
             self.differences_report = block_diff["report"]
             self.number_of_errors = block_diff["nerrors"]
             self.number_of_values = block_diff["nvalues"]
