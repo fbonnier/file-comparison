@@ -62,7 +62,7 @@ class Method:
                 # self.differences_report = [{"Fatal Error": "check_file_formats FAIL " + str(type(e)) + ": file have Unknown or different file formats -- " + str(e)}]
                 # return False, file_comparison.report_generator.generate_report_1_file (self.file1, self.file2, self.__name__, self.score, self.differences_report)
         check = check1 and check2
-        error = [error1,  error2] if error1 and error2 else None
+        error = [error1,  error2] if error1 and error2 else []
         return check, error 
 
     # 2.pair
@@ -80,26 +80,25 @@ class Method:
         self.quantity_score = 100. - self.number_of_errors*100./self.number_of_values
 
         # Calculate MAPE
-        # apes = [ipair["ape"] for ipair in self.differences_report if self.differences_report[ipair]["ape"]]
-        apes = []
-        for ipair in self.differences_report:
-            print (ipair, sep="\n\n")
+        apes = [ipair["ape"] for ipair in self.differences_report if ipair["ape"]]
+        # apes = []
+        # for ipair in self.differences_report:
             # if ipair["ape"]:
-            #     apes.append(ipair["ape"])
+                # apes.append(ipair["ape"])
 
         if apes:
-            self.mape_score = 100. - (sum(apes)/len(apes) * 100.)
+            # self.mape_score = 100. - (sum(apes)/len(apes) * 100.)
+            self.mape_score = 100. - (sum(apes)/self.number_of_values * 100.)
 
-        # # Calculate Mean Error
-        # deltas = [ipair["delta"] for ipair in self.differences_report if ipair["delta"]]
-        # if deltas:
-        #     self.mean_error = sum(deltas)/len(deltas)
             
         # # Calculate MSE
-        # # TODO
+        squared_deltas = [ipair["delta"]*ipair["delta"] for ipair in self.differences_report if ipair["delta"]]
+        if squared_deltas:
+            self.mse_score = sum(squared_deltas)/len(self.number_of_values)
 
-        # # Calculate RMSE
-        # # TODO
+        # Calculate RMSE
+        if self.mse_score:
+            self.rmse_score = sqrt(self.mse_score)
 
         # # try:
         # #     self.score = self.__score_methods__[self.__name__](self.number_of_errors, self.number_of_values)
