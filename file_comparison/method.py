@@ -94,7 +94,7 @@ class Method:
         # # Calculate MSE
         squared_deltas = [ipair["delta"]*ipair["delta"] for ipair in self.differences_report if ipair["delta"]]
         if squared_deltas:
-            self.mse_score = sum(squared_deltas)/len(self.number_of_values)
+            self.mse_score = sum(squared_deltas)/self.number_of_values
 
         # Calculate RMSE
         if self.mse_score:
