@@ -10,11 +10,11 @@ import file_comparison.neo as fcneo
 
 known_types = [np.lib.npyio.NpzFile, np.ndarray, neo.core.block.Block, neo.core.Segment, str, bytes, list, dict, bool, float, int, neo.core.spiketrain.SpikeTrain, neo.core.analogsignal.AnalogSignal]
 
-def compare_lists (list1:list, list2:list, comparison_path: str, block_diff: dict):
+def compare_lists (list1:list, list2:list, comparison_path: str, block_diff: dict ):
 
     # block_diff["log"].append(comparison_path+str(type(list1)))
     if len(list1) != len(list2):
-        block_diff["report"][str(comparison_path+str(type(list1))+"->")] = "List don't have same length"
+        block_diff["error"].append(str(comparison_path+str(type(list1))+"->") + "List don't have same length")
         block_diff["nerrors"] += 1
     
     for id_ilist in range(min(len(list1), len(list2))):
@@ -38,7 +38,7 @@ def compare_dicts (item1, item2, comparison_path, block_diff):
     common_keys = item1.keys() - keys_to_avoid
 
     if len(keys_to_avoid) > 0:
-        block_diff["report"][str(comparison_path+str(type(item1))+"->KeysAvoided")] = keys_to_avoid
+        block_diff["error"].append(str(comparison_path+str(type(item1))+"->KeysAvoided") +  str(keys_to_avoid))
         block_diff["nerrors"] += len(keys_to_avoid)
         block_diff["nvalues"] += len(keys_to_avoid)
 
@@ -77,7 +77,7 @@ def compare_numpy_npz (item1, item2, comparison_path, block_diff):
 
     # common_keys = item1.files - keys_to_avoid
     if len(keys_to_avoid) > 0:
-        block_diff["report"][str(comparison_path+str(type(item1))+"->KeysAvoided")] = keys_to_avoid
+        block_diff["error"].append(str(comparison_path+str(type(item1))+"->KeysAvoided") + str( keys_to_avoid))
         block_diff["nerrors"] += len(keys_to_avoid)
         block_diff["nvalues"] += len(keys_to_avoid)
 

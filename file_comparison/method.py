@@ -83,8 +83,7 @@ class Method:
         # apes = [ipair["ape"] for ipair in self.differences_report if self.differences_report[ipair]["ape"]]
         apes = []
         for ipair in self.differences_report:
-            print (ipair)
-            print ("\n")
+            print (ipair, sep="\n\n")
             # if ipair["ape"]:
             #     apes.append(ipair["ape"])
 
