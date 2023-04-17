@@ -1,6 +1,7 @@
 # Neo
 from collections.abc import Iterable
 import neo.io
+import file_comparison.report_generator as rg
 
 
 
@@ -140,104 +141,152 @@ def extract_neo_segment (segment, path, data):
     except Exception as e:
         print ("Error Neo :: " + str(e))
 
-# def compare_segments (segment1, segment2, path, all_failures, nb_errors, nb_values_total):
-#     # if type(segment1) == type(None) or type(segment1) == type(None):
-#     #     print ("Error NoneType ")
-#
-#     try:
-#         # Group objects
-#         print (path + "->channelview")
-#         # print (segment1.channelview)
-#         for ivar_idx in range(len(segment1.channelview)):
-#             if segment1.channelview[ivar_idx].all() != segment2.channelview[ivar_idx].all():
-#                 all_failures[str(path+str("->channelview[" + str(ivar_idx) + "]") + "->")] = segment1.channelview[ivar_idx] - segment2.channelview[ivar_idx]
-#     except Exception as e:
-#         print (type(segment1.channelview))
-#         print (type(segment1))
-#         print ("Error Neo :: " + str(e))
-#
-#     try:
-#         print (path + "->analogsignals")
-#         for ivar_idx in range(len(segment1.analogsignals)):
-#             if segment1.analogsignals[ivar_idx].all() != segment2.analogsignals[ivar_idx].all():
-#                 all_failures[str(path+str("->analogsignals[" + str(ivar_idx) + "]") + "->")] = segment1.analogsignals[ivar_idx] - segment2.analogsignals[ivar_idx]
-#     except Exception as e:
-#         print ("Error Neo :: " + str(e))
-#
-#     try:
-#         print (path + "->irregularlysampledsignals")
-#         for ivar_idx in range(len(segment1.irregularlysampledsignals)):
-#             if segment1.irregularlysampledsignals[ivar_idx].all() != segment2.irregularlysampledsignals[ivar_idx].all():
-#                 all_failures[str(path+str("->irregularlysampledsignals[" + str(ivar_idx) + "]") + "->")] = segment1.irregularlysampledsignals[ivar_idx] - segment2.irregularlysampledsignals[ivar_idx]
-#     except Exception as e:
-#         print ("Error Neo :: " + str(e))
-#
-#     try:
-#         print (path + "->spiketrains")
-#         for ivar_idx in range(len(segment1.spiketrains)):
-#             print (segment1.spiketrains[ivar_idx])
-#             if segment1.spiketrains[ivar_idx].all() != segment2.spiketrains[ivar_idx].all():
-#                 all_failures[str(path+str("->spiketrains[" + str(ivar_idx) + "]") + "->")] = segment1.spiketrains[ivar_idx] - segment2.spiketrains[ivar_idx]
-#     except Exception as e:
-#         print ("Error Neo :: " + str(e))
-#
-#     try:
-#         print (path + "->events")
-#         for ivar_idx in range(len(segment1.events)):
-#             if segment1.events[ivar_idx].all() != segment2.events[ivar_idx].all():
-#                 all_failures[str(path+str("->events[" + str(ivar_idx) + "]") + "->")] = segment1.events[ivar_idx] - segment2.events[ivar_idx]
-#     except Exception as e:
-#         print ("Error Neo :: " + str(e))
-#
-#     try:
-#         print (path + "->epochs")
-#         for ivar_idx in range(len(segment1.epochs)):
-#             if segment1.epochs[ivar_idx].all() != segment2.epochs[ivar_idx].all():
-#                 all_failures[str(path+str("->epochs[" + str(ivar_idx) + "]") + "->")] = segment1.epochs[ivar_idx] - segment2.epochs[ivar_idx]
-#     except Exception as e:
-#         print ("Error Neo :: " + str(e))
+def compare_segments (original_segment, new_segment, path, block_diff):
+
+    if type(original_segment) == type(None) or type(original_segment) == type(None):
+        block_diff["error"].append (path + " Segment is None ")
+        block_diff["nerrors"] += 1
+    else:
+        try:
+            # Channelview data
+            if len(original_segment.channelview) != len(new_segment.channelview):
+                block_diff["error"].append (path + " channelview are not the same size")
+                block_diff["nerrors"] += 1
+                block_diff["log"].append (path + " channelview are not the same size")
+              
+            for ivar_idx in range(min(len(original_segment.channelview), len(new_segment.channelview))):
+                if original_segment.channelview[ivar_idx].all() != new_segment.channelview[ivar_idx].all():
+                    block_diff["report"].append (rg.compute_1el_difference (original_segment.channelview[ivar_idx], new_segment.channelview[ivar_idx]))
+        except Exception as e:
+            block_diff["log"].append (path + " " + str(e))
+
+        try:
+            # Analog Signals
+            if len(original_segment.analogsignals) != len(new_segment.analogsignals):
+                block_diff["error"].append (path + " analogsignals are not the same size")
+                block_diff["nerrors"] += 1
+                block_diff["log"].append (path + " analogsignals are not the same size")
+
+            for ivar_idx in range(min(len(original_segment.analogsignals), len(new_segment.analogsignals))):
+                if original_segment.analogsignals[ivar_idx].all() != new_segment.analogsignals[ivar_idx].all():
+                    block_diff["report"].append (rg.compute_1el_difference (original_segment.analogsignals[ivar_idx], new_segment.analogsignals[ivar_idx]))
+        except Exception as e:
+            block_diff["log"].append (path + " " + str(e))
+
+        try:
+            # irregularly sampled signals
+            if len(original_segment.irregularlysampledsignals) != len(new_segment.irregularlysampledsignals):
+                block_diff["error"].append (path + " irregularlysampledsignals are not the same size")
+                block_diff["nerrors"] += 1
+                block_diff["log"].append (path + " irregularlysampledsignals are not the same size")
+
+            for ivar_idx in range(min(len(original_segment.irregularlysampledsignals), len(new_segment.irregularlysampledsignals))):
+                if original_segment.irregularlysampledsignals[ivar_idx].all() != new_segment.irregularlysampledsignals[ivar_idx].all():
+                    block_diff["report"].append (rg.compute_1el_difference (original_segment.irregularlysampledsignals[ivar_idx], new_segment.irregularlysampledsignals[ivar_idx]))
+        
+        except Exception as e:
+            block_diff["log"].append (path + " " + str(e))
+
+        try:
+            # Spiketrains
+            if len(original_segment.spiketrains) != len(new_segment.spiketrains):
+                block_diff["error"].append (path + " spiketrains are not the same size")
+                block_diff["nerrors"] += 1
+                block_diff["log"].append (path + " spiketrains are not the same size")
+
+            for ivar_idx in range(min(len(original_segment.spiketrains), len(new_segment.spiketrains))):
+                if original_segment.spiketrains[ivar_idx].all() != new_segment.spiketrains[ivar_idx].all():
+                    block_diff["report"].append (rg.compute_1el_difference (original_segment.spiketrains[ivar_idx], new_segment.spiketrains[ivar_idx]))
+        except Exception as e:
+            block_diff["log"].append (path + " " + str(e))
+
+        try:
+            # Events
+            if len(original_segment.events) != len(new_segment.events):
+                block_diff["error"].append (path + " events are not the same size")
+                block_diff["nerrors"] += 1
+                block_diff["log"].append (path + " events are not the same size")
+
+            for ivar_idx in range(min(len(original_segment.events), len(new_segment.events))):
+                if original_segment.events[ivar_idx].all() != new_segment.events[ivar_idx].all():
+                    block_diff["report"].append (rg.compute_1el_difference (original_segment.events[ivar_idx], new_segment.events[ivar_idx]))
+        except Exception as e:
+            block_diff["log"].append (path + " " + str(e))
+
+        try:
+            # Epochs
+            if len(original_segment.epochs) != len(new_segment.epochs):
+                block_diff["error"].append (path + " epochs are not the same size")
+                block_diff["nerrors"] += 1
+                block_diff["log"].append (path + " epochs are not the same size")
+
+            for ivar_idx in range(min(len(original_segment.epochs), len(new_segment.epochs))):
+                if original_segment.epochs[ivar_idx].all() != new_segment.epochs[ivar_idx].all():
+                    block_diff["report"].append (rg.compute_1el_difference (original_segment.epochs[ivar_idx], new_segment.epochs[ivar_idx]))
+        except Exception as e:
+            block_diff["log"].append (path + " " + str(e))
+
+    return block_diff
 
 
-# def compare_groups (group1, group2, path, all_failures, nb_errors, nb_values_total):
-#     assert (len(group1.groups) == len (group2.groups))
-#
-#     for igroup_idx in range(len(group1.groups)):
-#         compare_groups (group1.groups[igroup_idx], group2.groups[igroup_idx], path + "->group[" + str(igroup_idx) + "]")
-#
-#     compare_segments (group1, group2, path, all_failures, nb_errors, nb_values_total)
+def compare_groups (original_group, new_group, path, block_diff):
 
-# def compare_neo_blocks (neoblock1, neoblock2, path, all_failures, nb_errors, nb_values_total):
-#
-#     assert(len(neoblock1.segments) == len(neoblock2.segments))
-#     print ("nombre de segment = " + str(len(neoblock1.segments)))
-#     for isegment_idx in range(len(neoblock1.segments)):
-#         compare_segments (neoblock1.segments[isegment_idx], neoblock2.segments[isegment_idx], path + "->segment[" + str(isegment_idx) + "]", all_failures, nb_errors, nb_values_total)
-#
-#     print ("groups")
-#
-#     assert(len(neoblock1.groups) == len(neoblock2.groups))
-#     print ("nombre de groupes = " + str(len(neoblock1.groups)))
-#     for igroup_idx in range(len(neoblock1.groups)):
-#         compare_groups (neoblock1.groups[igroup_idx], neoblock2.groups[igroup_idx], path + "->group[" + str(igroup_idx) + "]")
+    if len(original_group.groups) != len(new_group.groups):
+        block_diff["error"].append (path + " group have different number of groups")
+        block_diff["nerrors"] += 1
+        block_diff["log"].append (path + " group have different number of groups")
 
-def compute_differences_report (file1, file2, path, all_failures, nb_errors, nb_values_total):
+    for igroup_idx in range(min(len(original_group.groups, new_group.groups))):
+        block_diff = compare_groups (original_group.groups[igroup_idx], new_group.groups[igroup_idx], path + "->group[" + str(igroup_idx) + "]", block_diff)
+
+    block_diff = compare_segments (original_group, original_group, path, block_diff)
+
+    return block_diff
+
+def compare_neo_blocks (original_block, new_block, path, block_diff):
+
+    # Compare segments
+    if len(original_block.segments) != len(new_block.segments):
+        block_diff["error"].append (path + " block have different number of segments")
+        block_diff["nerrors"] += 1
+        block_diff["log"].append (path + " block have different number of segments")
+
+    for isegment_idx in range(min (len(original_block.segments), len(new_block.segments))):
+        block_diff = compare_segments (original_block.segments[isegment_idx], new_block.segments[isegment_idx], path + "->segment[" + str(isegment_idx) + "]", block_diff)
+
+    # Compare groups
+    if len(original_block.groups) != len(new_block.groups):
+        block_diff["error"].append (path + " block have different number of groups")
+        block_diff["nerrors"] += 1
+        block_diff["log"].append (path + " block have different number of groups")
+        
+    for igroup_idx in range(min (len(original_block.groups), len(new_block.groups))):
+        block_diff = compare_groups (original_block.groups[igroup_idx], new_block.groups[igroup_idx], path + "->group[" + str(igroup_idx) + "]", block_diff)
+
+    return block_diff
+
+
+def compute_differences_report (original_file, new_file):
+    block_diff = {"report": [], "nerrors": 0, "nvalues": 0, "log": [], "error": []}
+    comparison_path = "R"
     try:
-        file_path1 = self.file1.url + self.file1.name
-        file_path2 = self.file2.url + self.file2.name
+        original_neo_reader = neo.io.get_io(original_file["path"])
+        new_neo_reader = neo.io.get_io(new_file["path"])
 
-        neo_reader1 = neo.io.get_io(self.file1.url + self.file1.name)
-        neo_reader2 = neo.io.get_io(self.file2.url + self.file2.name)
+        original_blocks = original_neo_reader.read()
+        new_blocks = new_neo_reader.read()
 
-        blocks1 = neo_reader1.read()
-        blocks2 = neo_reader2.read()
+        if len(original_blocks) != len(new_blocks):
+            block_diff["error"].append ("NEO Error:" + original_file["path"] + " and " + new_file["path"] + " do not have the same number of neo:blocks")
+            block_diff["nerrors"] += 1
+            block_diff["log"].append ("NEO Warning: Number of blocks are not equal: not all blocks will be compared" )
 
-        # Assert blocks have same size
-        if len(blocks1) != len(blocks2):
-            print ("NEO Error:" + file_path1 + " and " + file_path2 + " do not have the same number of neo:blocks")
-            print ("NEO Warning: Number of blocks are not equal: not all blocks will be compared" )
+        for iblock_idx in range(min(len(original_blocks), len(new_blocks))):
+            block_diff = compare_neo_blocks(original_blocks[iblock_idx], new_blocks[iblock_idx], comparison_path + "->block[" + str(iblock_idx) + "]", block_diff)
 
-        print ("nombre de blocks = " + str(len(blocks1)))
-        for iblock_idx in range(min(len(blocks1), len(blocks2))):
-            compare_neo_blocks(blocks1[iblock_idx], blocks2[iblock_idx], "R->block[" + str(iblock_idx) + "]")
     except Exception as e:
-        print ("Neo :: " + str(type(e).__name__) + " " + str(e))
+        block_diff["error"].append("Neo :: " + str(type(e).__name__) + " " + str(e))
+        block_diff["nerrors"] += 1
+
+    return block_diff
+

@@ -22,68 +22,68 @@ def compare_lists (list1:list, list2:list, comparison_path: str, block_diff: dic
     
     return block_diff
 
-def compare_dicts (item1, item2, comparison_path, block_diff):
+def compare_dicts (original_item, new_item, comparison_path, block_diff):
     keys_to_avoid = []
     common_keys = []
-    # block_diff["log"].append (comparison_path+str(type(item1)))
+    # block_diff["log"].append (comparison_path+str(type(original_item)))
 
-    for ikey in item1.keys():
-        if not ikey in item2:
+    for ikey in original_item.keys():
+        if not ikey in new_item:
             keys_to_avoid.append(ikey)
 
-    for ikey in item2.keys():
-        if not ikey in item1:
+    for ikey in new_item.keys():
+        if not ikey in original_item:
             keys_to_avoid.append(ikey)
 
-    common_keys = item1.keys() - keys_to_avoid
+    common_keys = original_item.keys() - keys_to_avoid
 
     if len(keys_to_avoid) > 0:
-        block_diff["error"].append(str(comparison_path+str(type(item1))+"->KeysAvoided") +  str(keys_to_avoid))
+        block_diff["error"].append(str(comparison_path+str(type(original_item))+"->KeysAvoided") +  str(keys_to_avoid))
         block_diff["nerrors"] += len(keys_to_avoid)
         block_diff["nvalues"] += len(keys_to_avoid)
 
-    # Iterate on items of item1 and item2
+    # Iterate on items of original_item and new_item
     for item in common_keys:
-        block_diff = iterable_are_equal(item1[item], item2[item], comparison_path+str(type(item1))+"->"+item+"->", block_diff)
+        block_diff = iterable_are_equal(original_item[item], new_item[item], comparison_path+str(type(original_item))+"->"+item+"->", block_diff)
         
     return block_diff
     
 
-def compare_numpy_arrays (item1, item2, comparison_path, block_diff):
+def compare_numpy_arrays (original_item, new_item, comparison_path, block_diff):
 
-    # block_diff["log"].append(comparison_path+str(type(item1)))
+    # block_diff["log"].append(comparison_path+str(type(original_item)))
     
-    block_diff = iterable_are_equal(item1.tolist(), item2.tolist(), comparison_path+str(type(item1))+"->", block_diff)
+    block_diff = iterable_are_equal(original_item.tolist(), new_item.tolist(), comparison_path+str(type(original_item))+"->", block_diff)
 
     return block_diff
 
-def compare_numpy_npz (item1, item2, comparison_path, block_diff):
+def compare_numpy_npz (original_item, new_item, comparison_path, block_diff):
 
     keys_to_avoid = []
     common_keys = []
 
     # Check keys_to_avoid# # TODO
-    for ikey in item1.files:
-        if not ikey in item2.files:
+    for ikey in original_item.files:
+        if not ikey in new_item.files:
             keys_to_avoid.append(ikey)
         elif not ikey in common_keys:
             common_keys.append(ikey)
 
-    for ikey in item2.files:
-        if not ikey in item1.files:
+    for ikey in new_item.files:
+        if not ikey in original_item.files:
             keys_to_avoid.append(ikey)
         elif not ikey in common_keys:
             common_keys.append(ikey)
 
-    # common_keys = item1.files - keys_to_avoid
+    # common_keys = original_item.files - keys_to_avoid
     if len(keys_to_avoid) > 0:
-        block_diff["error"].append(str(comparison_path+str(type(item1))+"->KeysAvoided") + str( keys_to_avoid))
+        block_diff["error"].append(str(comparison_path+str(type(original_item))+"->KeysAvoided") + str( keys_to_avoid))
         block_diff["nerrors"] += len(keys_to_avoid)
         block_diff["nvalues"] += len(keys_to_avoid)
 
     # Iterate on keys
     for ivar in common_keys:
-        block_diff = iterable_are_equal(item1[ivar], item2[ivar], comparison_path+str(type(item1))+"->"+str(ivar)+"->", block_diff)
+        block_diff = iterable_are_equal(original_item[ivar], new_item[ivar], comparison_path+str(type(original_item))+"->"+str(ivar)+"->", block_diff)
     return block_diff
 
 
@@ -100,15 +100,15 @@ def compute_score (number_of_errors, number_of_values):
     return (score)
 
 # 3
-def compute_differences_report (file1, file2):
+def compute_differences_report (original_file, new_file):
 
     block_diff = {"report": [], "nerrors": 0, "nvalues": 0, "log": [], "error": []}
     comparison_path = "R"
     try:
-        data1 = np.load(file1["path"], allow_pickle=file1["allow_pickle"], encoding=file1["encoding"])
-        data2 = np.load(file2["path"], allow_pickle=file2["allow_pickle"], encoding=file2["encoding"])
+        original_data = np.load(original_file["path"], allow_pickle=original_file["allow_pickle"], encoding=original_file["encoding"])
+        new_data = np.load(new_file["path"], allow_pickle=new_file["allow_pickle"], encoding=new_file["encoding"])
 
-        block_diff = iterable_are_equal (data1, data2, comparison_path, block_diff)
+        block_diff = iterable_are_equal (original_data, new_data, comparison_path, block_diff)
         # print (block_diff)
         # print ("\n")
 
@@ -127,59 +127,59 @@ def check_file_formats (filepath):
         print ("Error " + str(type(e)) + " :: NPZ method: " + str(e))
         return False, str(e)
 
-def iterable_are_equal (item1, item2, comparison_path, block_diff):
+def iterable_are_equal (original_item, new_item, comparison_path, block_diff):
     
-    if (type (item1) not in known_types or type(item2) not in known_types):
+    if (type (original_item) not in known_types or type(new_item) not in known_types):
         # Return error, unkown type
-        block_diff["log"].append(comparison_path + " " + str(type(item1)) + " " + str(type(item2)))
-        block_diff ["error"].append(comparison_path + " " + str(type(item1)) + " " + str(type(item2)) + " are not in KNOWN Types")
+        block_diff["log"].append(comparison_path + " " + str(type(original_item)) + " " + str(type(new_item)))
+        block_diff ["error"].append(comparison_path + " " + str(type(original_item)) + " " + str(type(new_item)) + " are not in KNOWN Types")
         block_diff["nerrors"]+=1
         block_diff["nvalues"]+=1
 
     #############   NUMPY.NPZ.Files  #################
     # Convert npz files into compatible arrays
-    if ((type(item1) == np.lib.npyio.NpzFile) and (type(item2) == np.lib.npyio.NpzFile)):
+    if ((type(original_item) == np.lib.npyio.NpzFile) and (type(new_item) == np.lib.npyio.NpzFile)):
         
-        block_diff = compare_numpy_npz (item1, item2, comparison_path+str(type(item1))+"->", block_diff)
+        block_diff = compare_numpy_npz (original_item, new_item, comparison_path+str(type(original_item))+"->", block_diff)
 
     #############   NUMPY.arrays  #################
     # Convert numpy arrays into compatible arrays
-    elif ((type(item1) == np.ndarray) and (type(item2) == np.ndarray)):
-        block_diff = compare_numpy_arrays (item1, item2, comparison_path+str(type(item1))+"->", block_diff)
+    elif ((type(original_item) == np.ndarray) and (type(new_item) == np.ndarray)):
+        block_diff = compare_numpy_arrays (original_item, new_item, comparison_path+str(type(original_item))+"->", block_diff)
 
     #############   NEO.BLOCK   ###################
     # TODO
-    elif (type(item1) == neo.core.block.Block) and (type(item2) == neo.core.block.Block):
+    elif (type(original_item) == neo.core.block.Block) and (type(new_item) == neo.core.block.Block):
         # TODO
-        block_diff = fcneo.compare_neo_blocks (item1, item2, comparison_path+str(item1.name)+str(type(item1))+"->", block_diff)
+        block_diff = fcneo.compare_neo_blocks (original_item, new_item, comparison_path+str(original_item.name)+str(type(original_item))+"->", block_diff)
 
     ############    NEO.SEGMENT ##################
     # TODO
-    elif (type(item1) == neo.core.Segment) and (type(item2) == neo.core.Segment):
-        block_diff = fcneo.compare_segments(item1, item2, comparison_path+str(item1.name)+str(type(item1))+"->", block_diff)
+    elif (type(original_item) == neo.core.Segment) and (type(new_item) == neo.core.Segment):
+        block_diff = fcneo.compare_segments(original_item, new_item, comparison_path+str(original_item.name)+str(type(original_item))+"->", block_diff)
         
-    elif ((isinstance(item1, Iterable)) and (isinstance(item2, Iterable)) and (type(item1)!=str) and (type(item1)!= bytes) ):
+    elif ((isinstance(original_item, Iterable)) and (isinstance(new_item, Iterable)) and (type(original_item)!=str) and (type(original_item)!= bytes) ):
 
         #################   LIST    ###################
-        if ((type(item1) == list) and (type(item2) == list)):
-            block_diff = compare_lists (item1, item2, comparison_path+str(type(item1))+"->", block_diff)
+        if ((type(original_item) == list) and (type(new_item) == list)):
+            block_diff = compare_lists (original_item, new_item, comparison_path+str(type(original_item))+"->", block_diff)
             
         #################   DICT    ###################
-        # Check if item1 and item2 provide keys to check keys
-        elif ((type(item1) == dict) and (type(item2) == dict)):
-            block_diff = compare_dicts (item1, item2, comparison_path+str(type(item1))+"->", block_diff)
+        # Check if original_item and new_item provide keys to check keys
+        elif ((type(original_item) == dict) and (type(new_item) == dict)):
+            block_diff = compare_dicts (original_item, new_item, comparison_path+str(type(original_item))+"->", block_diff)
         else:
-            block_diff["error"].append(comparison_path+str(type(item1)) + " iterable not supported")
+            block_diff["error"].append(comparison_path+str(type(original_item)) + " iterable not supported")
             block_diff["nerrors"] += 1
             
 
-    # If item1 and item2 are not iterable (are values)
+    # If original_item and new_item are not iterable (are values)
     else :
         block_diff["nvalues"] += 1
         # if values are not equal
-        if (item1 != item2):
-            block_delta = rg.compute_1el_difference (item1, item2)
-            block_delta["log"].append(str(comparison_path+str(type(item1))+"->"+str(item1)))
+        if (original_item != new_item):
+            block_delta = rg.compute_1el_difference (original_item, new_item)
+            block_delta["log"].append(str(comparison_path+str(type(original_item))+"->"+str(original_item)))
             block_diff["report"].append(block_delta)
             block_diff["nerrors"] += 1
         

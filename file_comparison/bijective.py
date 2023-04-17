@@ -39,11 +39,11 @@ def find_bijective (produced_outputs, expected_outputs):
             if partner["score"] < new_score:
                 partner["ifile2"] = ifile2
                 partner["score"] = new_score
-        block = {"File1": None, "File2": None, "hash score": None, "format": None, "error": [], "method": None}
-        block["File1"] = ifile1
-        block["File1"]["origin"] = "produced"
-        block["File2"] = partner["ifile2"]
-        block["File2"]["origin"] = "expected"
+        block = {"Origin": None, "New": None, "hash score": None, "format": None, "error": [], "method": None}
+        block["Origin"] = ifile1
+        block["Origin"]["origin"] = "produced"
+        block["New"] = partner["ifile2"]
+        block["New"]["origin"] = "expected"
         block["hash score"] = partner["score"]
 
         # Compare file formats

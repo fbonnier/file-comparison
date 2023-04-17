@@ -27,19 +27,7 @@ def compute_1el_difference (item1, item2):
     except:
         pass
 
-    # # # Test rmse
-    # # # Compute Root Mean Square Error between two values
-    # # try:
-    # #     block_diff_1el["rmse"] = nltk.metrics.distance.edit_distance(item1, item2)
-    # # except:
-    # #     pass
 
-    # # # Test mse
-    # # # Compute Mean Square Error between two values
-    # # try:
-    # #     block_diff_1el["mse"] = nltk.metrics.distance.edit_distance(item1, item2)
-    # # except:
-    # #     pass
 
     # Test ape
     # Compute Absolute Percentage Error between two values
@@ -50,55 +38,6 @@ def compute_1el_difference (item1, item2):
 
     return block_diff_1el
 
-
-
-
-# Generates the final report that compiles differences and scores of file comparison
-# The output report is an array of file couples organized like the following
-# {"file1":{
-#       "name":"test-file.txt",
-#       "path":"",
-#       "size":"1000",
-#       "type":"file",
-#     },
-#  "file2":{
-#         "name":"test-file.txt",
-#         "path":"",
-#         "size":"1000",
-#         "type":"file",},
-#  "method":"",
-#  "score":"",
-#  "differences":{},
-# },
-# input:
-#       - file1: file path
-#       - file2: file path
-#       - method: method used to compare the files (neo, numpy, bytes)
-#       - score: score of the comparison
-#       - differences: list of differences
-def generate_report_1_file (file1, file2, method, score, differences):
-    file1_path = file1.url + file1.name
-    file2_path = file2.url + file2.name
-    # Block to return
-    blck = {"file1":
-                {
-                    "name":os.path.basename(file1_path),
-                    "path":os.path.dirname(file1_path),
-                    "size":os.path.getsize(file1_path),
-                    "type":os.path.splitext(file1_path)[1],
-                },
-            "file2":
-                {
-                    "name":os.path.basename(file2_path),
-                    "path":os.path.dirname(file2_path),
-                    "size":os.path.getsize(file2_path),
-                    "type":os.path.splitext(file2_path)[1],
-                },
-            "method":method,
-            "score": score,
-            "differences": differences
-            }
-    return blck
 
 """
 Differences object should look like:
