@@ -7,7 +7,9 @@ from math import sqrt
 
 import file_comparison.neo
 import file_comparison.npz
+# Nilsimsa
 import file_comparison.nilsimsa
+from nilsimsa import Nilsimsa, compare_digests
 
 
 class Method:
@@ -27,6 +29,7 @@ class Method:
     rmse_score = 0.
     mse_score = 0.
     mape_score = 0.
+    hash_score = 0.
     errors = []
     log = []
 
@@ -64,6 +67,20 @@ class Method:
         check = check1 and check2
         error = [error1,  error2] if error1 and error2 else []
         return check, error 
+    
+    # Compare the two file's hash
+    def compare_hash (self):
+        try:
+            with open(self.original_file, "rb") as foriginal, open(self.new_file, "rb") as fnew:
+                original_hash = Nilsimsa (foriginal.read())
+                new_hash = Nilsimsa (fnew.read())
+                score_nilsimsa = compare_digests (original_hash.hexdigest(), new_hash.hexdigest())
+                ratio = file_comparison.nilsimsa.compute_ratio (score_nilsimsa)
+                self.hash_score = ratio*100.
+        except Exception as e:
+            self.number_of_errors += 1
+            self.errors.append("compare_hash error: " + str(e))
+            self.log.append("compare_hash error: " + str(e))
 
     # 2.pair
     def check_file_formats_pair (self):
@@ -137,6 +154,7 @@ class Method:
         ipair["mse_score"] = self.mse_score
         ipair["mape_score"] = self.mape_score
         ipair["quantity score"] = self.quantity_score
+        ipair["hash score"] = self.hash_score
         
         return ipair
 

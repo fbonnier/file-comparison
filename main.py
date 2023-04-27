@@ -46,6 +46,9 @@ def run_file_comparison_json (jsonfile):
                 #     continue
                 ##############################
 
+                # Compare hash of files 
+                imethod.compare_hash()
+
                 # Compute differences between data
                 imethod.compute_differences ()
 
