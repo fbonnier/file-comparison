@@ -16,7 +16,7 @@ import sys
 
 
 def run_file_comparison_json (jsonfile):
-    error_glob = None
+    error_glob = []
     json_data = None
     pairs = None
     with open(jsonfile, "r") as f:
@@ -54,32 +54,20 @@ def run_file_comparison_json (jsonfile):
 
                 # Get all data from associated method and pair
                 ipair = imethod.topair(ipair)
-                
-                # ipair["rmse_score"] = imethod.rmse_score
-
-
-
-            # for icouple, imethod in zip(adjacency_matrix, advice_methods):
-            #     # print(icouple, imethod)
-            #     # score, file_diff = report.compute_differences(icouple[0], icouple[1], imethod)
-            #     # final_report.append(report.generate_report_1_file (icouple[0], icouple[1], imethod, score, file_diff))
-            #     method = Method (imethod, icouple[0], icouple[1])
-            #     is_checked, check_error = method.check_file_formats()
-
-            #     # print (is_checked)
-            #     if (is_checked):
-            #         method.compute_differences_report()
-            #         method.compute_score()
-            #         report_block.append ({"f1": icouple[0].finfo_to_dict(), "f2": icouple[1], "Method": str(method.__name__), "score": "method.differences_report", "rmse": None, "mape": None, "mse": None, "report": None, "nerrors": 0, "ndiff": 0, "nvalues": 0})
-
+            
         except Exception as e:
-            error_glob = str(e)
+            error_glob.append (str(e))
 
     # Write data in JSON file
     with open(jsonfile, "w") as f:
         if json_data:
             json_data["Reusability Verification"] = {}
-            json_data["Reusability Verification"]["error"] = error_glob
+            if error_glob:
+                json_data["Reusability Verification"]["error"].append (error_glob)
+            for ipair in pairs:
+                if ipair["error"]:
+                    json_data["Reusability Verification"]["error"].append (ipair["error"])
+
         
             json_data["Reusability Verification"]["files"] = pairs
     

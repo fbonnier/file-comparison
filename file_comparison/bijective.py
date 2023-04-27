@@ -44,7 +44,7 @@ def find_bijective (produced_outputs, expected_outputs):
         block["Origin"]["origin"] = "produced"
         block["New"] = partner["ifile2"]
         block["New"]["origin"] = "expected"
-        block["hash score"] = partner["score"]
+        block["hash score"] = partner["score"]*100
 
         # Compare file formats
         format_block = are_same_file_format (ifile1, partner["ifile2"])

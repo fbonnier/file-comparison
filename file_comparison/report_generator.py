@@ -2,43 +2,61 @@
 import os
 import file_comparison.file_compare as file_compare
 from nltk.metrics.distance import *
+import sklearn.metrics
 
 error_diff_types = ["type", "len"]
 
 
-def compute_1el_difference (item1, item2):
-    block_diff_1el = {"type1": str(type(item1)), "value1": item1, "type2": str(type(item1)), "value2": item2, "delta": None, "levenshtein": None, "rmse": None, "mse": None, "ape": None, "error": [], "log": []}
-    # Test types: if types are different, return error type
-    if type(item1) != type(item2):
-        block_diff_1el["error"] = "Values are not the same type"
-        return (block_diff_1el)
+def compute_1el_difference (origin, new):
 
-    # Test delta
-    # Compute Absolute difference between two values
-    try:
-        block_diff_1el["delta"] = abs(item1 - item2)
-    except:
-        pass
+    return compute_1list_difference ([origin], [new])
+
+
+def compute_1list_difference (origin, new):
+    block_diff_1list = {"origin": {"type": str(type(origin)), "value": origin}, "new": {"type": str(type(new)), "value": new}, "nilsimsa": None, "rmspe": None, "mspe": None, "mape": None, "error": [], "log": []}
+
+    # Test types: if types are different, return error type
+    if type(origin) != type(new):
+        block_diff_1list["error"] = "Values are not the same type"
+        return (block_diff_1list)
+
+    # # Test delta
+    # # Compute Absolute difference between two values
+    # try:
+    #     block_diff_1list["delta"] = abs(origin - new)
+    # except:
+    #     pass
 
     # Test string values
     # Compute Levenshtein distance between two strings
     try:
-        block_diff_1el["levenshtein"] = nltk.metrics.distance.edit_distance(item1, item2)
+        block_diff_1list["levenshtein"] = nltk.metrics.distance.edit_distance(origin, new)
     except:
         pass
 
 
-
-    # Test ape
+    # Test mape
     # Compute Absolute Percentage Error between two values
     try:
-        block_diff_1el["ape"] = abs((item1-item2)/item1)
+        block_diff_1list["mape"] = sklearn.metrics.mean_absolute_percentage_error(origin, new)
+    except:
+        pass
+    
+    # Test mspe
+    # Compute Mean Squared Percentage Error between two values
+    try:
+        block_diff_1list["mspe"] = mean_squared_percentage_error(origin, new)
     except:
         pass
 
-    return block_diff_1el
+    # Test rmspe
+    # Compute Root Mean Squared Percentage Error between two lists
+    try:
+        block_diff_1list["mspe"] = root_mean_squared_percentage_error(origin, new)
+    except:
+        pass
 
-
+    return block_diff_1list
 """
 Differences object should look like:
 ------------------
