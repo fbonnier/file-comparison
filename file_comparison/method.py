@@ -131,7 +131,7 @@ class Method:
         try:
             # TODO
             block_diff = self.__difference_methods__[self.__name__](self.original_file, self.new_file)
-            print (block_diff)
+            # print (block_diff)
             self.differences_report = block_diff["report"]
             self.number_of_errors = block_diff["nerrors"]
             self.number_of_values = block_diff["nvalues"]
