@@ -70,11 +70,9 @@ class Method:
     
     # Compare the two file's hash
     def compare_hash (self):
-        if not (self.original_file or self.new_file):
-            print (self.original_file)
-            print (self.new_file)
+
         try:
-            with open(self.original_file, "rb") as foriginal, open(self.new_file, "rb") as fnew:
+            with open(self.original_file["path"], "rb") as foriginal, open(self.new_file["path"], "rb") as fnew:
                 original_hash = Nilsimsa (foriginal.read())
                 print (original_hash)
                 # new_hash = Nilsimsa (fnew.read())
