@@ -15,7 +15,7 @@ import json
 import sys
 
 
-def run_file_comparison_json (jsonfile):
+def run_file_comparison_json (jsonfile, jsonfile_out):
     error_glob = []
     json_data = None
     pairs = None
@@ -50,10 +50,10 @@ def run_file_comparison_json (jsonfile):
                 imethod.compare_hash()
 
                 # Compute differences between data
-                imethod.compute_differences ()
+                # imethod.compute_differences ()
 
                 # Compute different scores and stats
-                imethod.compute_score ()
+                # imethod.compute_score ()
 
                 # Get all data from associated method and pair
                 ipair = imethod.topair(ipair)
@@ -62,20 +62,19 @@ def run_file_comparison_json (jsonfile):
             error_glob.append (str(e))
 
     # Write data in JSON file
-    with open(jsonfile, "w") as f:
-        if json_data:
-            json_data["Reusability Verification"] = {}
-            if error_glob:
-                json_data["Reusability Verification"]["error"].append (error_glob)
-            for ipair in pairs:
-                if ipair["error"]:
-                    json_data["Reusability Verification"]["error"].append (ipair["error"])
-
-        
-            json_data["Reusability Verification"]["files"] = pairs
+    with open(jsonfile_out, "w") as f:
+        json_data_out = None
+        json_data_out["Reusability Verification"] = {}
+        if error_glob:
+            json_data_out["Reusability Verification"]["error"].append (error_glob)
+        for ipair in pairs:
+            if ipair["error"]:
+                json_data_out["Reusability Verification"]["error"].append (ipair["error"])
     
-            # Methods report
-            json.dump(json_data, f, indent=4)
+        json_data_out["Reusability Verification"]["files"] = pairs
+    
+        # Methods report
+        json.dump(json_data_out, f, indent=4)
         
     # Exit Done ?
     sys.exit()
@@ -128,6 +127,8 @@ if __name__ == "__main__":
                         help='Files to compare')
     parser.add_argument('--json', type=argparse.FileType('r'), metavar='json', nargs=1,
                         help='JSON File containing metadata of files to compare')
+    parser.add_argument('--out', type=argparse.FileType('w'), metavar='out', nargs=1,
+                        help='JSON File containing results of file comparison')
     # parser.add_argument('--watchdog', type=argparse.FileType('r'), metavar='watchdog', nargs='1',
     #                     help='Watchdog File containing files to compare with JSON report')
     # parser.add_argument('--hamming', dest='hamming', action='store_const',
@@ -163,14 +164,15 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
     jsonfile = args.json[0] if args.json else None
+    jsonfile_out = args.out[0] if args.out else None
 
     file1 = args.files[0] if args.files else None
     file2 = args.files[1] if args.files else None
     
     if args.profile:
-        if jsonfile:
+        if jsonfile and jsonfile_out:
             try:
-                profile.run('run_file_comparison_json(jsonfile.name)')
+                profile.run('run_file_comparison_json(jsonfile.name, jsonfile_out.name)')
             except Exception as e1:
                 print (e1)
         elif file1 and file2:
@@ -180,9 +182,9 @@ if __name__ == "__main__":
                 print (e2)
 
     else:
-        if jsonfile:
+        if jsonfile and jsonfile_out:
             try:
-                run_file_comparison_json(jsonfile.name)
+                run_file_comparison_json(jsonfile=jsonfile.name, jsonfile_out=jsonfile_out.name)
             except Exception as e1:
                 print (e1)
         elif file1 and file2:

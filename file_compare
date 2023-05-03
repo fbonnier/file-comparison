@@ -1,6 +1,7 @@
 #!/bin/bash
 
 JSON=""
+JSON_OUT=""
 FILE1=""
 FILE2=""
 LIST1=""
@@ -28,6 +29,10 @@ for (( iarg=1; iarg<=NARGS; iarg++)); do
     elif [ ${!iarg} == "--watchdog" ]; then
         FILE1=${!jarg}
         RUN_INSTR="$RUN_INSTR --watchdog $FILE1"
+
+    elif [ ${!iarg} == "--out" ]; then
+        FILE1=${!jarg}
+        RUN_INSTR="$RUN_INSTR --out $FILE1"
 
     elif [ ${!iarg} == "--lists" ]; then
         karg=$((iarg+2))
