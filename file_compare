@@ -1,14 +1,14 @@
 #!/bin/bash
 
 JSON=""
-JSON_OUT=""
+JSON_OUT="file_compare_report.json"
 FILE1=""
 FILE2=""
 LIST1=""
 LIST2=""
 
 RUN_INSTR="python3 $( dirname -- "$0"; )/main.py "
-RUN_INSTR_ORIGIN=$RUN_INSTR
+RUN_INSTR_ORIGIN="$RUN_INSTR --out $JSON_OUT"
 
 NARGS=$(($#-1))
 
@@ -29,10 +29,6 @@ for (( iarg=1; iarg<=NARGS; iarg++)); do
     elif [ ${!iarg} == "--watchdog" ]; then
         FILE1=${!jarg}
         RUN_INSTR="$RUN_INSTR --watchdog $FILE1"
-
-    elif [ ${!iarg} == "--out" ]; then
-        FILE1=${!jarg}
-        RUN_INSTR="$RUN_INSTR --out $FILE1"
 
     elif [ ${!iarg} == "--lists" ]; then
         karg=$((iarg+2))
