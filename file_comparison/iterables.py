@@ -2,6 +2,7 @@
 import numpy as np
 
 from collections.abc import Iterable
+from sklearn.metrics import mean_absolute_percentage_error
 import neo.io
 import json
 import file_comparison.report_generator as rg
@@ -87,8 +88,13 @@ def compare_dicts (original_item, new_item, comparison_path, block_diff):
 def compare_numpy_arrays (original_item, new_item, comparison_path, block_diff):
 
     # block_diff["log"].append(comparison_path+str(type(original_item)))
-    
-    block_diff = iterable_are_equal(original_item.tolist(), new_item.tolist(), comparison_path+str(type(original_item))+"->", block_diff)
+    block_diff[comparison_path]["mse"] = np.mean((original_item - new_item)**2)
+    block_diff[comparison_path]["rmse"] = np.sqrt(np.mean((original_item - new_item)**2))
+    block_diff[comparison_path]["rmspe"] = np.sqrt(np.mean(np.square(((original_item - new_item) / original_item)), axis=0))*100.
+    block_diff[comparison_path]["mspe"] = np.mean(np.square(((original_item - new_item) / original_item)), axis=0)*100.
+    block_diff[comparison_path]["mape"] = mean_absolute_percentage_error(original_item, new_item)*100.
+
+    # block_diff = iterable_are_equal(original_item.tolist(), new_item.tolist(), comparison_path+str(type(original_item))+"->", block_diff)
 
     return block_diff
 
