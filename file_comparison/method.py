@@ -74,14 +74,13 @@ class Method:
         try:
             with open(self.original_file["path"], "rb") as foriginal, open(self.new_file["path"], "rb") as fnew:
                 original_hash = Nilsimsa (foriginal.read())
-                print (original_hash)
-                # new_hash = Nilsimsa (fnew.read())
-                # score_nilsimsa = compare_digests (original_hash.hexdigest(), new_hash.hexdigest())
-                # print(score_nilsimsa)
-                # ratio = file_comparison.nilsimsa.compute_ratio (score_nilsimsa)
-                # print(ratio)
-                # self.hash_score = ratio*100.
-                # print(self.hash_score)
+                new_hash = Nilsimsa (fnew.read())
+                score_nilsimsa = compare_digests (original_hash.hexdigest(), new_hash.hexdigest())
+                print(score_nilsimsa)
+                ratio = file_comparison.nilsimsa.compute_ratio (score_nilsimsa)
+                print(ratio)
+                self.hash_score = ratio*100.
+                print(self.hash_score)
         except Exception as e:
             self.number_of_errors += 1
             self.errors.append("compare_hash error: " + str(e))
