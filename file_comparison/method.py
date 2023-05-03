@@ -70,6 +70,9 @@ class Method:
     
     # Compare the two file's hash
     def compare_hash (self):
+        if not (self.original_file or self.new_file):
+            print (self.original_file)
+            print (self.new_file)
         try:
             with open(self.original_file, "rb") as foriginal, open(self.new_file, "rb") as fnew:
                 original_hash = Nilsimsa (foriginal.read())
@@ -85,6 +88,7 @@ class Method:
             self.number_of_errors += 1
             self.errors.append("compare_hash error: " + str(e))
             self.log.append("compare_hash error: " + str(e))
+            print (e)
 
     # 2.pair
     def check_file_formats_pair (self):
