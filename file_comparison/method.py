@@ -76,11 +76,8 @@ class Method:
                 original_hash = Nilsimsa (foriginal.read())
                 new_hash = Nilsimsa (fnew.read())
                 score_nilsimsa = compare_digests (original_hash.hexdigest(), new_hash.hexdigest())
-                print(score_nilsimsa)
                 ratio = file_comparison.nilsimsa.compute_ratio (score_nilsimsa)
-                print(ratio)
                 self.hash_score = ratio*100.
-                print(self.hash_score)
         except Exception as e:
             self.number_of_errors += 1
             self.errors.append("compare_hash error: " + str(e))

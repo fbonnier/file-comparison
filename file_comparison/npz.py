@@ -6,6 +6,7 @@ import neo.io
 import json
 import file_comparison.report_generator as rg
 import file_comparison.neo as fcneo
+from sklearn.metrics import mean_absolute_percentage_error
 
 
 known_types = [np.lib.npyio.NpzFile, np.ndarray, neo.core.block.Block, neo.core.Segment, str, bytes, list, dict, bool, float, int, neo.core.spiketrain.SpikeTrain, neo.core.analogsignal.AnalogSignal]
@@ -53,8 +54,22 @@ def compare_numpy_arrays (original_item, new_item, comparison_path, block_diff):
 
     # block_diff["log"].append(comparison_path+str(type(original_item)))
     
-    block_diff = iterable_are_equal(original_item.tolist(), new_item.tolist(), comparison_path+str(type(original_item))+"->", block_diff)
+    # block_diff = iterable_are_equal(original_item.tolist(), new_item.tolist(), comparison_path+str(type(original_item))+"->", block_diff)
+    block_diff["nvalues"] += max(len(new_item), len(original_item))
+    if len(new_item) != len(original_item):
+        block_diff["nerrors"] += abs(len(new_item) - len(original_item))
+        block_diff["error"].append("Nummy array have different sizes, missing data")
 
+    block_diff["report"].append({
+        "path": comparison_path+str(type(original_item)),
+        "size diff": len(new_item) - len(original_item),
+        "mse": np.mean((original_item - new_item)**2),
+        "rmse": np.sqrt(np.mean((original_item - new_item)**2)),
+        "rmspe": np.sqrt(np.mean(np.square(((original_item - new_item) / original_item)), axis=0))*100.,
+        "mspe": np.mean(np.square(((original_item - new_item) / original_item)), axis=0)*100.,
+        "mape": mean_absolute_percentage_error(original_item, new_item)*100.
+    })
+    {"origin": {"type": str(type(origin)), "value": origin}, "new": {"type": str(type(new)), "value": new}, "nilsimsa": None, "rmspe": None, "mspe": None, "mape": None, "error": [], "log": []}
     return block_diff
 
 def compare_numpy_npz (original_item, new_item, comparison_path, block_diff):

@@ -50,7 +50,7 @@ def run_file_comparison_json (jsonfile, jsonfile_out):
                 imethod.compare_hash()
 
                 # Compute differences between data
-                # imethod.compute_differences ()
+                imethod.compute_differences ()
 
                 # Compute different scores and stats
                 # imethod.compute_score ()

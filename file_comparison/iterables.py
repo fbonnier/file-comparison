@@ -88,12 +88,18 @@ def compare_dicts (original_item, new_item, comparison_path, block_diff):
 def compare_numpy_arrays (original_item, new_item, comparison_path, block_diff):
 
     # block_diff["log"].append(comparison_path+str(type(original_item)))
-    block_diff[comparison_path]["mse"] = np.mean((original_item - new_item)**2)
-    block_diff[comparison_path]["rmse"] = np.sqrt(np.mean((original_item - new_item)**2))
-    block_diff[comparison_path]["rmspe"] = np.sqrt(np.mean(np.square(((original_item - new_item) / original_item)), axis=0))*100.
-    block_diff[comparison_path]["mspe"] = np.mean(np.square(((original_item - new_item) / original_item)), axis=0)*100.
-    block_diff[comparison_path]["mape"] = mean_absolute_percentage_error(original_item, new_item)*100.
-
+    block_diff["nvalues"] += 1
+    
+    block_diff["report"].append({
+        "path": comparison_path+str(type(original_item)),
+        "size diff": len(new_item) - len(original_item),
+        "mse": np.mean((original_item - new_item)**2),
+        "rmse": np.sqrt(np.mean((original_item - new_item)**2)),
+        "rmspe": np.sqrt(np.mean(np.square(((original_item - new_item) / original_item)), axis=0))*100.,
+        "mspe": np.mean(np.square(((original_item - new_item) / original_item)), axis=0)*100.,
+        "mape": mean_absolute_percentage_error(original_item, new_item)*100.
+    })
+    
     # block_diff = iterable_are_equal(original_item.tolist(), new_item.tolist(), comparison_path+str(type(original_item))+"->", block_diff)
 
     return block_diff
