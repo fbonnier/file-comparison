@@ -4,6 +4,7 @@ import numpy as np
 from collections.abc import Iterable
 from sklearn.metrics import mean_absolute_percentage_error
 import neo.io
+import file_comparison.stats as stats
 import json
 import file_comparison.report_generator as rg
 import file_comparison.neo as fcneo
@@ -87,18 +88,21 @@ def compare_dicts (original_item, new_item, comparison_path, block_diff):
 
 def compare_numpy_arrays (original_item, new_item, comparison_path, block_diff):
 
-    # block_diff["log"].append(comparison_path+str(type(original_item)))
-    block_diff["nvalues"] += 1
+    block_diff["log"].append(comparison_path+str(type(original_item)))
+    block_diff["nvalues"] += len(original_item)
+    block_diff["nerrors"] += abs(len(original_item) - len(new_item))
     
-    block_diff["report"].append({
-        "path": comparison_path+str(type(original_item)),
-        "size diff": len(new_item) - len(original_item),
-        "mse": np.mean((original_item - new_item)**2),
-        "rmse": np.sqrt(np.mean((original_item - new_item)**2)),
-        "rmspe": np.sqrt(np.mean(np.square(((original_item - new_item) / original_item)), axis=0))*100.,
-        "mspe": np.mean(np.square(((original_item - new_item) / original_item)), axis=0)*100.,
-        "mape": mean_absolute_percentage_error(original_item, new_item)*100.
-    })
+    # Check sizes
+    # TODO
+
+    # Check data types
+    # TODO
+
+    block_diff["report"].append(rg.compute_1list_difference(origin=original_item, new=new_item))
+    
+    # Add errors and logs
+    # TODO
+    block_diff["nerrors"] += len(original_item) - len(new_item)
     
     # block_diff = iterable_are_equal(original_item.tolist(), new_item.tolist(), comparison_path+str(type(original_item))+"->", block_diff)
 

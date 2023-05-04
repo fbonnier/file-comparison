@@ -1,8 +1,7 @@
 # Report generator Module
 import os
 import file_comparison.file_compare as file_compare
-from nltk.metrics.distance import *
-import sklearn.metrics
+import file_comparison.stats as stats
 
 error_diff_types = ["type", "len"]
 
@@ -15,10 +14,10 @@ def compute_1el_difference (origin, new):
 def compute_1list_difference (origin, new):
     block_diff_1list = {"origin": {"type": str(type(origin)), "value": origin}, "new": {"type": str(type(new)), "value": new}, "nilsimsa": None, "rmspe": None, "mspe": None, "mape": None, "error": [], "log": []}
 
-    # Test types: if types are different, return error type
-    if type(origin) != type(new):
-        block_diff_1list["error"] = "Values are not the same type"
-        return (block_diff_1list)
+    # # Test types: if types are different, return error type
+    # if type(origin) != type(new):
+    #     block_diff_1list["error"] = "Values are not the same type"
+    #     return (block_diff_1list)
 
     # # Test delta
     # # Compute Absolute difference between two values
@@ -29,32 +28,37 @@ def compute_1list_difference (origin, new):
 
     # Test string values
     # Compute Levenshtein distance between two strings
-    try:
-        block_diff_1list["levenshtein"] = nltk.metrics.distance.edit_distance(origin, new)
-    except:
-        pass
+    # TODO
+    # try:
+    #     block_diff_1list["levenshtein"] = stats.levenshtein_distance(origin, new)
+    # except:
+    #     pass
 
 
     # Test mape
     # Compute Absolute Percentage Error between two values
     try:
-        block_diff_1list["mape"] = sklearn.metrics.mean_absolute_percentage_error(origin, new)
-    except:
-        pass
+        block_diff_1list["mape"] = stats.mean_absolute_percentage_error(origin, new)
+    except ZeroDivisionError as ed:
+        block_diff_1list["log"].append(ed)
+        block_diff_1list["mape"] = None
     
     # Test mspe
     # Compute Mean Squared Percentage Error between two values
+    # TODO
     try:
-        block_diff_1list["mspe"] = mean_squared_percentage_error(origin, new)
-    except:
-        pass
+        block_diff_1list["mspe"] = stats.mean_squared_percentage_error(origin, new)
+    except ZeroDivisionError as ed:
+        block_diff_1list["log"].append(ed)
+        block_diff_1list["mspe"] = None
 
     # Test rmspe
     # Compute Root Mean Squared Percentage Error between two lists
     try:
-        block_diff_1list["mspe"] = root_mean_squared_percentage_error(origin, new)
-    except:
-        pass
+        block_diff_1list["rmspe"] = stats.root_mean_squared_percentage_error(origin, new)
+    except ZeroDivisionError as ed:        
+        block_diff_1list["log"].append(ed)
+        block_diff_1list["rmspe"] = None
 
     return block_diff_1list
 """

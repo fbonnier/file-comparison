@@ -6,7 +6,7 @@ import neo.io
 import json
 import file_comparison.report_generator as rg
 import file_comparison.neo as fcneo
-from sklearn.metrics import mean_absolute_percentage_error
+import file_comparison.stats as stats
 
 
 known_types = [np.lib.npyio.NpzFile, np.ndarray, neo.core.block.Block, neo.core.Segment, str, bytes, list, dict, bool, float, int, neo.core.spiketrain.SpikeTrain, neo.core.analogsignal.AnalogSignal]
@@ -55,21 +55,32 @@ def compare_numpy_arrays (original_item, new_item, comparison_path, block_diff):
     # block_diff["log"].append(comparison_path+str(type(original_item)))
     
     # block_diff = iterable_are_equal(original_item.tolist(), new_item.tolist(), comparison_path+str(type(original_item))+"->", block_diff)
-    block_diff["nvalues"] += max(len(new_item), len(original_item))
+
+    # Check sizes
+    if (len(original_item) != len(new_item)):
+        block_diff["error"].append(comparison_path+str(type(original_item) + ": Different size, missing data")
+        block_diff["nerrors"] += abs(len(original_item) - len(new_item))
+
+    # Check type similar
+    if (original_item.dtype != new_item.dtype):
+        block_diff["error"].append(comparison_path+str(type(original_item) + ": Different data types")
+        block_diff["nerrors"] += abs(len(original_item))
+    
+    # Check type similar
+    if (original_item.dtype != object and new_item.dtype != object):
+        block_delta = rg.compute_1list_difference(original_item, new_item)
+        
+        block_diff["error"].append(comparison_path+str(type(original_item) + ": Different data types")
+        block_diff["nerrors"] += abs(len(original_item))
+
+    block_diff["report"].append(rg.compute_1list_difference(origin=original_item, new=new_item))
+
+    block_diff["nvalues"] += len(original_item)
     if len(new_item) != len(original_item):
         block_diff["nerrors"] += abs(len(new_item) - len(original_item))
         block_diff["error"].append("Nummy array have different sizes, missing data")
+    
 
-    block_diff["report"].append({
-        "path": comparison_path+str(type(original_item)),
-        "size diff": len(new_item) - len(original_item),
-        "mse": np.mean((original_item - new_item)**2),
-        "rmse": np.sqrt(np.mean((original_item - new_item)**2)),
-        "rmspe": np.sqrt(np.mean(np.square(((original_item - new_item) / original_item)), axis=0))*100.,
-        "mspe": np.mean(np.square(((original_item - new_item) / original_item)), axis=0)*100.,
-        "mape": mean_absolute_percentage_error(original_item, new_item)*100.
-    })
-    {"origin": {"type": str(type(origin)), "value": origin}, "new": {"type": str(type(new)), "value": new}, "nilsimsa": None, "rmspe": None, "mspe": None, "mape": None, "error": [], "log": []}
     return block_diff
 
 def compare_numpy_npz (original_item, new_item, comparison_path, block_diff):

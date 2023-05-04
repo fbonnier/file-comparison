@@ -3,11 +3,12 @@ import os
 from nltk.metrics.distance import *
 import sklearn.metrics
 import numpy as np
+import nltk.metrics.distance
 
 error_diff_types = ["type", "len"]
 
 def levenshtein_distance (origin, new):
-    pass
+    return nltk.metrics.distance.edit_distance(origin, new)
 
 # MAPE
 # Compute Mean Absolute Percentage Error between two values
@@ -21,7 +22,6 @@ def mean_squared_percentage_error(origin, new):
 
 # RMSPE
 # Compute Root Mean Squared Percentage Error between two lists
-# TODO
 def root_mean_squared_percentage_error(origin, new):
     return np.sqrt(np.mean(np.square(((origin - new) / origin)), axis=0))*100.
 
@@ -32,13 +32,11 @@ def mean_squared_error(origin, new):
 
 # RMSE
 # Compute Root Mean Squared Error between two lists
-# TODO
 def root_mean_squared_error(origin, new):
     return np.sqrt(np.mean(np.square(origin - new), axis=0))
 
-
-
 # Compute difference between two values
+# TODO
 def delta (origin, new):
     return new - origin
         
