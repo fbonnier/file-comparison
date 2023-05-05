@@ -48,6 +48,11 @@ def compute_1list_difference (origin, new):
         block_diff_1list["mape"] = None
     except Exception as e:
         print (e)
+        print ("Origin: ")
+        print (origin)
+        print ("\n")
+        print ("New: ")
+        print (new)
     
     # Test mspe
     # Compute Mean Squared Percentage Error between two values
@@ -59,6 +64,11 @@ def compute_1list_difference (origin, new):
         block_diff_1list["mspe"] = None
     except Exception as e:
         print (e)
+        print ("Origin: ")
+        print (origin)
+        print ("\n")
+        print ("New: ")
+        print (new)
 
     # Test rmspe
     # Compute Root Mean Squared Percentage Error between two lists
@@ -69,6 +79,11 @@ def compute_1list_difference (origin, new):
         block_diff_1list["rmspe"] = None
     except Exception as e:
         print (e)
+        print ("Origin: ")
+        print (origin)
+        print ("\n")
+        print ("New: ")
+        print (new)
 
     return block_diff_1list
 """
