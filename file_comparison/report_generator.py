@@ -8,11 +8,15 @@ error_diff_types = ["type", "len"]
 
 def compute_1el_difference (origin, new):
 
+    print ("Report_generator: compute_1el_difference")
     return compute_1list_difference ([origin], [new])
 
 
 def compute_1list_difference (origin, new):
     block_diff_1list = {"origin": {"type": str(type(origin)), "value": origin}, "new": {"type": str(type(new)), "value": new}, "nilsimsa": None, "rmspe": None, "mspe": None, "mape": None, "error": [], "log": []}
+
+    print ("Report_generator: compute_1list_difference")
+
 
     # # Test types: if types are different, return error type
     # if type(origin) != type(new):
@@ -42,6 +46,8 @@ def compute_1list_difference (origin, new):
     except ZeroDivisionError as ed:
         block_diff_1list["log"].append(ed)
         block_diff_1list["mape"] = None
+    except Exception as e:
+        print (e)
     
     # Test mspe
     # Compute Mean Squared Percentage Error between two values
@@ -51,6 +57,8 @@ def compute_1list_difference (origin, new):
     except ZeroDivisionError as ed:
         block_diff_1list["log"].append(ed)
         block_diff_1list["mspe"] = None
+    except Exception as e:
+        print (e)
 
     # Test rmspe
     # Compute Root Mean Squared Percentage Error between two lists
@@ -59,6 +67,8 @@ def compute_1list_difference (origin, new):
     except ZeroDivisionError as ed:        
         block_diff_1list["log"].append(ed)
         block_diff_1list["rmspe"] = None
+    except Exception as e:
+        print (e)
 
     return block_diff_1list
 """
@@ -103,20 +113,20 @@ byte method objects
 }
 """
 
-def compute_differences (file1, file2, method):
+# def compute_differences (file1, file2, method):
 
-    ratio = 0.
-    differences = {}
-    try:
-        print (method)
-        print (file_compare.all_methods[method])
-        ratio, differences = file_compare.all_methods[method](file1.url+file1.name, file2.url+file2.name)
-        print ("SCORE = " + str(ratio))
+#     ratio = 0.
+#     differences = {}
+#     try:
+#         print (method)
+#         print (file_compare.all_methods[method])
+#         ratio, differences = file_compare.all_methods[method](file1.url+file1.name, file2.url+file2.name)
+#         print ("SCORE = " + str(ratio))
 
-    except Exception as e:
-        print ("\nError: method " + method + " Exception for " + file1.name + " and " + file2.name)
-        print (e)
-        ratio = 0.
-        differences = {"error" : str(e)}
+#     except Exception as e:
+#         print ("\nError: method " + method + " Exception for " + file1.name + " and " + file2.name)
+#         print (e)
+#         ratio = 0.
+#         differences = {"error" : str(e)}
 
-    return ratio, differences
+#     return ratio, differences

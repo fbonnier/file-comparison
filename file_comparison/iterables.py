@@ -48,6 +48,7 @@ def contains_values (container):
 
 def compare_lists (list1:list, list2:list, comparison_path: str, block_diff: dict ):
 
+    print ("iterable_are_equal List")
     # block_diff["log"].append(comparison_path+str(type(list1)))
     if len(list1) != len(list2):
         block_diff["error"].append(str(comparison_path+str(type(list1))+"->") + "List don't have same length")
@@ -62,6 +63,8 @@ def compare_dicts (original_item, new_item, comparison_path, block_diff):
     keys_to_avoid = []
     common_keys = []
     # block_diff["log"].append (comparison_path+str(type(original_item)))
+    print ("iterable_are_equal Dict")
+
 
     for ikey in original_item.keys():
         if not ikey in new_item:
@@ -185,31 +188,39 @@ def iterable_are_equal (original_item, new_item, comparison_path, block_diff):
         block_diff ["error"].append(comparison_path + " " + str(type(original_item)) + " " + str(type(new_item)) + " are not in KNOWN Types")
         block_diff["nerrors"]+=1
         block_diff["nvalues"]+=1
+        print ("iterable_are_equal unknown types")
 
     #############   NUMPY.NPZ.Files  #################
     # Convert npz files into compatible arrays
     if ((type(original_item) == np.lib.npyio.NpzFile) and (type(new_item) == np.lib.npyio.NpzFile)):
-        
+
+        print ("iterable_are_equal NPZ type")
+
         block_diff = file_comparison.npz.compare_numpy_npz (original_item, new_item, comparison_path+str(type(original_item))+"->", block_diff)
 
     #############   NUMPY.arrays  #################
     # Convert numpy arrays into compatible arrays
     elif ((type(original_item) == np.ndarray) and (type(new_item) == np.ndarray)):
+        print ("iterable_are_equal Numpy Array type")
         block_diff = file_comparison.npz.compare_numpy_arrays (original_item, new_item, comparison_path+str(type(original_item))+"->", block_diff)
 
     #############   NEO.BLOCK   ###################
     # TODO
     elif (type(original_item) == neo.core.block.Block) and (type(new_item) == neo.core.block.Block):
         # TODO
+        print ("iterable_are_equal NEO Block")
         block_diff = file_comparison.neo.compare_neo_blocks (original_item, new_item, comparison_path+str(original_item.name)+str(type(original_item))+"->", block_diff)
 
     ############    NEO.SEGMENT ##################
     # TODO
     elif (type(original_item) == neo.core.Segment) and (type(new_item) == neo.core.Segment):
+        print ("iterable_are_equal NEO Segment")
         block_diff = file_comparison.neo.compare_segments(original_item, new_item, comparison_path+str(original_item.name)+str(type(original_item))+"->", block_diff)
         
     elif ((isinstance(original_item, Iterable)) and (isinstance(new_item, Iterable)) and (type(original_item)!=str) and (type(original_item)!= bytes) ):
 
+
+        print ("iterable_are_equal Iterable type")
         #################   LIST    ###################
         if ((type(original_item) == list) and (type(new_item) == list)):
             block_diff = compare_lists (original_item, new_item, comparison_path+str(type(original_item))+"->", block_diff)

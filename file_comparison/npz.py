@@ -142,6 +142,7 @@ def compute_differences_report (original_file, new_file):
     except Exception as e:
         block_diff["error"].append("NPZ compute_differences_report: " + str(e))
         block_diff["nerrors"] += 1
+        print ("NPZ compute_differences_report: " + str (e))
 
     return block_diff
 
