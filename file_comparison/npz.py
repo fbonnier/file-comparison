@@ -59,19 +59,19 @@ def compare_numpy_arrays (original_item, new_item, comparison_path, block_diff):
 
     # Check sizes
     if (len(original_item) != len(new_item)):
-        block_diff["error"].append(comparison_path+str(type(original_item) + ": Different size, missing data"))
+        block_diff["error"].append(comparison_path+str(type(original_item)) + ": Different size, missing data")
         block_diff["nerrors"] += abs(len(original_item) - len(new_item))
 
     # Check type similar
     if (original_item.dtype != new_item.dtype):
-        block_diff["error"].append(comparison_path+str(type(original_item) + ": Different data types"))
+        block_diff["error"].append(comparison_path+str(type(original_item)) + ": Different data types")
         block_diff["nerrors"] += abs(len(original_item))
     
     # Check type similar
     if (original_item.dtype != object and new_item.dtype != object):
         block_delta = file_comparison.report_generator.compute_1list_difference(original_item, new_item)
         
-        block_diff["error"].append(comparison_path+str(type(original_item) + ": Different data types"))
+        block_diff["error"].append(comparison_path+str(type(original_item)) + ": Different data types")
         block_diff["nerrors"] += abs(len(original_item))
 
     block_diff["report"].append(file_comparison.report_generator.compute_1list_difference(origin=original_item, new=new_item))

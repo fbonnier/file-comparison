@@ -204,7 +204,7 @@ def iterable_are_equal (original_item, new_item, comparison_path, block_diff):
         print ("iterable_are_equal Numpy Array type")
         # Check type similar
         if (original_item.dtype != new_item.dtype):
-            block_diff["error"].append(comparison_path+str(type(original_item) + ": Different data types"))
+            block_diff["error"].append(comparison_path+str(type(original_item)) + ": Different data types")
             block_diff["nerrors"] += abs(len(original_item))
         else:
             # Check element types are primitive types
