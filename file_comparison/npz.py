@@ -56,9 +56,10 @@ def compare_numpy_arrays (original_item, new_item, comparison_path, block_diff):
     # block_diff["log"].append(comparison_path+str(type(original_item)))
     
     # block_diff = file_comparison.iterables.iterable_are_equal(original_item.tolist(), new_item.tolist(), comparison_path+str(type(original_item))+"->", block_diff)
+    print ("Compare Numpy Arrays")
 
     # Check sizes
-    if (len(original_item) != len(new_item)):
+    if (len(original_item) - len(new_item)):
         block_diff["error"].append(comparison_path+str(type(original_item)) + ": Different size, missing data")
         block_diff["nerrors"] += abs(len(original_item) - len(new_item))
 
@@ -69,17 +70,18 @@ def compare_numpy_arrays (original_item, new_item, comparison_path, block_diff):
     
     # Check type similar
     if (original_item.dtype != object and new_item.dtype != object):
-        block_delta = file_comparison.report_generator.compute_1list_difference(original_item, new_item)
+        # block_delta = file_comparison.report_generator.compute_1list_difference(original_item, new_item)
         
-        block_diff["error"].append(comparison_path+str(type(original_item)) + ": Different data types")
-        block_diff["nerrors"] += abs(len(original_item))
+        # block_diff["error"].append(comparison_path+str(type(original_item)) + ": Different data types")
+        # block_diff["nerrors"] += abs(len(original_item))
+        for iel in range(min(len(original_item), len(new_item))):
+            block_diff["report"].append(file_comparison.report_generator.compute_1el_difference(origin=original_item, new=new_item))
+        block_diff["nvalues"] += min(len(original_item), len(new_item))
 
-    block_diff["report"].append(file_comparison.report_generator.compute_1list_difference(origin=original_item, new=new_item))
 
-    block_diff["nvalues"] += len(original_item)
-    if len(new_item) != len(original_item):
-        block_diff["nerrors"] += abs(len(new_item) - len(original_item))
-        block_diff["error"].append("Nummy array have different sizes, missing data")
+    # if len(new_item) != len(original_item):
+    #     block_diff["nerrors"] += abs(len(new_item) - len(original_item))
+    #     block_diff["error"].append("Nummy array have different sizes, missing data")
     
 
     return block_diff
