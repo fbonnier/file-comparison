@@ -71,6 +71,7 @@ def compare_numpy_arrays (original_item, new_item, comparison_path, block_diff):
     # Check type similar
     if (original_item.dtype != object and new_item.dtype != object):
         # block_delta = file_comparison.report_generator.compute_1list_difference(original_item, new_item)
+        print (type(original_item.dtype))
 
         block_diff["report"].append(file_comparison.report_generator.compute_1el_difference(origin=original_item, new=new_item))
         
