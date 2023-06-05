@@ -7,14 +7,19 @@ import nltk.metrics.distance
 
 error_diff_types = ["type", "len"]
 
-def mean_levenshtein_distance (origin, new):
+def mean_levenshtein_distance_percentage (origin, new):
     n = min(len(origin), len(new))
-    value = 0.
+    lev_max_scores = []
+    # Compute Levenshtein maximum scores
     for iel in range(n):
-        value += nltk.metrics.distance.edit_distance(origin[iel], new[iel])
-    value = value / n
+        lev_max_scores.append(max(len(str(origin[iel])), len(str(new[iel]))))
 
-    return value*100
+    distance_percentage = 0.
+    for iel in range(n):
+        distance_percentage += nltk.metrics.distance.edit_distance(str(origin[iel]), str(new[iel]))*100./lev_max_scores[iel]
+    mean_distance_percentage = distance_percentage / n
+
+    return 100. - mean_distance_percentage
 
 # MAPE
 # Compute Mean Absolute Percentage Error between two values
