@@ -117,7 +117,7 @@ def compute_1list_difference (origin:np.ndarray, new:np.ndarray):
     # Compute Relative Percentage Difference between two lists
     # TODO
     # try:
-    #     block_diff_1list["rpd"] = stats.root_mean_squared_percentage_error(origin, new)
+    #     block_diff_1list["rpd"] = stats.mean_relative_percentage_difference(origin, new)
     # except ZeroDivisionError as ed:        
     #     block_diff_1list["log"].append(ed)
     #     block_diff_1list["rpd"] = None
