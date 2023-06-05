@@ -50,19 +50,19 @@ def compute_1list_difference (origin:np.ndarray, new:np.ndarray):
 
     # Test mape
     # Compute Absolute Percentage Error between two values
-    try:
-        block_diff_1list["mape"] = stats.mean_absolute_percentage_error(origin, new)
-    except ZeroDivisionError as ed:
-        block_diff_1list["log"].append(ed)
-        block_diff_1list["mape"] = None
-    except Exception as e:
-        print ("MAPE Stat")
-        print (e)
-        print ("Origin: ")
-        print (origin)
-        print ("\n")
-        print ("New: ")
-        print (new)
+    # try:
+    #     block_diff_1list["mape"] = stats.mean_absolute_percentage_error(origin, new)
+    # except ZeroDivisionError as ed:
+    #     block_diff_1list["log"].append(ed)
+    #     block_diff_1list["mape"] = None
+    # except Exception as e:
+    #     print ("MAPE Stat")
+    #     print (e)
+    #     print ("Origin: ")
+    #     print (origin)
+    #     print ("\n")
+    #     print ("New: ")
+    #     print (new)
     
     # Test mspe
     # Compute Mean Squared Percentage Error between two values

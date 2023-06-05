@@ -57,13 +57,13 @@ def root_mean_squared_percentage_error(origin:np.ndarray, new:np.ndarray):
 
 # MSE  
 # Compute Mean Squared Error between two lists
-def mean_squared_error(origin:np.ndarray, new:np.ndarray):
-    return np.mean(np.square(origin - new), axis=0)
+# def mean_squared_error(origin:np.ndarray, new:np.ndarray):
+#     return np.mean(np.square(origin - new), axis=0)
 
 # RMSE
 # Compute Root Mean Squared Error between two lists
-def root_mean_squared_error(origin:np.ndarray, new:np.ndarray):
-    return np.sqrt(np.mean(np.square(origin - new), axis=0))
+# def root_mean_squared_error(origin:np.ndarray, new:np.ndarray):
+#     return np.sqrt(np.mean(np.square(origin - new), axis=0))
 
 # MPE
 # Compute Mean Percentage Error between two lists
