@@ -14,8 +14,8 @@ def compute_1el_difference (origin, new):
 
 
 def compute_1list_difference (origin:np.ndarray, new:np.ndarray):
-
-    block_diff_1list = {"origin": {"type": str(type(origin)), "value": origin.tolist()}, "new": {"type": str(type(new)), "value": new.tolist()}, "levenshtein": None, "nilsimsa": None, "rmspe": None, "mspe": None, "mape": None, "mpe":None, "rpd": None , "error": [], "log": []}
+    print (type(origin.tolist()))
+    block_diff_1list = {"origin": {"type": str(type(origin.tolist())), "value": origin.tolist()}, "new": {"type": str(type(new.tolist())), "value": new.tolist()}, "levenshtein": None, "nilsimsa": None, "rmspe": None, "mspe": None, "mape": None, "mpe":None, "rpd": None , "error": [], "log": []}
 
     print ("Report_generator: compute_1list_difference")
 
