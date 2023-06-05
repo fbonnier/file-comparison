@@ -31,12 +31,18 @@ def compute_1list_difference (origin, new):
     #     pass
 
     # Test string values
-    # Compute Levenshtein distance between two strings
+    # Compute Levenshtein distance percentage between two strings
     # TODO
-    # try:
-    #     block_diff_1list["levenshtein"] = stats.levenshtein_distance(origin, new)
-    # except:
-    #     pass
+    try:
+        block_diff_1list["levenshtein"] = stats.levenshtein_distance(origin, new)
+    except Exception as e:
+        print ("Levenshtein Stat")
+        print (e)
+        print ("Origin: ")
+        print (origin)
+        print ("\n")
+        print ("New: ")
+        print (new)
 
 
     # Test mape
@@ -88,7 +94,7 @@ def compute_1list_difference (origin, new):
     # Test mpe
     # Compute Mean Percentage Error between two lists
     try:
-        # block_diff_1list["mpe"] = stats.root_mean_squared_percentage_error(origin, new)
+        block_diff_1list["mpe"] = stats.root_mean_squared_percentage_error(origin, new)
     except ZeroDivisionError as ed:        
         block_diff_1list["log"].append(ed)
         block_diff_1list["mpe"] = None
@@ -103,7 +109,7 @@ def compute_1list_difference (origin, new):
     # Test rpd
     # Compute Relative Percentage Difference between two lists
     try:
-        # block_diff_1list["rpd"] = stats.root_mean_squared_percentage_error(origin, new)
+        block_diff_1list["rpd"] = stats.root_mean_squared_percentage_error(origin, new)
     except ZeroDivisionError as ed:        
         block_diff_1list["log"].append(ed)
         block_diff_1list["rpd"] = None
@@ -117,18 +123,18 @@ def compute_1list_difference (origin, new):
     
     # Test nilsimsa
     # Compute Nilsimsa Distane between two lists
-    try:
+    # try:
         # block_diff_1list["nilsimsa"] = stats.root_mean_squared_percentage_error(origin, new)
     # except ZeroDivisionError as ed:        
         # block_diff_1list["log"].append(ed)
         # block_diff_1list["rpd"] = None
-    except Exception as e:
-        print (e)
-        print ("Origin: ")
-        print (origin)
-        print ("\n")
-        print ("New: ")
-        print (new)
+    # except Exception as e:
+    #     print (e)
+    #     print ("Origin: ")
+    #     print (origin)
+    #     print ("\n")
+    #     print ("New: ")
+    #     print (new)
 
 
     return block_diff_1list
