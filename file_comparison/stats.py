@@ -21,7 +21,7 @@ def vcore (origin, new):
     n = min(len(origin), len(new))
     for iel in range(n):
         res.append(core(origin=origin[iel], new=new[iel]))
-    return res
+    return np.asarray(res)
 
 def mean_levenshtein_distance_percentage (origin:np.ndarray, new:np.ndarray):
     n = min(len(origin), len(new))
@@ -45,12 +45,12 @@ def mean_absolute_percentage_error(origin:np.ndarray, new:np.ndarray):
 # MSPE
 # Compute Mean Squared Percentage Error between two values
 def mean_squared_percentage_error(origin:np.ndarray, new:np.ndarray):
-    return np.mean(np.square(((origin - new) / origin)), axis=0)*100.
+    return np.mean(np.square((vcore(origin=origin, new=new))), axis=0)*100.
 
 # RMSPE
 # Compute Root Mean Squared Percentage Error between two lists
 def root_mean_squared_percentage_error(origin:np.ndarray, new:np.ndarray):
-    return np.sqrt(np.mean(np.square(((origin - new) / origin)), axis=0))*100.
+    return np.sqrt(np.mean(np.square(vcore(origin=origin, new=new)), axis=0))*100.
 
 # MSE  
 # Compute Mean Squared Error between two lists
@@ -72,7 +72,7 @@ def mean_percentage_error(origin:np.ndarray, new:np.ndarray):
     # core_value = core_value/n
 
     # return core_value * 100.
-    return np.mean((origin - new)/origin)*100.
+    return np.mean(vcore(origin=origin, new=new))*100.
 
 # MRPD
 # Compute Mean Relative Percentage Difference between two lists
@@ -89,6 +89,6 @@ def mean_relative_percentage_difference(origin:np.ndarray, new:np.ndarray):
 # Compute difference between two values
 # TODO
 def delta (origin:np.ndarray, new:np.ndarray):
-    return new - origin
+    return (origin - new)
         
         
