@@ -53,9 +53,18 @@ def compare_lists (list1:list, list2:list, comparison_path: str, block_diff: dic
     if len(list1) != len(list2):
         block_diff["error"].append(str(comparison_path+str(type(list1))+"->") + "List don't have same length")
         block_diff["nerrors"] += 1
-    
+
+    # Check type of list's elements
+    contains_containers = False
     for id_ilist in range(min(len(list1), len(list2))):
-        block_diff = iterable_are_equal (list1[id_ilist], list2[id_ilist], comparison_path+str(type(list1))+"->", block_diff)
+        if is_iterable_container(list1[id_ilist]) or is_iterable_container(list2[id_ilist]):
+            contains_containers = True
+    
+    if contains_containers:
+        for id_ilist in range(min(len(list1), len(list2))):
+            block_diff = iterable_are_equal (list1[id_ilist], list2[id_ilist], comparison_path+str(type(list1))+"->", block_diff)
+    else:
+        block_diff["report"].append(file_comparison.report_generator.compute_1list_difference(origin=list1, new=list2))
     
     return block_diff
 
