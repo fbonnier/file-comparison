@@ -72,7 +72,7 @@ def compare_numpy_arrays (original_item, new_item, comparison_path, block_diff):
     if (original_item.dtype != object and new_item.dtype != object):
         # block_delta = file_comparison.report_generator.compute_1list_difference(original_item, new_item)
 
-        block_diff["report"].append(file_comparison.report_generator.compute_1el_difference(origin=original_item[iel], new=new_item[iel]))
+        block_diff["report"].append(file_comparison.report_generator.compute_1el_difference(origin=original_item, new=new_item))
         
         # block_diff["error"].append(comparison_path+str(type(original_item)) + ": Different data types")
         # block_diff["nerrors"] += abs(len(original_item))

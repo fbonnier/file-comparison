@@ -65,29 +65,30 @@ def root_mean_squared_error(origin:np.ndarray, new:np.ndarray):
 # MPE
 # Compute Mean Percentage Error between two lists
 def mean_percentage_error(origin:np.ndarray, new:np.ndarray):
-    n = min(len(origin), len(new))
-    core_value = 0.
-    for icore in range (n):
-        core_value += (origin[icore] - new[icore])/origin[icore]
-    core_value = core_value/n
+    # n = min(len(origin), len(new))
+    # core_value = 0.
+    # for icore in range (n):
+    #     core_value += (origin[icore] - new[icore])/origin[icore]
+    # core_value = core_value/n
 
-    return core_value * 100.
+    # return core_value * 100.
+    return np.mean((origin - new)/origin)*100.
 
 # MRPD
 # Compute Mean Relative Percentage Difference between two lists
 def mean_relative_percentage_difference(origin:np.ndarray, new:np.ndarray):
-    n = min(len(origin), len(new))
-    core_value = 0.
-    for icore in range (n):
-        core_value += abs((origin[icore] - new[icore])) / ((origin[icore] + new[icore])/2)
-    core_value = abs(core_value)/n
-
-    return core_value * 100.
+    # n = min(len(origin), len(new))
+    # core_value = 0.
+    # for icore in range (n):
+        # core_value += abs((origin[icore] - new[icore])) / ((origin[icore] + new[icore])/2)
+    # core_value = abs(core_value)/n
+    return np.mean (np.abs(origin - new) / ((origin - new)/2))*100.
+    # return core_value * 100.
 
 
 # Compute difference between two values
 # TODO
-def delta (origin, new):
+def delta (origin:np.ndarray, new:np.ndarray):
     return new - origin
         
         
