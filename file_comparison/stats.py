@@ -16,7 +16,7 @@ def mean_levenshtein_distance_percentage (origin, new):
 
     distance_percentage = 0.
     for iel in range(n):
-        distance_percentage += nltk.metrics.distance.edit_distance(str(origin[iel]), str(new[iel]))*100./lev_max_scores[iel]
+        distance_percentage += nltk.metrics.edit_distance(str(origin[iel]), str(new[iel]))*100./lev_max_scores[iel]
     mean_distance_percentage = distance_percentage / n
 
     return 100. - mean_distance_percentage
