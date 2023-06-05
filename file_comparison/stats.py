@@ -3,7 +3,7 @@ import os
 import nltk
 import sklearn.metrics
 import numpy as np
-import nltk.metrics.distance
+# import nltk.metrics.distance
 
 error_diff_types = ["type", "len"]
 
