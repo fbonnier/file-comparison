@@ -113,19 +113,20 @@ def compute_1list_difference (origin:np.ndarray, new:np.ndarray):
     
     # Test rpd
     # Compute Relative Percentage Difference between two lists
-    try:
-        block_diff_1list["rpd"] = stats.root_mean_squared_percentage_error(origin, new)
-    except ZeroDivisionError as ed:        
-        block_diff_1list["log"].append(ed)
-        block_diff_1list["rpd"] = None
-    except Exception as e:
-        print ("RPD Stat")
-        print (e)
-        print ("Origin: ")
-        print (origin)
-        print ("\n")
-        print ("New: ")
-        print (new)
+    # TODO
+    # try:
+    #     block_diff_1list["rpd"] = stats.root_mean_squared_percentage_error(origin, new)
+    # except ZeroDivisionError as ed:        
+    #     block_diff_1list["log"].append(ed)
+    #     block_diff_1list["rpd"] = None
+    # except Exception as e:
+    #     print ("RPD Stat")
+    #     print (e)
+    #     print ("Origin: ")
+    #     print (origin)
+    #     print ("\n")
+    #     print ("New: ")
+    #     print (new)
     
     # Test nilsimsa
     # Compute Nilsimsa Distane between two lists

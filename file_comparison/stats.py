@@ -82,7 +82,7 @@ def mean_relative_percentage_difference(origin:np.ndarray, new:np.ndarray):
     # for icore in range (n):
         # core_value += abs((origin[icore] - new[icore])) / ((origin[icore] + new[icore])/2)
     # core_value = abs(core_value)/n
-    return np.mean (np.abs(origin - new) / ((origin - new)/2))*100.
+    return np.mean (np.abs(origin - new) / ((origin + new)/2))*100.
     # return core_value * 100.
 
 
