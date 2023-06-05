@@ -34,7 +34,7 @@ def compute_1list_difference (origin, new):
     # Compute Levenshtein distance percentage between two strings
     # TODO
     try:
-        block_diff_1list["levenshtein"] = stats.levenshtein_distance(origin, new)
+        block_diff_1list["levenshtein"] = stats.mean_levenshtein_distance_percentage(origin, new)
     except Exception as e:
         print ("Levenshtein Stat")
         print (e)
@@ -53,6 +53,7 @@ def compute_1list_difference (origin, new):
         block_diff_1list["log"].append(ed)
         block_diff_1list["mape"] = None
     except Exception as e:
+        print ("MAPE Stat")
         print (e)
         print ("Origin: ")
         print (origin)
@@ -69,6 +70,7 @@ def compute_1list_difference (origin, new):
         block_diff_1list["log"].append(ed)
         block_diff_1list["mspe"] = None
     except Exception as e:
+        print ("MSPE Stat")
         print (e)
         print ("Origin: ")
         print (origin)
@@ -84,6 +86,7 @@ def compute_1list_difference (origin, new):
         block_diff_1list["log"].append(ed)
         block_diff_1list["rmspe"] = None
     except Exception as e:
+        print ("RMSPE Stat")
         print (e)
         print ("Origin: ")
         print (origin)
@@ -99,6 +102,7 @@ def compute_1list_difference (origin, new):
         block_diff_1list["log"].append(ed)
         block_diff_1list["mpe"] = None
     except Exception as e:
+        print ("MPE Stat")
         print (e)
         print ("Origin: ")
         print (origin)
@@ -114,6 +118,7 @@ def compute_1list_difference (origin, new):
         block_diff_1list["log"].append(ed)
         block_diff_1list["rpd"] = None
     except Exception as e:
+        print ("RPD Stat")
         print (e)
         print ("Origin: ")
         print (origin)
