@@ -11,7 +11,10 @@ def core (origin, new):
     res = 0.
     try:
         res = (origin - new)/origin
-    except ZeroDivisionError as e:
+    except Exception as e:
+        print ("Core:")
+        print (type(e))
+        print(e)
         if origin == 0. and origin == new:
             res = 0.
     return res
