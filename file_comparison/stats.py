@@ -7,6 +7,22 @@ import numpy as np
 
 error_diff_types = ["type", "len"]
 
+def core (origin, new):
+    res = 0.
+    try:
+        res = (origin - new)/origin
+    except ZeroDivisionError as e:
+        if origin == 0. and origin == new:
+            res = 0.
+    return res
+
+def vcore (origin, new):
+    res = []
+    n = min(len(origin), len(new))
+    for iel in range(n):
+        res.append(core(origin=origin[iel], new=new[iel]))
+    return res
+
 def mean_levenshtein_distance_percentage (origin, new):
     n = min(len(origin), len(new))
     lev_max_scores = []
