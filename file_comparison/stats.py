@@ -23,7 +23,7 @@ def vcore (origin, new):
         res.append(core(origin=origin[iel], new=new[iel]))
     return res
 
-def mean_levenshtein_distance_percentage (origin, new):
+def mean_levenshtein_distance_percentage (origin:np.ndarray, new:np.ndarray):
     n = min(len(origin), len(new))
     lev_max_scores = []
     # Compute Levenshtein maximum scores
@@ -39,32 +39,32 @@ def mean_levenshtein_distance_percentage (origin, new):
 
 # MAPE
 # Compute Mean Absolute Percentage Error between two values
-def mean_absolute_percentage_error(origin, new):
+def mean_absolute_percentage_error(origin:np.ndarray, new:np.ndarray):
     return sklearn.metrics.mean_absolute_percentage_error(origin, new)*100.
 
 # MSPE
 # Compute Mean Squared Percentage Error between two values
-def mean_squared_percentage_error(origin, new):
+def mean_squared_percentage_error(origin:np.ndarray, new:np.ndarray):
     return np.mean(np.square(((origin - new) / origin)), axis=0)*100.
 
 # RMSPE
 # Compute Root Mean Squared Percentage Error between two lists
-def root_mean_squared_percentage_error(origin, new):
+def root_mean_squared_percentage_error(origin:np.ndarray, new:np.ndarray):
     return np.sqrt(np.mean(np.square(((origin - new) / origin)), axis=0))*100.
 
 # MSE  
 # Compute Mean Squared Error between two lists
-def mean_squared_error(origin, new):
+def mean_squared_error(origin:np.ndarray, new:np.ndarray):
     return np.mean(np.square(origin - new), axis=0)
 
 # RMSE
 # Compute Root Mean Squared Error between two lists
-def root_mean_squared_error(origin, new):
+def root_mean_squared_error(origin:np.ndarray, new:np.ndarray):
     return np.sqrt(np.mean(np.square(origin - new), axis=0))
 
 # MPE
 # Compute Mean Percentage Error between two lists
-def mean_percentage_error(origin, new):
+def mean_percentage_error(origin:np.ndarray, new:np.ndarray):
     n = min(len(origin), len(new))
     core_value = 0.
     for icore in range (n):
@@ -75,7 +75,7 @@ def mean_percentage_error(origin, new):
 
 # MRPD
 # Compute Mean Relative Percentage Difference between two lists
-def mean_relative_percentage_difference(origin, new):
+def mean_relative_percentage_difference(origin:np.ndarray, new:np.ndarray):
     n = min(len(origin), len(new))
     core_value = 0.
     for icore in range (n):

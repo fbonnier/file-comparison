@@ -71,12 +71,14 @@ def compare_numpy_arrays (original_item, new_item, comparison_path, block_diff):
     # Check type similar
     if (original_item.dtype != object and new_item.dtype != object):
         # block_delta = file_comparison.report_generator.compute_1list_difference(original_item, new_item)
+
+        block_diff["report"].append(file_comparison.report_generator.compute_1el_difference(origin=original_item[iel], new=new_item[iel]))
         
         # block_diff["error"].append(comparison_path+str(type(original_item)) + ": Different data types")
         # block_diff["nerrors"] += abs(len(original_item))
-        for iel in range(min(len(original_item), len(new_item))):
+        # for iel in range(min(len(original_item), len(new_item))):
             # block_diff["report"].append(file_comparison.report_generator.compute_1el_difference(origin=original_item[iel], new=new_item[iel]))
-            block_diff = file_comparison.iterables.iterable_are_equal (original_item[iel], new_item[iel], comparison_path+str(type(original_item))+"->", block_diff)
+            # block_diff = file_comparison.iterables.iterable_are_equal (original_item[iel], new_item[iel], comparison_path+str(type(original_item))+"->", block_diff)
         block_diff["nvalues"] += min(len(original_item), len(new_item))
 
 

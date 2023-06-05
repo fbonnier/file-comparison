@@ -1,7 +1,8 @@
 # Report generator Module
 import os
-import file_comparison.file_compare as file_compare
+# import file_comparison.file_compare as file_compare
 import file_comparison.stats as stats
+import numpy as np
 
 error_diff_types = ["type", "len"]
 
@@ -9,10 +10,10 @@ error_diff_types = ["type", "len"]
 def compute_1el_difference (origin, new):
 
     print ("Report_generator: compute_1el_difference")
-    return compute_1list_difference ([origin], [new])
+    return compute_1list_difference (np.asarray(origin), np.asarray(new))
 
 
-def compute_1list_difference (origin, new):
+def compute_1list_difference (origin:np.ndarray, new:np.ndarray):
     block_diff_1list = {"origin": {"type": str(type(origin)), "value": origin}, "new": {"type": str(type(new)), "value": new}, "nilsimsa": None, "rmspe": None, "mspe": None, "mape": None, "mpe":None, "rpd": None , "error": [], "log": []}
 
     print ("Report_generator: compute_1list_difference")
