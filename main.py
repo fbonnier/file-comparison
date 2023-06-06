@@ -61,6 +61,11 @@ def run_file_comparison_json (jsonfile, jsonfile_out):
         except Exception as e:
             error_glob.append (str(e))
 
+    print ("Analyze pairs:\n")
+    for ipair in pairs:
+        print (ipair["differences"])
+        print ("\n\n")
+
     # Write data in JSON file
     with open(jsonfile_out, "w") as f:
         json_data_out = {}
