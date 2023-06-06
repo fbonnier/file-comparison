@@ -95,35 +95,39 @@ class Method:
     # 4
     def compute_score (self):
 
-        # Calculate the ratio of different values compared to total number of values
-        self.quantity_score = 100. - self.number_of_errors*100./self.number_of_values
+        for ipair in self.differences_report:
+            pass
 
-        # Calculate MAPE
-        apes = [ipair["ape"] for ipair in self.differences_report if ipair["ape"]]
-        # apes = []
-        # for ipair in self.differences_report:
-            # if ipair["ape"]:
-                # apes.append(ipair["ape"])
 
-        if apes:
-            # self.mape_score = 100. - (sum(apes)/len(apes) * 100.)
-            self.mape_score = 100. - (sum(apes)/self.number_of_values * 100.)
+        # # Calculate the ratio of different values compared to total number of values
+        # self.quantity_score = 100. - self.number_of_errors*100./self.number_of_values
+
+        # # Calculate MAPE
+        # apes = [ipair["ape"] for ipair in self.differences_report if ipair["ape"]]
+        # # apes = []
+        # # for ipair in self.differences_report:
+        #     # if ipair["ape"]:
+        #         # apes.append(ipair["ape"])
+
+        # if apes:
+        #     # self.mape_score = 100. - (sum(apes)/len(apes) * 100.)
+        #     self.mape_score = 100. - (sum(apes)/self.number_of_values * 100.)
 
             
-        # # Calculate MSE
-        squared_deltas = [ipair["delta"]*ipair["delta"] for ipair in self.differences_report if ipair["delta"]]
-        if squared_deltas:
-            self.mse_score = sum(squared_deltas)/self.number_of_values
+        # # # Calculate MSE
+        # squared_deltas = [ipair["delta"]*ipair["delta"] for ipair in self.differences_report if ipair["delta"]]
+        # if squared_deltas:
+        #     self.mse_score = sum(squared_deltas)/self.number_of_values
 
-        # Calculate RMSE
-        if self.mse_score:
-            self.rmse_score = sqrt(self.mse_score)
+        # # Calculate RMSE
+        # if self.mse_score:
+        #     self.rmse_score = sqrt(self.mse_score)
 
-        # # try:
-        # #     self.score = self.__score_methods__[self.__name__](self.number_of_errors, self.number_of_values)
-        # # except Exception as e:
-        # #     print (e)
-        # # return self.score
+        # # # try:
+        # # #     self.score = self.__score_methods__[self.__name__](self.number_of_errors, self.number_of_values)
+        # # # except Exception as e:
+        # # #     print (e)
+        # # # return self.score
 
     # 3
     def compute_differences (self):
@@ -139,6 +143,11 @@ class Method:
             self.number_of_values = block_diff["nvalues"]
             self.log = block_diff["log"]
             self.errors += block_diff["error"]
+
+            print("## BLOCK DIFF ##")
+            print(block_diff)
+
+            print("## ##### ##")
             
         except Exception as e:
             self.log.append ("Method.compute_differences: " + str(e))
