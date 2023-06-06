@@ -64,48 +64,47 @@ def compute_1list_difference (origin:np.ndarray, new:np.ndarray):
     #     print ("New: ")
     #     print (new)
     
-    # Test mspe
-    # Compute Mean Squared Percentage Error between two values
-    # TODO
-    try:
-        block_diff_1list["mspe"] = stats.mean_squared_percentage_error(origin, new)
-    except ZeroDivisionError as ed:
-        block_diff_1list["log"].append(ed)
-        block_diff_1list["mspe"] = None
-    except Exception as e:
-        print ("MSPE Stat")
-        print (e)
-        print ("Origin: ")
-        print (origin)
-        print ("\n")
-        print ("New: ")
-        print (new)
+    # # Test mspe
+    # # Compute Mean Squared Percentage Error between two values
+    # # TODO
+    # try:
+    #     block_diff_1list["mspe"] = stats.mean_squared_percentage_error(origin, new)
+    # except ZeroDivisionError as ed:
+    #     block_diff_1list["log"].append(ed)
+    #     block_diff_1list["mspe"] = None
+    # except Exception as e:
+    #     print ("MSPE Stat")
+    #     print (e)
+    #     print ("Origin: ")
+    #     print (origin)
+    #     print ("\n")
+    #     print ("New: ")
+    #     print (new)
 
-    # Test rmspe
-    # Compute Root Mean Squared Percentage Error between two lists
-    try:
-        block_diff_1list["rmspe"] = stats.root_mean_squared_percentage_error(origin, new)
-    except ZeroDivisionError as ed:        
-        block_diff_1list["log"].append(ed)
-        block_diff_1list["rmspe"] = None
-    except Exception as e:
-        print ("RMSPE Stat")
-        print (e)
-        print ("Origin: ")
-        print (origin)
-        print ("\n")
-        print ("New: ")
-        print (new)
+    # # Test rmspe
+    # # Compute Root Mean Squared Percentage Error between two lists
+    # try:
+    #     block_diff_1list["rmspe"] = stats.root_mean_squared_percentage_error(origin, new)
+    # except ZeroDivisionError as ed:        
+    #     block_diff_1list["log"].append(ed)
+    #     block_diff_1list["rmspe"] = None
+    # except Exception as e:
+    #     print ("RMSPE Stat")
+    #     print (e)
+    #     print ("Origin: ")
+    #     print (origin)
+    #     print ("\n")
+    #     print ("New: ")
+    #     print (new)
 
     # Test mpe
     # Compute Mean Percentage Error between two lists
     try:
         block_diff_1list["mpe"] = stats.root_mean_squared_percentage_error(origin, new)
-    except ZeroDivisionError as ed:        
-        block_diff_1list["log"].append(ed)
-        block_diff_1list["mpe"] = None
     except Exception as e:
         print ("MPE Stat")
+        block_diff_1list["log"].append(e)
+        block_diff_1list["mpe"] = None
         print (e)
         print ("Origin: ")
         print (origin)
@@ -116,19 +115,18 @@ def compute_1list_difference (origin:np.ndarray, new:np.ndarray):
     # Test rpd
     # Compute Relative Percentage Difference between two lists
     # TODO
-    # try:
-    #     block_diff_1list["rpd"] = stats.mean_relative_percentage_difference(origin, new)
-    # except ZeroDivisionError as ed:        
-    #     block_diff_1list["log"].append(ed)
-    #     block_diff_1list["rpd"] = None
-    # except Exception as e:
-    #     print ("RPD Stat")
-    #     print (e)
-    #     print ("Origin: ")
-    #     print (origin)
-    #     print ("\n")
-    #     print ("New: ")
-    #     print (new)
+    try:
+        block_diff_1list["rpd"] = stats.mean_relative_percentage_difference(origin, new)
+    except Exception as e:
+        print ("RPD Stat")
+        block_diff_1list["log"].append(e)
+        block_diff_1list["rpd"] = None
+        print (e)
+        print ("Origin: ")
+        print (origin)
+        print ("\n")
+        print ("New: ")
+        print (new)
     
     # Test nilsimsa
     # Compute Nilsimsa Distane between two lists

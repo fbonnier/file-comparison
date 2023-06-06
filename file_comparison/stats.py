@@ -7,6 +7,7 @@ import numpy as np
 
 error_diff_types = ["type", "len"]
 
+# (origin - new) / origin
 def core (origin, new):
     res = 0.
     try:
@@ -19,12 +20,20 @@ def core (origin, new):
             res = 0.
     return res
 
-def vcore (origin, new):
-    res = []
-    n = min(len(origin), len(new))
-    for iel in range(n):
-        res.append(core(origin=origin[iel], new=new[iel]))
-    return np.asarray(res)
+# (origin - new) / origin
+# def vcore (origin:np.ndarray, new:np.ndarray):
+#     res = []
+#     n = min(len(origin), len(new))
+#     for iel in range(n):
+#         res.append(core(origin=origin[iel], new=new[iel]))
+#     return np.asarray(res)
+
+# (origin - new) / origin
+def vcore (origin:np.ndarray, new:np.ndarray):
+    
+    res = np.divide (origin-new, origin, out=np.full_like(origin, None), where=origin!=0)
+
+    return res
 
 def mean_levenshtein_distance_percentage (origin:np.ndarray, new:np.ndarray):
     n = min(len(origin), len(new))
@@ -75,17 +84,20 @@ def mean_percentage_error(origin:np.ndarray, new:np.ndarray):
     # core_value = core_value/n
 
     # return core_value * 100.
-    return np.mean(vcore(origin=origin, new=new))*100.
+    core = vcore(origin=origin, new=new)
+    return np.mean(core, where=core!=None)*100.
 
 # MRPD
 # Compute Mean Relative Percentage Difference between two lists
 def mean_relative_percentage_difference(origin:np.ndarray, new:np.ndarray):
-    # n = min(len(origin), len(new))
-    # core_value = 0.
+
+    core = np.divide (np.abs(origin - new), ((origin + new)/2), out=np.full_like(origin, None), where=((origin + new)/2)!=0)
+
     # for icore in range (n):
         # core_value += abs((origin[icore] - new[icore])) / ((origin[icore] + new[icore])/2)
     # core_value = abs(core_value)/n
-    return np.mean (np.abs(origin - new) / ((origin + new)/2))*100.
+
+    return np.mean (core, where=core!=None)*100.
     # return core_value * 100.
 
 
