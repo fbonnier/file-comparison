@@ -91,7 +91,7 @@ def mean_percentage_error(origin:np.ndarray, new:np.ndarray):
 # Compute Mean Relative Percentage Difference between two lists
 def mean_relative_percentage_difference(origin:np.ndarray, new:np.ndarray):
 
-    core = np.divide (np.abs(origin - new), ((origin + new)/2), out=np.full_like(origin, None), where=((origin + new)/2)!=0)
+    core = np.divide (np.abs(origin - new), ((origin + new)/2), out=np.full_like(origin, np.nan), where=((origin + new)/2)!=0)
 
     # for icore in range (n):
         # core_value += abs((origin[icore] - new[icore])) / ((origin[icore] + new[icore])/2)
