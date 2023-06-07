@@ -87,7 +87,7 @@ def mean_percentage_error(origin:np.ndarray, new:np.ndarray):
     print (origin)
     core = vcore(origin=origin, new=new)
     print (core)
-    return np.nanmean(core)*100.
+    return 100. - np.nanmean(core)*100.
 
 # MRPD
 # Compute Mean Relative Percentage Difference between two lists
@@ -99,7 +99,7 @@ def mean_relative_percentage_difference(origin:np.ndarray, new:np.ndarray):
         # core_value += abs((origin[icore] - new[icore])) / ((origin[icore] + new[icore])/2)
     # core_value = abs(core_value)/n
 
-    return np.nanmean (core)*100.
+    return 100. - np.nanmean (core)*100.
     # return core_value * 100.
 
 
