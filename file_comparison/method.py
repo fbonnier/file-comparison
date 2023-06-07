@@ -143,11 +143,6 @@ class Method:
             self.number_of_values = block_diff["nvalues"]
             self.log = block_diff["log"]
             self.errors += block_diff["error"]
-
-            print("## BLOCK DIFF ##")
-            print(block_diff)
-
-            print("## ##### ##")
             
         except Exception as e:
             self.log.append ("Method.compute_differences: " + str(e))
