@@ -99,7 +99,7 @@ def compute_1list_difference (origin:np.ndarray, new:np.ndarray):
     # Test mpe
     # Compute Mean Percentage Error between two lists
     try:
-        block_diff_1list["mpe"] = stats.root_mean_squared_percentage_error(origin, new)
+        block_diff_1list["mpe"] = stats.mean_percentage_error(origin, new)
         print ("MPE = " + str(block_diff_1list["mpe"]))
     except Exception as e:
         print ("MPE Stat")

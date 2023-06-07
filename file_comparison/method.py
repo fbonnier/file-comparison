@@ -30,6 +30,11 @@ class Method:
     mse_score = 0.
     mape_score = 0.
     hash_score = 0.
+    mrpd_score = 0.
+    mpe_score = 0.
+    mspe_score = 0.
+    rmspe_score = 0.
+    levenshtein_score = 0.
     errors = []
     log = []
 
