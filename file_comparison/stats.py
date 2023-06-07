@@ -21,14 +21,6 @@ def core (origin, new):
     return res
 
 # (origin - new) / origin
-# def vcore (origin:np.ndarray, new:np.ndarray):
-#     res = []
-#     n = min(len(origin), len(new))
-#     for iel in range(n):
-#         res.append(core(origin=origin[iel], new=new[iel]))
-#     return np.asarray(res)
-
-# (origin - new) / origin
 def vcore (origin:np.ndarray, new:np.ndarray):
     
     res = np.divide (origin-new, origin, out=np.full_like(origin, np.nan), where=origin!=0)
@@ -52,7 +44,14 @@ def mean_levenshtein_distance_percentage (origin:np.ndarray, new:np.ndarray):
 # MAPE
 # Compute Mean Absolute Percentage Error between two values
 def mean_absolute_percentage_error(origin:np.ndarray, new:np.ndarray):
-    return sklearn.metrics.mean_absolute_percentage_error(origin, new)*100.
+    # Can't use sklearn.metrics.mean_absolute_percentage_error because
+    # zero division return random high number
+    # return sklearn.metrics.mean_absolute_percentage_error(origin, new)*100.
+
+    # MAPE Numpy implement instead
+    core = np.absolute(vcore(origin=origin, new=new))
+    return np.nanmean(core) * 100.
+
 
 # MSPE
 # Compute Mean Squared Percentage Error between two values
@@ -77,31 +76,17 @@ def root_mean_squared_percentage_error(origin:np.ndarray, new:np.ndarray):
 # MPE
 # Compute Mean Percentage Error between two lists
 def mean_percentage_error(origin:np.ndarray, new:np.ndarray):
-    # n = min(len(origin), len(new))
-    # core_value = 0.
-    # for icore in range (n):
-    #     core_value += (origin[icore] - new[icore])/origin[icore]
-    # core_value = core_value/n
-
-    # return core_value * 100.
-    print (origin)
+    
     core = vcore(origin=origin, new=new)
-    print (core)
-    return 100. - np.nanmean(core)*100.
+    return np.nanmean(core)*100.
 
 # MRPD
 # Compute Mean Relative Percentage Difference between two lists
 def mean_relative_percentage_difference(origin:np.ndarray, new:np.ndarray):
 
     core = np.divide (np.abs(origin - new), ((origin + new)/2), out=np.full_like(origin, np.nan), where=(((origin + new)/2)!=0))
-
-    # for icore in range (n):
-        # core_value += abs((origin[icore] - new[icore])) / ((origin[icore] + new[icore])/2)
-    # core_value = abs(core_value)/n
-
-    return 100. - np.nanmean (core)*100.
-    # return core_value * 100.
-
+    return np.nanmean (core)*100.
+    
 
 # Compute difference between two values
 # TODO
