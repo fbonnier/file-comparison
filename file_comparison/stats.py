@@ -84,6 +84,7 @@ def mean_percentage_error(origin:np.ndarray, new:np.ndarray):
     # core_value = core_value/n
 
     # return core_value * 100.
+    print (origin)
     core = vcore(origin=origin, new=new)
     print (core)
     return np.nanmean(core)*100.
