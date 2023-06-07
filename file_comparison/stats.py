@@ -85,6 +85,7 @@ def mean_percentage_error(origin:np.ndarray, new:np.ndarray):
 
     # return core_value * 100.
     core = vcore(origin=origin, new=new)
+    print (core)
     return np.nanmean(core)*100.
 
 # MRPD
