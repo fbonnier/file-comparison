@@ -3,6 +3,7 @@ import os
 from nltk.metrics import edit_distance
 import sklearn.metrics
 import numpy as np
+from file_comparison.nilsimsa import nilsimsa_str
 # import nltk.metrics.distance
 
 error_diff_types = ["type", "len"]
@@ -56,12 +57,14 @@ def mean_absolute_percentage_error(origin:np.ndarray, new:np.ndarray):
 # MSPE
 # Compute Mean Squared Percentage Error between two values
 def mean_squared_percentage_error(origin:np.ndarray, new:np.ndarray):
-    return np.nanmean(np.square((vcore(origin=origin, new=new))), axis=0)*100.
+    core = vcore(origin=origin, new=new)
+    core = np.square(core, where=core!=np.nan, out=np.full_like(core, np.nan))
+    return np.nanmean(core)*100.
 
 # RMSPE
 # Compute Root Mean Squared Percentage Error between two lists
 def root_mean_squared_percentage_error(origin:np.ndarray, new:np.ndarray):
-    return np.sqrt(np.mean(np.square(vcore(origin=origin, new=new)), axis=0))*100.
+    return np.sqrt(mean_squared_percentage_error(origin=origin, new=new)/100.)*100.
 
 # MSE  
 # Compute Mean Squared Error between two lists
@@ -88,9 +91,18 @@ def mean_relative_percentage_difference(origin:np.ndarray, new:np.ndarray):
     return np.nanmean (core)*100.
     
 
-# Compute difference between two values
-# TODO
+# Compute mean difference between two datasets
 def delta (origin:np.ndarray, new:np.ndarray):
-    return (origin - new)
-        
+    return np.mean(np.absolute(origin - new))
+
+# Compute maximum difference between two datasets
+def maximum_delta (origin:np.ndarray, new:np.ndarray):
+    return np.max(np.absolute(origin - new))
+
+def mean_nilsimsa_distance(origin:np.ndarray, new:np.ndarray):
+    nilsimsa_scores = np.full_like(origin, np.nan)
+    for iel in range(min(len(origin), len(new))):
+        nilsimsa_scores[iel] = nilsimsa_str(origin=str(origin[iel]), new=str(new[iel]))
+
+    return np.nanmean(nilsimsa_scores)
         
