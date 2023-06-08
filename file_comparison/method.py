@@ -18,24 +18,66 @@ class Method:
     __difference_methods__ = {"neo": file_comparison.neo.compute_differences_report, "npz": file_comparison.npz.compute_differences_report, "byte": file_comparison.nilsimsa.compute_differences_report}
     __score_methods__ = {"neo": file_comparison.neo.compute_score, "npz": file_comparison.npz.compute_score, "byte": file_comparison.nilsimsa.compute_score}
     __check_methods__ = {"neo": file_comparison.neo.check_file_formats, "npz": file_comparison.npz.check_file_formats, "byte": file_comparison.nilsimsa.check_file_formats}
+
+    # File containing known/expected results
     original_file = None
+
+    # File containing simulated/produced results
     new_file = None
+
+    # Global score of file
     score = 0.
-    quantity_score = 0.
-    differences_report = []
-    mean_value = 0.
-    number_of_errors = 0
+
+    # Number of different values
+    ndiff = 0
+    # Total number of values in dataset
     number_of_values = 0
+    # Ratio between number of different values and total values: quantity_score = ndiff/number_of_values
+    quantity_score = 0.
+
+    # Complete list of datasets containing values and local scores
+    differences_report = []
+    
+    # Global Mean MSE value
     rmse_score = 0.
+
+    # Global Mean MSE value
     mse_score = 0.
+
+    # Global MAPE score
     mape_score = 0.
+
+    # Hash score calculated between the two files
     hash_score = 0.
+
+    # Global MRPD score
     mrpd_score = 0.
+
+    # Global MPE score
     mpe_score = 0.
+
+    # Global MSPE score
     mspe_score = 0.
+
+    # Global RMSPE score
     rmspe_score = 0.
+
+    # Global Levenshtein score
     levenshtein_score = 0.
+
+    # Global Mean Nilsimsa score
+    nilsimsa_score = 0.
+
+    # Global Maximum absolute difference
+    max_delta = 0.
+
+    # Global Mean absolute difference
+    delta = 0.
+
+    # Total list of critical errors raised during score computation
     errors = []
+
+    # Total list of logs raised during score computation
     log = []
 
     # 1.1
@@ -84,10 +126,8 @@ class Method:
                 ratio = file_comparison.nilsimsa.compute_ratio (score_nilsimsa)
                 self.hash_score = ratio*100.
         except Exception as e:
-            self.number_of_errors += 1
             self.errors.append("compare_hash error: " + str(e))
             self.log.append("compare_hash error: " + str(e))
-            print (e)
 
     # 2.pair
     def check_file_formats_pair (self):
@@ -144,10 +184,34 @@ class Method:
             block_diff = self.__difference_methods__[self.__name__](self.original_file, self.new_file)
             # print (block_diff)
             self.differences_report = block_diff["report"]
-            self.number_of_errors = block_diff["nerrors"]
             self.number_of_values = block_diff["nvalues"]
             self.log = block_diff["log"]
             self.errors += block_diff["error"]
+            
+            ### Initialized all scores
+            self.levenshtein = 0.
+            self.nilsimsa = 0.
+            self.rmspe = 0.
+            self.mspe = 0.
+            self.mape = 0.
+            self.mpe = 0.
+            self.rpd = 0.
+            self.max_delta = 0.
+            self.delta = 0.
+            self.ndiff = 0
+
+            ### Sum for all datasets the scores
+            for idataset in self.differences_report:
+                self.levenshtein_score += idataset["levenshtein"]
+                self.nilsimsa_score += idataset["nilsimsa"]
+                self.rmspe_score += 100 - idataset["rmspe"]
+                self.mspe_score += 100 - idataset["mspe"]
+                self.mape_score += 100 - idataset["mape"]
+                self.mpe_score += 100 - idataset["mpe"]
+                self.mrpd_score += 100 - idataset["rpd"]
+                self.max_delta = max(self.max_delta, idataset["max delta"])
+                self.delta += idataset["delta"]
+                self.ndiff += idataset["ndiff"]
             
         except Exception as e:
             self.log.append ("Method.compute_differences: " + str(e))
@@ -166,6 +230,8 @@ class Method:
         ipair["mape_score"] = self.mape_score
         ipair["quantity score"] = self.quantity_score
         ipair["hash score"] = self.hash_score
+        
+        
         
         return ipair
 

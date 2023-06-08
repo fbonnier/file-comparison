@@ -36,7 +36,7 @@ def nilsimsa_str (origin:str, new:str):
     nil_origin = Nilsimsa(bytes(origin, "utf-8"))
     nil_new = Nilsimsa(bytes(new, "utf-8"))
     score_nilsimsa = compare_digests (nil_origin.hexdigest(), nil_new.hexdigest())
-    return compute_ratio (score_nilsimsa)
+    return compute_ratio (score_nilsimsa) * 100.
 
 
 

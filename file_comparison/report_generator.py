@@ -13,7 +13,7 @@ def compute_1el_difference (origin, new):
 
 def compute_1list_difference (origin:np.ndarray, new:np.ndarray):
  
-    block_diff_1list = {"origin": {"type": str(type(origin.tolist())), "value": origin.tolist()}, "new": {"type": str(type(new.tolist())), "value": new.tolist()}, "levenshtein": None, "nilsimsa": None, "rmspe": None, "mspe": None, "mape": None, "mpe":None, "rpd": None , "max delta": None, "delta": None, "error": [], "log": []}
+    block_diff_1list = {"origin": {"type": str(type(origin.tolist())), "value": origin.tolist()}, "new": {"type": str(type(new.tolist())), "value": new.tolist()}, "levenshtein": None, "nilsimsa": None, "rmspe": None, "mspe": None, "mape": None, "mpe":None, "rpd": None , "max delta": None, "delta": None, "error": [], "log": [], "ndiff": 0}
 
     # # Test types: if types are different, return error type
     # if type(origin) != type(new):
@@ -93,6 +93,11 @@ def compute_1list_difference (origin:np.ndarray, new:np.ndarray):
     except Exception as e:
         block_diff_1list["log"].append("Mean Nilsimsa Stat: " + str(e))
         block_diff_1list["nilsimsa"] = None
+
+    # Count the number of value differences
+    for iel in range(min(len(origin), len(new))):
+        if origin[iel] != new[iel]:
+            block_diff_1list["ndiff"] += 1
 
     return block_diff_1list
 """
