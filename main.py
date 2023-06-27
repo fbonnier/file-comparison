@@ -1,18 +1,19 @@
 import os
 import file_comparison.file_compare as fc
-import file_comparison.nilsimsa as nl
-import file_comparison.npz as npz
-import file_comparison.neo as neo
-import file_comparison.hamming as hm
-import file_comparison.levenshtein as lv
-import file_comparison.report_generator as report
-import file_comparison.downloader as downloader
+# import file_comparison.nilsimsa as nl
+# import file_comparison.npz as npz
+# import file_comparison.neo as neo
+# import file_comparison.hamming as hm
+# import file_comparison.levenshtein as lv
+# import file_comparison.report_generator as report
+# import file_comparison.downloader as downloader
 import file_comparison.bijective as bijective
 import file_comparison.method as method
 import profile
 import argparse
 import json
 import sys
+import traceback
 
 
 def run_file_comparison_json (jsonfile, jsonfile_out):
@@ -59,7 +60,8 @@ def run_file_comparison_json (jsonfile, jsonfile_out):
                 ipair = imethod.topair(ipair)
             
         except Exception as e:
-            error_glob.append (str(e))
+            error_glob.append (str("".join(traceback.format_exception(etype=type(e), value=e, tb=e.__traceback__))))
+            print (str("".join(traceback.format_exception(etype=type(e), value=e, tb=e.__traceback__))))
 
     # Write data in JSON file
     with open(jsonfile_out, "w") as f:
@@ -174,24 +176,24 @@ if __name__ == "__main__":
             try:
                 profile.run('run_file_comparison_json(jsonfile.name, jsonfile_out.name)')
             except Exception as e1:
-                print (e1)
+                print (str("".join(traceback.format_exception(etype=type(e1), value=e1, tb=e1.__traceback__))))
         elif file1 and file2:
             try:
                 profile.run('run_file_comparison_files(file1.name, file2.name)')
             except Exception as e2:
-                print (e2)
+                print (str("".join(traceback.format_exception(etype=type(e2), value=e2, tb=e2.__traceback__))))
 
     else:
         if jsonfile and jsonfile_out:
             try:
                 run_file_comparison_json(jsonfile=jsonfile.name, jsonfile_out=jsonfile_out.name)
             except Exception as e1:
-                print (e1)
+                print (str("".join(traceback.format_exception(etype=type(e1), value=e1, tb=e1.__traceback__))))
         elif file1 and file2:
             try:
                 run_file_comparison_files(file1.name, file2.name)
             except Exception as e2:
-                print (e2)
+                print (str("".join(traceback.format_exception(etype=type(e2), value=e2, tb=e2.__traceback__))))
                 
 
     # method = ""

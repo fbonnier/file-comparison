@@ -4,6 +4,7 @@ from nltk.metrics import edit_distance
 import sklearn.metrics
 import numpy as np
 from file_comparison.nilsimsa import nilsimsa_str
+import traceback
 # import nltk.metrics.distance
 
 error_diff_types = ["type", "len"]
@@ -15,8 +16,7 @@ def core (origin, new):
         res = (origin - new)/origin
     except Exception as e:
         print ("Core:")
-        print (type(e))
-        print(e)
+        print(str("".join(traceback.format_exception(etype=type(e), value=e, tb=e.__traceback__))))
         if origin == 0. and origin == new:
             res = 0.
     return res
