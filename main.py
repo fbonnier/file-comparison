@@ -66,7 +66,7 @@ def run_file_comparison_json (jsonfile, jsonfile_out):
     # Write data in JSON file
     with open(jsonfile_out, "w") as f:
         json_data_out = {}
-        json_data_out["Reusability Verification"] = {"errors": [], "score": 0, "advice": [], "log": [], "report": {}}
+        json_data_out["Reusability Verification"] = {"error": [], "score": 0, "advice": [], "log": [], "report": {}}
         if error_glob:
             json_data_out["Reusability Verification"]["error"].append (error_glob)
         for ipair in pairs:
