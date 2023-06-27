@@ -225,7 +225,7 @@ class Method:
         ipair["log"] = self.log
         ipair["score"] = self.score
         ipair["differences"] = self.differences_report
-        ipair["number_of_errors"] = self.number_of_errors
+        ipair["number_of_errors"] = self.errors.size()
         ipair["number_of_values"] = self.number_of_values
         ipair["rmse_score"] = self.rmse_score
         ipair["mse_score"] = self.mse_score

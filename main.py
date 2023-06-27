@@ -106,7 +106,7 @@ def run_file_comparison_files(file1, file2):
         # print(icouple, imethod)
         # score, file_diff = report.compute_differences(icouple[0], icouple[1], imethod)
         # final_report.append(report.generate_report_1_file (icouple[0], icouple[1], imethod, score, file_diff))
-        method = Method (imethod, icouple[0], icouple[1])
+        method = method.Method (imethod, icouple[0], icouple[1])
         is_checked, check_error = method.check_file_formats()
 
         print (is_checked)
