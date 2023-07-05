@@ -212,25 +212,25 @@ def iterable_are_equal (original_item, new_item, comparison_path, block_diff):
     elif ((type(original_item) == np.ndarray) and (type(new_item) == np.ndarray)):
         print ("iterable_are_equal Numpy Array")
 
-        # Check type similar
-        if (original_item.dtype != new_item.dtype):
-            block_diff["error"].append(comparison_path+str(type(original_item)) + ": Different data types")
-            block_diff["nerrors"] += abs(len(original_item))
-        else:
+        # # Check type similar
+        # if (original_item.dtype != new_item.dtype):
+        #     block_diff["error"].append(comparison_path+str(type(original_item)) + ": Different data types")
+        #     block_diff["nerrors"] += abs(len(original_item))
+        # else:
             # Check element types are primitive types
-            if (original_item.dtype not in container_types):
-                print ("iterable_are_equal Numpy Array not in container types:  " + str(original_item.dtype))
-                block_diff = file_comparison.npz.compare_numpy_arrays (original_item, new_item, comparison_path+str(type(original_item))+"->", block_diff)
-            else:
-                print ("iterable_are_equal Numpy Array type " + str(original_item.dtype))
+            # if (original_item.dtype not in container_types):
+            #     print ("iterable_are_equal Numpy Array not in container types:  " + str(original_item.dtype))
+            #     block_diff = file_comparison.npz.compare_numpy_arrays (original_item, new_item, comparison_path+str(type(original_item))+"->", block_diff)
+            # else:
+                # print ("iterable_are_equal Numpy Array type " + str(original_item.dtype))
                 
-                # Check array length
-                if len(original_item) - len(new_item):
-                    block_diff["error"].append (comparison_path+str(type(original_item)) + ": Different size, missing data")
-                    block_diff["nerrors"] += abs(len(original_item) - len(new_item))
+        # Check array length
+        if len(original_item) - len(new_item):
+            block_diff["error"].append (comparison_path+str(type(original_item)) + ": Different size, missing data")
+            block_diff["nerrors"] += abs(len(original_item) - len(new_item))
 
-                for id_ilist in range(min(len(original_item), len(new_item))):
-                    block_diff = iterable_are_equal (original_item[id_ilist], new_item[id_ilist], comparison_path+str(type(original_item))+"->", block_diff)
+        for id_ilist in range(min(len(original_item), len(new_item))):
+            block_diff = iterable_are_equal (original_item[id_ilist], new_item[id_ilist], comparison_path+str(type(original_item))+"->", block_diff)
 
 
     #############   NEO.BLOCK   ###################
@@ -252,7 +252,13 @@ def iterable_are_equal (original_item, new_item, comparison_path, block_diff):
         print ("iterable_are_equal Iterable type")
         #################   LIST    ###################
         if ((type(original_item) == list) and (type(new_item) == list)):
-            block_diff = compare_lists (original_item, new_item, comparison_path+str(type(original_item))+"->", block_diff)
+            # Check array length
+            if len(original_item) - len(new_item):
+                block_diff["error"].append (comparison_path+str(type(original_item)) + ": Different size, missing data")
+                block_diff["nerrors"] += abs(len(original_item) - len(new_item))
+            
+            for id_ilist in range(min(len(original_item), len(new_item))):
+                block_diff = iterable_are_equal (original_item[id_ilist], new_item[id_ilist], comparison_path+str(type(original_item))+"->", block_diff)
             
         #################   DICT    ###################
         # Check if original_item and new_item provide keys to check keys
