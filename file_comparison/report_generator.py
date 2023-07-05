@@ -97,8 +97,13 @@ def compute_1list_difference (origin:np.ndarray, new:np.ndarray):
 
     # Count the number of value differences
     for iel in range(min(len(origin), len(new))):
-        if origin[iel] != new[iel]:
-            block_diff_1list["ndiff"] += 1
+        try:
+            if origin[iel] != new[iel]:
+                block_diff_1list["ndiff"] += 1
+        except Exception as e:
+            block_diff_1list["log"].append("report_generator - Count differences: " + str("".join(traceback.format_exception(etype=type(e), value=e, tb=e.__traceback__))))
+            block_diff_1list["error"].append("report_generator - Count differences: " + str("".join(traceback.format_exception(etype=type(e), value=e, tb=e.__traceback__))))
+            print ("report_generator - Count differences: " + str("".join(traceback.format_exception(etype=type(e), value=e, tb=e.__traceback__))))
 
     return block_diff_1list
 """
