@@ -8,7 +8,7 @@ import file_comparison.report_generator
 import file_comparison.neo as fcneo
 import file_comparison.stats as stats
 import file_comparison.iterables
-
+import traceback
 
 known_types = [np.lib.npyio.NpzFile, np.ndarray, neo.core.block.Block, neo.core.Segment, str, bytes, list, dict, bool, float, int, neo.core.spiketrain.SpikeTrain, neo.core.analogsignal.AnalogSignal]
 
@@ -147,9 +147,9 @@ def compute_differences_report (original_file, new_file):
         # print ("\n")
 
     except Exception as e:
-        block_diff["error"].append("NPZ compute_differences_report: " + str(e))
+        block_diff["error"].append("NPZ compute_differences_report: " + str("".join(traceback.format_exception(etype=type(e), value=e, tb=e.__traceback__))))
         block_diff["nerrors"] += 1
-        print ("NPZ compute_differences_report: " + str (e))
+        print ("NPZ compute_differences_report: " + str("".join(traceback.format_exception(etype=type(e), value=e, tb=e.__traceback__))))
 
     return block_diff
 
@@ -159,7 +159,7 @@ def check_file_formats (filepath):
         np.load(filepath, allow_pickle=True)
         return True, None
     except Exception as e:
-        print ("Error " + str(type(e)) + " :: NPZ method: " + str(e))
+        print ("NPZ check_file_format: " + str("".join(traceback.format_exception(etype=type(e), value=e, tb=e.__traceback__))))
         return False, str(e)
 
 # def file_comparison.iterables.iterable_are_equal (original_item, new_item, comparison_path, block_diff):
