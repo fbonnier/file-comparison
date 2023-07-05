@@ -197,7 +197,7 @@ def iterable_are_equal (original_item, new_item, comparison_path, block_diff):
         block_diff ["error"].append(comparison_path + " " + str(type(original_item)) + " " + str(type(new_item)) + " are not in KNOWN Types")
         block_diff["nerrors"]+=1
         block_diff["nvalues"]+=1
-        print ("iterable_are_equal unknown types")
+        print ("iterable_are_equal unknown types " + str(type (original_item)) + " -- " + str(type (new_item)))
 
     #############   NUMPY.NPZ.Files  #################
     # Convert npz files into compatible arrays
