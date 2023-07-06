@@ -96,7 +96,7 @@ def compute_1list_difference (origin:np.ndarray, new:np.ndarray):
         block_diff_1list["nilsimsa"] = None
 
     # Count the number of value differences
-    for iel in range(min(len(origin), len(new))):
+    for iel in range(min(origin.size, new.size)):
         try:
             if origin[iel] != new[iel]:
                 block_diff_1list["ndiff"] += 1
