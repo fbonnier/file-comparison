@@ -9,7 +9,7 @@ error_diff_types = ["type", "len"]
 
 
 def compute_1el_difference (origin, new):
-    return compute_1list_difference (np.asarray(origin), np.asarray(new))
+    return compute_1list_difference (np.array(origin, ndmin=1), np.array(new, ndmin=1))
 
 
 def compute_1list_difference (origin:np.ndarray, new:np.ndarray):

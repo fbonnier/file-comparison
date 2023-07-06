@@ -275,8 +275,6 @@ def iterable_are_equal (original_item, new_item, comparison_path, block_diff):
         # if values are not equal
         if (original_item != new_item):
             block_delta = file_comparison.report_generator.compute_1el_difference (original_item, new_item)
-            block_delta["log"].append(str(comparison_path+str(type(original_item))+"->"+str(original_item)))
             block_diff["report"].append(block_delta)
-            block_diff["nerrors"] += 1
         
     return block_diff
