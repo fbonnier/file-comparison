@@ -51,7 +51,7 @@ def mean_absolute_percentage_error(origin:np.ndarray, new:np.ndarray):
 
     # MAPE Numpy implement instead
     core = np.absolute(vcore(origin=origin, new=new))
-    return np.nanmean(core) * 100.
+    return 100. - np.nanmean(core) * 100.
 
 
 # MSPE
@@ -59,12 +59,12 @@ def mean_absolute_percentage_error(origin:np.ndarray, new:np.ndarray):
 def mean_squared_percentage_error(origin:np.ndarray, new:np.ndarray):
     core = vcore(origin=origin, new=new)
     core = np.square(core, where=core!=np.nan, out=np.full_like(core, np.nan))
-    return np.nanmean(core)*100.
+    return 100. - np.nanmean(core)*100.
 
 # RMSPE
 # Compute Root Mean Squared Percentage Error between two lists
 def root_mean_squared_percentage_error(origin:np.ndarray, new:np.ndarray):
-    return np.sqrt(mean_squared_percentage_error(origin=origin, new=new)/100.)*100.
+    return 100. - np.sqrt(mean_squared_percentage_error(origin=origin, new=new)/100.)*100.
 
 # MSE  
 # Compute Mean Squared Error between two lists
@@ -81,14 +81,14 @@ def root_mean_squared_percentage_error(origin:np.ndarray, new:np.ndarray):
 def mean_percentage_error(origin:np.ndarray, new:np.ndarray):
     
     core = vcore(origin=origin, new=new)
-    return np.nanmean(core)*100.
+    return 100. - np.nanmean(core)*100.
 
 # MRPD
 # Compute Mean Relative Percentage Difference between two lists
 def mean_relative_percentage_difference(origin:np.ndarray, new:np.ndarray):
 
     core = np.divide (np.abs(origin - new), ((origin + new)/2), out=np.full_like(origin, np.nan), where=(((origin + new)/2)!=0))
-    return np.nanmean (core)*100.
+    return 100. - np.nanmean (core)*100.
     
 
 # Compute mean difference between two datasets
