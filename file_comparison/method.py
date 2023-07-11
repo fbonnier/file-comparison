@@ -141,10 +141,38 @@ class Method:
 
     # 4
     def compute_score (self):
+        ### Initialized all scores
+        self.levenshtein = 0.
+        self.nilsimsa = 0.
+        self.rmspe = 0.
+        self.mspe = 0.
+        self.mape = 0.
+        self.mpe = 0.
+        self.rpd = 0.
+        self.max_delta = 0.
+        self.delta = 0.
+        self.ndiff = 0
+           
+        ### Sum for all datasets the scores
+        for idataset in self.differences_report:
+            self.levenshtein_score += 100. - idataset["levenshtein"]
+            self.nilsimsa_score += idataset["nilsimsa"]
+            self.rmspe_score += 100 - idataset["rmspe"]
+            self.mspe_score += 100 - idataset["mspe"]
+            self.mape_score += 100 - idataset["mape"]
+            self.mpe_score += 100 - idataset["mpe"]
+            self.mrpd_score += 100 - idataset["rpd"]
+            self.max_delta = max(self.max_delta, idataset["max delta"])
+            self.delta += idataset["delta"]
+            self.ndiff += idataset["ndiff"]
 
-        for ipair in self.differences_report:
-            pass
-
+        for iscore in [self.levenshtein_score, self.rmspe_score, self.mspe_score, self.mape_score,
+        self.mpe_score, self.mrpd_score]:
+            iscore += 100. * (self.number_of_values - self.ndiff)
+            iscore = iscore / self.number_of_values
+        
+        # self.delta += idataset["delta"]
+        # self.ndiff += idataset["ndiff"]
 
         # # Calculate the ratio of different values compared to total number of values
         # self.quantity_score = 100. - self.number_of_errors*100./self.number_of_values
@@ -185,35 +213,13 @@ class Method:
             # TODO
             block_diff = self.__difference_methods__[self.__name__](self.original_file, self.new_file)
             # print (block_diff)
-            self.differences_report = block_diff["report"]
+            if block_diff["report"]: self.differences_report = block_diff["report"]
             self.number_of_values = block_diff["nvalues"]
-            self.log = block_diff["log"]
-            self.errors += block_diff["error"]
+            self.ndiff = block_diff["ndiff"]
+            if block_diff["log"]: self.log = block_diff["log"]
+            if block_diff["error"]: self.errors += block_diff["error"]
+            if block_diff["advices"]: self.advices += block_diff["advices"]
             
-            ### Initialized all scores
-            self.levenshtein = 0.
-            self.nilsimsa = 0.
-            self.rmspe = 0.
-            self.mspe = 0.
-            self.mape = 0.
-            self.mpe = 0.
-            self.rpd = 0.
-            self.max_delta = 0.
-            self.delta = 0.
-            self.ndiff = 0
-
-            ### Sum for all datasets the scores
-            for idataset in self.differences_report:
-                self.levenshtein_score += idataset["levenshtein"]
-                self.nilsimsa_score += idataset["nilsimsa"]
-                self.rmspe_score += 100 - idataset["rmspe"]
-                self.mspe_score += 100 - idataset["mspe"]
-                self.mape_score += 100 - idataset["mape"]
-                self.mpe_score += 100 - idataset["mpe"]
-                self.mrpd_score += 100 - idataset["rpd"]
-                self.max_delta = max(self.max_delta, idataset["max delta"])
-                self.delta += idataset["delta"]
-                self.ndiff += idataset["ndiff"]
             
         except Exception as e:
             self.log.append ("Method.compute_differences: " + str("".join(traceback.format_exception(etype=type(e), value=e, tb=e.__traceback__))))

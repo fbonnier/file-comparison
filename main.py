@@ -54,7 +54,7 @@ def run_file_comparison_json (jsonfile, jsonfile_out):
                 imethod.compute_differences ()
 
                 # Compute different scores and stats
-                # imethod.compute_score ()
+                imethod.compute_score ()
 
                 # Get all data from associated method and pair
                 ipair = imethod.topair(ipair)
