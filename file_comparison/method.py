@@ -142,13 +142,13 @@ class Method:
     # 4
     def compute_score (self):
         ### Initialized all scores
-        self.levenshtein = 0.
-        self.nilsimsa = 0.
-        self.rmspe = 0.
-        self.mspe = 0.
-        self.mape = 0.
-        self.mpe = 0.
-        self.rpd = 0.
+        self.levenshtein_score = 0.
+        self.nilsimsa_score = 0.
+        self.rmspe_score = 0.
+        self.mspe_score = 0.
+        self.mape_score = 0.
+        self.mpe_score = 0.
+        self.mrpd_score = 0.
         self.max_delta = 0.
         self.delta = 0.
         self.ndiff = 0
@@ -168,6 +168,8 @@ class Method:
 
         for iscore in [self.levenshtein_score, self.rmspe_score, self.mspe_score, self.mape_score,
         self.mpe_score, self.mrpd_score]:
+            print ("Ndiff = " + str(self.ndiff))
+            print ("Nvalues = " + str(self.number_of_values))
             iscore += 100. * (self.number_of_values - self.ndiff)
             iscore = iscore / self.number_of_values
         
