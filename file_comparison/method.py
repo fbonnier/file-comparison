@@ -188,21 +188,6 @@ class Method:
         
         # self.delta += idataset["delta"]
         # self.ndiff += idataset["ndiff"]
-
-        # # Calculate the ratio of different values compared to total number of values
-        # self.quantity_score = 100. - self.number_of_errors*100./self.number_of_values
-
-        # # Calculate MAPE
-        # apes = [ipair["ape"] for ipair in self.differences_report if ipair["ape"]]
-        # # apes = []
-        # # for ipair in self.differences_report:
-        #     # if ipair["ape"]:
-        #         # apes.append(ipair["ape"])
-
-        # if apes:
-        #     # self.mape_score = 100. - (sum(apes)/len(apes) * 100.)
-        #     self.mape_score = 100. - (sum(apes)/self.number_of_values * 100.)
-
             
         # # # Calculate MSE
         # squared_deltas = [ipair["delta"]*ipair["delta"] for ipair in self.differences_report if ipair["delta"]]
@@ -248,9 +233,20 @@ class Method:
         ipair["differences"] = self.differences_report
         ipair["number_of_errors"] = len(self.errors)
         ipair["number_of_values"] = self.number_of_values
-        ipair["rmse_score"] = self.rmse_score
-        ipair["mse_score"] = self.mse_score
+        
         ipair["mape_score"] = self.mape_score
+        ipair["rmse_score"] = self.rmse_score
+        ipair["rmspe_score"] = self.rmspe_score
+        ipair["levenshtein_score"] = self.levenshtein_score
+        ipair["mspe_score"] = self.mspe_score
+        ipair["mpe_score"] = self.mpe_score
+        ipair["mrpd_score"] = self.mrpd_score
+        
+        ipair["max_delta"] = self.max_delta
+        ipair["delta"] = self.delta
+        # ipair["mse_score"] = self.mse_score
+        # ipair["mse_score"] = self.mse_score
+        # ipair["mse_score"] = self.mse_score
         ipair["quantity score"] = self.quantity_score
         ipair["hash score"] = self.hash_score
         
