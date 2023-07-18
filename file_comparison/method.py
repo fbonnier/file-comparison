@@ -172,6 +172,8 @@ class Method:
             print ("Nvalues = " + str(self.number_of_values))
             iscore += 100. * (self.number_of_values - self.ndiff)
             iscore = iscore / self.number_of_values
+            print (iscore)
+        self.quantity_score = self.ndiff/self.number_of_values * 100.
         
         # self.delta += idataset["delta"]
         # self.ndiff += idataset["ndiff"]
