@@ -82,6 +82,9 @@ class Method:
     # Total list of logs raised during score computation
     log = []
 
+    # Total list of advices raised during score computation
+    advices = []
+
     # 1.1
     def __init__ (self, ipair: dict):
 
@@ -186,8 +189,7 @@ class Method:
 
         self.quantity_score = 100. - (self.ndiff/self.number_of_values * 100.)
         
-        # self.delta += idataset["delta"]
-        # self.ndiff += idataset["ndiff"]
+        self.delta = self.delta/self.number_of_values
             
         # # # Calculate MSE
         # squared_deltas = [ipair["delta"]*ipair["delta"] for ipair in self.differences_report if ipair["delta"]]
@@ -229,6 +231,7 @@ class Method:
         ipair["method"] = self.__name__
         ipair["error"] = self.errors
         ipair["log"] = self.log
+        ipair["advices"] = self.advices
         ipair["score"] = self.score
         ipair["differences"] = self.differences_report
         ipair["number_of_errors"] = len(self.errors)
