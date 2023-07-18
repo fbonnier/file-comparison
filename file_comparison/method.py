@@ -166,14 +166,25 @@ class Method:
             self.delta += idataset["delta"]
             self.ndiff += idataset["ndiff"]
 
-        for iscore in [self.levenshtein_score, self.rmspe_score, self.mspe_score, self.mape_score,
-        self.mpe_score, self.mrpd_score]:
-            print ("Ndiff = " + str(self.ndiff))
-            print ("Nvalues = " + str(self.number_of_values))
-            iscore += 100. * (self.number_of_values - self.ndiff)
-            iscore = iscore / self.number_of_values
-            print (iscore)
-        self.quantity_score = self.ndiff/self.number_of_values * 100.
+        self.levenshtein_score += 100. * (self.number_of_values - self.ndiff)
+        self.levenshtein_score = self.levenshtein_score / self.number_of_values
+
+        self.rmspe_score += 100. * (self.number_of_values - self.ndiff)
+        self.rmspe_score = self.rmspe_score / self.number_of_values
+
+        self.mspe_score += 100. * (self.number_of_values - self.ndiff)
+        self.mspe_score = self.mspe_score / self.number_of_values
+
+        self.mape_score += 100. * (self.number_of_values - self.ndiff)
+        self.mape_score = self.mape_score / self.number_of_values
+
+        self.mpe_score += 100. * (self.number_of_values - self.ndiff)
+        self.mpe_score = self.mpe_score / self.number_of_values
+
+        self.mrpd_score += 100. * (self.number_of_values - self.ndiff)
+        self.mrpd_score = self.mrpd_score / self.number_of_values
+
+        self.quantity_score = 100. - (self.ndiff/self.number_of_values * 100.)
         
         # self.delta += idataset["delta"]
         # self.ndiff += idataset["ndiff"]
