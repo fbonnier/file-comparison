@@ -206,6 +206,16 @@ class Method:
         # # #     print (e)
         # # # return self.score
 
+        ## Compute MAIN Score
+        nscore_method_used = 0
+        for iscore in [self.levenshtein_score, self.nilsimsa_score, self.rmspe_score, self.mspe_score, self.mape_score, self.mpe_score, self.mrpd_score, self.quantity_score]:
+            if iscore:
+                self.score += iscore
+                nscore_method_used += 1
+
+        if self.score:
+            self.score = self.score/nscore_method_used
+
     # 3
     def compute_differences (self):
         if not (self.original_file or self.new_file):
