@@ -69,14 +69,19 @@ def run_file_comparison_json (jsonfile, jsonfile_out):
         json_data_out["Reusability Verification"] = {"error": [], "score": 0, "advice": [], "log": [], "report": {}}
         if error_glob:
             json_data_out["Reusability Verification"]["error"].append (error_glob)
+        
         n_valid_values = 0
+        total_score = 0.
         for ipair in pairs:
             if ipair["error"]:
                 json_data_out["Reusability Verification"]["error"].append (ipair["error"])
             if ipair["score"]:
-                json_data_out["Reusability Verification"]["score"] += ipair["score"]
+                total_score += ipair["score"]
                 n_valid_values += 1
-        json_data_out["Reusability Verification"]["score"] = json_data_out["Reusability Verification"]["score"]/n_valid_values
+                print ("Total score = " + str(total_score))
+                print ("N valid pair = " + str(n_valid_values))
+        
+        json_data_out["Reusability Verification"]["score"] = total_score/n_valid_values
         json_data_out["Reusability Verification"]["report"] = pairs
     
         # Methods report
