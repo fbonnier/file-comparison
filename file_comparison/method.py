@@ -173,6 +173,9 @@ class Method:
         self.levenshtein_score += 100. * (self.number_of_values - self.ndiff)
         self.levenshtein_score = self.levenshtein_score / self.number_of_values
 
+        self.nilsimsa_score += 100. * (self.number_of_values - self.ndiff)
+        self.nilsimsa_score = self.nilsimsa_score/self.number_of_values
+
         self.rmspe_score += 100. * (self.number_of_values - self.ndiff)
         self.rmspe_score = self.rmspe_score / self.number_of_values
 
