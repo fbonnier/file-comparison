@@ -155,6 +155,7 @@ class Method:
         self.max_delta = 0.
         self.delta = 0.
         self.ndiff = 0
+        self.score = 0.
            
         ### Sum for all datasets the scores
         for idataset in self.differences_report:
@@ -212,9 +213,12 @@ class Method:
             if iscore:
                 self.score += iscore
                 nscore_method_used += 1
+        print ("Score Sum = " + str(self.score))
 
         if self.score:
             self.score = self.score/nscore_method_used
+        
+        print ("Score = " + str(self.score))
 
     # 3
     def compute_differences (self):
