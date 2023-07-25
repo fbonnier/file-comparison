@@ -66,25 +66,25 @@ def run_file_comparison_json (jsonfile, jsonfile_out):
     # Write data in JSON file
     with open(jsonfile_out, "w") as f:
         json_data_out = {}
-        json_data_out["Reusability Verification"] = {"error": [], "score": 0, "advice": [], "log": [], "report": {}}
+        json_data_out["Verification Method Reusability"] = {"error": [], "score": 0, "advice": [], "log": [], "report": {}}
         if error_glob:
-            json_data_out["Reusability Verification"]["error"] += error_glob
+            json_data_out["Verification Method Reusability"]["error"] += error_glob
         
         n_valid_values = 0
         total_score = 0.
         for ipair in pairs:
             if ipair["error"]:
-                json_data_out["Reusability Verification"]["error"] += ipair["error"]
+                json_data_out["Verification Method Reusability"]["error"] += ipair["error"]
             if ipair["log"]:
-                json_data_out["Reusability Verification"]["log"] += ipair["log"]
+                json_data_out["Verification Method Reusability"]["log"] += ipair["log"]
             if ipair["advices"]:
-                json_data_out["Reusability Verification"]["advice"] += ipair["advices"]
+                json_data_out["Verification Method Reusability"]["advice"] += ipair["advices"]
             if ipair["score"]:
                 total_score += ipair["score"]
                 n_valid_values += 1
         
-        json_data_out["Reusability Verification"]["score"] = total_score/n_valid_values
-        json_data_out["Reusability Verification"]["report"] = pairs
+        json_data_out["Verification Method Reusability"]["score"] = total_score/n_valid_values
+        json_data_out["Verification Method Reusability"]["report"] = pairs
     
         # Methods report
         json.dump(json_data_out, f, indent=4)
