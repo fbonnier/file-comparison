@@ -214,16 +214,11 @@ class Method:
         nscore_method_used = 0
         for iscore in [self.levenshtein_score, self.nilsimsa_score, self.rmspe_score, self.mspe_score, self.mape_score, self.mpe_score, self.mrpd_score, self.quantity_score]:
             if iscore:
-                print (str(self.score) + " += " + str(iscore))
-                print ("Nmethods = " + str(nscore_method_used))
                 self.score += iscore
                 nscore_method_used += 1
-        print ("Score Sum = " + str(self.score))
 
         if self.score:
             self.score = self.score/nscore_method_used
-        
-        print ("Score = " + str(self.score))
 
     # 3
     def compute_differences (self):
