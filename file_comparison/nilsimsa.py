@@ -33,8 +33,8 @@ def nilsimsa_files (f1_path, f2_path, buffer_size=32):
                 nilsimsa_single(filename1, filename2, buffer_size)
 
 def nilsimsa_str (origin:str, new:str):
-    nil_origin = Nilsimsa(bytes(origin, "utf-8"))
-    nil_new = Nilsimsa(bytes(new, "utf-8"))
+    nil_origin = Nilsimsa(origin)
+    nil_new = Nilsimsa(new)
     score_nilsimsa = compare_digests (nil_origin.hexdigest(), nil_new.hexdigest())
     return compute_ratio (score_nilsimsa) * 100.
 
