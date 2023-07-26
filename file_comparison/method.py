@@ -234,7 +234,7 @@ class Method:
             self.ndiff = block_diff["ndiff"]
             if block_diff["log"]: self.log = block_diff["log"]
             if block_diff["error"]: self.errors += block_diff["error"]
-            if block_diff["advices"]: self.advices += block_diff["advices"]
+            if block_diff["advice"]: self.advices += block_diff["advice"]
             
             
         except Exception as e:
@@ -245,7 +245,7 @@ class Method:
         ipair["method"] = self.__name__
         ipair["error"] = self.errors
         ipair["log"] = self.log
-        ipair["advices"] = self.advices
+        ipair["advice"] = self.advices
         ipair["score"] = self.score
         ipair["differences"] = self.differences_report
         ipair["number_of_errors"] = len(self.errors)

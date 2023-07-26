@@ -77,8 +77,8 @@ def run_file_comparison_json (jsonfile, jsonfile_out):
                 json_data_out["Verification Method Reusability"]["error"] += ipair["error"]
             if ipair["log"]:
                 json_data_out["Verification Method Reusability"]["log"] += ipair["log"]
-            if ipair["advices"]:
-                json_data_out["Verification Method Reusability"]["advice"] += ipair["advices"]
+            if ipair["advice"]:
+                json_data_out["Verification Method Reusability"]["advice"] += ipair["advice"]
             if ipair["score"]:
                 total_score += ipair["score"]
                 n_valid_values += 1

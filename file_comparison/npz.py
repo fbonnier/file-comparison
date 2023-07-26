@@ -136,7 +136,7 @@ def compute_score (number_of_errors, number_of_values):
 # 3
 def compute_differences_report (original_file, new_file):
 
-    block_diff = {"report": [], "nerrors": 0, "nvalues": 0, "log": [], "error": [], "ndiff": 0, "advices": []}
+    block_diff = {"report": [], "nerrors": 0, "nvalues": 0, "log": [], "error": [], "ndiff": 0, "advice": []}
     comparison_path = "R"
     try:
         original_data = np.load(original_file["path"], allow_pickle=original_file["allow_pickle"], encoding=original_file["encoding"])
