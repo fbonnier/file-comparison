@@ -46,10 +46,12 @@ def compare_line(origin:str, new:str, comparison_path: str, block_diff:dict):
         nwords = min(len(origin_words), len(new_words))
 
         for iword in range(nwords):
-            block_diff = compare_word ()
+            block_diff = compare_word (origin=origin_words[iword], new=new_words[iword], comparison_path=comparison_path, block_diff=block_diff)
 
 def compare_word (origin:str, new:str, comparison_path: str, block_diff:dict):
-    pass
+    if origin == None and new == None:
+        block_diff["error"].append (comparison_path + "")
+        return block_diff
 
 def compare_char ():
     pass    
